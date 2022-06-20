@@ -1,0 +1,15 @@
+package org.fenixedu.api.domain;
+
+class FenixEduAPISystem {
+
+}
+
+relation BennuFenixEduAPISystem {
+    .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
+        multiplicity 1..1;
+    }
+
+    FenixEduAPISystem playsRole fenixEduAPISystem {
+        multiplicity 0..1;
+    }
+}
