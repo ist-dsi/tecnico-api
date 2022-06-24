@@ -1,0 +1,26 @@
+get:
+  description: >-
+    Fetch information about the institution
+  tags:
+    - public
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - institution
+              - activeSemester
+            properties:
+              institution:
+                $ref: "../schemas/academic/Unit.yaml"
+              activeSemester:
+                $ref: "../schemas/academic/ExecutionSemester.yaml"
+              languages:
+                type: array
+                items:
+                  $ref: "../schemas/java/Locale.yaml"
+              defaultLanguage:
+                $ref: "../schemas/java/Locale.yaml"

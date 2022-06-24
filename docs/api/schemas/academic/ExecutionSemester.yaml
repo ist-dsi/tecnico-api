@@ -1,0 +1,23 @@
+type: object
+required:
+  - displayName
+  - semester
+  - beginDate
+  - endDate
+  - year
+properties:
+  displayName:
+    type: string
+    example: "2º Semestre 2021/2022"
+  semester:
+    type: integer
+    format: int32
+    example: 2
+  beginDate:
+    type: string
+    format: date
+  endDate:
+    type: string
+    format: date
+  year:
+    $ref: "./ExecutionYear.yaml"

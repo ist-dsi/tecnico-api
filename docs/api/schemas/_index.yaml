@@ -1,0 +1,13 @@
+# FenixEdu Academic
+
+ExecutionYear:
+  $ref: "./academic/ExecutionYear.yaml"
+ExecutionSemester:
+  $ref: "./academic/ExecutionSemester.yaml"
+Unit:
+  $ref: "./academic/Unit.yaml"
+
+# Java
+
+Locale:
+  $ref: "./java/Locale.yaml"

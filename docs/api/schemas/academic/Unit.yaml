@@ -1,0 +1,14 @@
+type: object
+required:
+  - name
+properties:
+  name:
+    type: string
+  url:
+    type: string
+    example: "https://tecnico.ulisboa.pt"
+  email:
+    type: string
+    format: email
+  phone:
+    type: string

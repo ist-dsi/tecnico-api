@@ -1,0 +1,25 @@
+type: object
+required:
+  - displayName
+  - beginYear
+  - endYear
+  - beginDate
+  - endDate
+properties:
+  displayName:
+    type: string
+    example: "2021/2022"
+  beginYear:
+    type: integer
+    format: int32
+    example: 2021
+  endYear:
+    type: integer
+    format: int32
+    example: 2022
+  beginDate:
+    type: string
+    format: date
+  endDate:
+    type: string
+    format: date

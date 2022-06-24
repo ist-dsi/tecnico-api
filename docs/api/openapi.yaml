@@ -1,0 +1,15 @@
+openapi: "3.0.3"
+info:
+  title: FenixEdu API
+  version: "2.0.0"
+servers:
+  - url: https://fenix.tecnico.ulisboa.pt/fenixedu-api/v2/
+paths:
+  /about:
+    $ref: "./paths/about.yaml"
+components:
+  schemas:
+    $ref: "./schemas/_index.yaml"
+tags:
+  - name: public
+    description: Endpoints that do not require authentication
