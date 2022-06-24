@@ -10,6 +10,7 @@ variables:
 
 stages:
   - Install and Lint
+  - Validate OpenAPI Schema
   # - Test
   - Release
   - Notify
@@ -23,6 +24,11 @@ Install and Lint:
     - export MAVEN_REPO_ID=dsi-maven-artifacts
   script:
     - mvn -s $CI_PROJECT_DIR/.m2/settings.xml clean install -Dmaven.test.skip=true
+
+Validate OpenAPI Schema:
+  stage: Validate OpenAPI Schema
+  script:
+    - npx --yes swagger-cli validate ./docs/api/openapi.yaml
 
 # Test:
 #   stage: Test
@@ -67,4 +73,3 @@ Notify:
     - node release-army-knife/notify-mattermost.js $CI_PROJECT_ID $CI_COMMIT_TAG $REPO_API_ACCESS_TOKEN $CHAT_HOOK
   only:
     - tags
-
