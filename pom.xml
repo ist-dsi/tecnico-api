@@ -13,7 +13,7 @@
     <version>DEV-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>FenixEdu API</name>
-    <url>http://fenixedu.org</url>
+    <url>https://fenixedu.org</url>
 
     <scm>
         <connection>scm:git:git@repo.dsi.tecnico.ulisboa.pt:FenixEdu/application/fenixedu-api.git</connection>

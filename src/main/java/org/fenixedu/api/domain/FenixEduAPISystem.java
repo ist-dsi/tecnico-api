@@ -7,7 +7,7 @@ import org.fenixedu.bennu.core.domain.Singleton;
 
 public class FenixEduAPISystem extends FenixEduAPISystem_Base {
 
-    private static final Supplier<FenixEduAPISystem> SYSTEM_GETTER = Bennu.getInstance()::getFenixEduAPISystem;
+    private static final Supplier<FenixEduAPISystem> SYSTEM_GETTER = () -> Bennu.getInstance().getFenixEduAPISystem();
     private static final Supplier<FenixEduAPISystem> SYSTEM_CREATOR = FenixEduAPISystem::new;
 
     public FenixEduAPISystem() {
