@@ -4,11 +4,19 @@ import com.google.gson.JsonObject;
 import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
+import org.fenixedu.api.util.ApiError;
 import org.fenixedu.bennu.core.json.JsonUtils;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Locale;
 
 public class BaseController extends org.fenixedu.bennu.spring.BaseController {
+
+    @ExceptionHandler({ApiError.class})
+    public ResponseEntity<?> handleApiError(final ApiError error) {
+        return ResponseEntity.status(error.getStatus()).body(error.toResponseBody());
+    }
 
     static JsonObject toUnitJson(Unit unit) {
         if (unit == null) {
