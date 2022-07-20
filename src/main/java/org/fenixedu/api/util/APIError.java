@@ -9,33 +9,33 @@ import org.springframework.http.HttpStatus;
 
 import java.util.ResourceBundle;
 
-public class ApiError extends Error {
+public class APIError extends Error {
     private final HttpStatus status;
     private final String[] args;
     private final Throwable cause;
     private LocalizedString description;
     private String bundle = FenixEduAPIConfiguration.BUNDLE;
 
-    public ApiError(final HttpStatus status, final String message, final String... args) {
+    public APIError(final HttpStatus status, final String message, final String... args) {
         super(message);
         this.status = status;
         this.args = args;
         this.cause = null;
     }
 
-    public ApiError(final String bundle, final HttpStatus status, final String message, final String... args) {
+    public APIError(final String bundle, final HttpStatus status, final String message, final String... args) {
         this(status, message, args);
         this.bundle = bundle;
     }
 
-    public ApiError(final Throwable cause, final HttpStatus status, final String message, final String... args) {
+    public APIError(final Throwable cause, final HttpStatus status, final String message, final String... args) {
         super(message);
         this.status = status;
         this.args = args;
         this.cause = cause;
     }
 
-    public ApiError(final HttpStatus status, final String message, final LocalizedString description, final String... args) {
+    public APIError(final HttpStatus status, final String message, final LocalizedString description, final String... args) {
         this(status, message, args);
         this.description = description;
     }
