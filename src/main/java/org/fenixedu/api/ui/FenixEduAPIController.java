@@ -3,6 +3,7 @@ package org.fenixedu.api.ui;
 import com.google.gson.JsonObject;
 import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
+import org.fenixedu.api.util.APIScope;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;

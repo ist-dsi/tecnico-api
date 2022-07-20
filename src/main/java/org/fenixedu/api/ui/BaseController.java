@@ -4,7 +4,9 @@ import com.google.gson.JsonObject;
 import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
-import org.fenixedu.api.util.ApiError;
+import org.fenixedu.api.oauth.OAuthAuthorizationProvider;
+import org.fenixedu.api.util.APIError;
+import org.fenixedu.api.util.APIScope;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,9 +15,20 @@ import java.util.Locale;
 
 public class BaseController extends org.fenixedu.bennu.spring.BaseController {
 
-    @ExceptionHandler({ApiError.class})
-    public ResponseEntity<?> handleApiError(final ApiError error) {
+    @ExceptionHandler({APIError.class})
+    public ResponseEntity<?> handleApiError(final APIError error) {
         return ResponseEntity.status(error.getStatus()).body(error.toResponseBody());
+    }
+
+    /**
+     * This parameter should be added to the route method
+     * <code>@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String accessToken</code>
+     * in order to get the access token.
+     *
+     * @see OAuthAuthorizationProvider#requireOAuthScope(String, String)
+     */
+    protected void requireOAuthScope(String accessToken, APIScope scope) {
+        OAuthAuthorizationProvider.requireOAuthScope(accessToken, scope.toString());
     }
 
     static JsonObject toUnitJson(Unit unit) {
