@@ -7,9 +7,23 @@ servers:
 paths:
   /about:
     $ref: "./paths/about.yaml"
+  /person:
+    $ref: "./paths/person.yaml"
 components:
   schemas:
     $ref: "./schemas/_index.yaml"
+  securitySchemes:
+    oauthApplication:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://fenix.tecnico.ulisboa.pt/oauth/userdialog
+          tokenUrl: https://fenix.tecnico.ulisboa.pt/oauth/access_token
+          refreshUrl: https://fenix.tecnico.ulisboa.pt/oauth/refresh_token
+          scopes:
+            read:personal: Read user's personal information
 tags:
   - name: public
     description: Endpoints that do not require authentication
+  - name: person
+    description: Endpoints related to user information

@@ -33,7 +33,7 @@ public class FenixEduAPIController extends BaseController {
             JsonUtils.addIf(data, "institution", toUnitJson(institution));
             JsonUtils.addIf(data, "activeSemester", toExecutionSemesterJson(currentSemester));
             data.add("languages", JsonUtils.toJsonArray(languages -> CoreConfiguration.supportedLocales().stream()
-                    .map(BaseController::toLocaleJson)
+                    .map(this::toLocaleJson)
                     .forEach(languages::add))
             );
             data.add("defaultLanguage", toLocaleJson(Locale.getDefault()));

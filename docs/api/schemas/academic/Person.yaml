@@ -1,0 +1,86 @@
+type: object
+required:
+  - username
+  - name
+  - givenNames
+  - familyNames
+  - displayName
+  - gender
+  - roles
+  - photo
+properties:
+  username:
+    type: string
+    example: "ist1XXXXXX"
+  name:
+    type: string
+  givenNames:
+    type: string
+  familyNames:
+    type: string
+  displayName:
+    type: string
+  gender:
+    type: string
+    enum:
+      - MALE
+      - FEMALE
+      - OTHER
+  dateOfBirth:
+    type: string
+    format: date
+  institutionalEmail:
+    type: string
+    format: email
+  campus:
+    type: string
+    example: "Alameda"
+  personalEmails:
+    type: array
+    items:
+      type: string
+      format: email
+  workEmails:
+    type: array
+    items:
+      type: string
+      format: email
+  personalWebAddresses:
+    type: array
+    items:
+      type: string
+      example: "https://example.com"
+  workWebAddresses:
+    type: array
+    items:
+      type: string
+      example: "https://example.com"
+  email:
+    type: string
+    description: >-
+      Primary email of the user.
+      Might not be the institutional email.
+    format: email
+  roles:
+    type: object
+    description: >-
+      All properties are optional and are only present if
+      the user has the respective role.
+    properties:
+      alumni:
+        $ref: "./person-roles/AlumniRole.yaml"
+      student:
+        $ref: "./person-roles/StudentRole.yaml"
+      teacher:
+        $ref: "./person-roles/TeacherRole.yaml"
+  photo:
+    type: object
+    required:
+      - type
+      - data
+    properties:
+      type:
+        type: string
+        example: "image/png"
+      data:
+        type: string

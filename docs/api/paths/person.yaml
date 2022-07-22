@@ -1,0 +1,15 @@
+get:
+  description: >-
+    Fetch information about the logged in user. Requires the `read:personal` scope
+  tags:
+    - person
+  security:
+    - oauthApplication:
+        - read:personal
+  responses:
+    "200":
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/academic/Person.yaml"

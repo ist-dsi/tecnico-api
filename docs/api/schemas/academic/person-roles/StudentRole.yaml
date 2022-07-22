@@ -1,0 +1,8 @@
+type: object
+required:
+  - registrations
+properties:
+  registrations:
+    type: array
+    items:
+      $ref: "../Registration.yaml"

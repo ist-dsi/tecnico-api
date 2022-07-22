@@ -1,9 +1,12 @@
 package org.fenixedu.api.ui;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
+import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.api.oauth.OAuthAuthorizationProvider;
 import org.fenixedu.api.util.APIError;
 import org.fenixedu.api.util.APIScope;
@@ -12,8 +15,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Locale;
+import java.util.function.Function;
+import java.util.stream.Collector;
 
 public class BaseController extends org.fenixedu.bennu.spring.BaseController {
+
+    protected final static Collector<JsonElement, JsonArray, JsonArray> jsonArrayCollector = Collector.of(
+            JsonArray::new,
+            JsonArray::add,
+            (a1, a2) -> JsonUtils.toJsonArray(array -> {
+                array.addAll(a1);
+                array.addAll(a2);
+            })
+    );
 
     @ExceptionHandler({APIError.class})
     public ResponseEntity<?> handleApiError(final APIError error) {
@@ -22,7 +36,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
 
     /**
      * This parameter should be added to the route method
-     * <code>@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String accessToken</code>
+     * <code>@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken</code>
      * in order to get the access token.
      *
      * @see OAuthAuthorizationProvider#requireOAuthScope(String, String)
@@ -31,12 +45,13 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         OAuthAuthorizationProvider.requireOAuthScope(accessToken, scope.toString());
     }
 
-    static JsonObject toUnitJson(Unit unit) {
+    protected JsonObject toUnitJson(Unit unit) {
         if (unit == null) {
             return null;
         }
         return JsonUtils.toJson(institution -> {
             institution.addProperty("name", unit.getName());
+            institution.addProperty("acronym", unit.getAcronym());
             if (unit.hasDefaultWebAddress()) {
                 institution.addProperty("url", unit.getDefaultWebAddressUrl());
             }
@@ -49,7 +64,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    static JsonObject toExecutionSemesterJson(ExecutionSemester executionSemester) {
+    protected JsonObject toExecutionSemesterJson(ExecutionSemester executionSemester) {
         if (executionSemester == null) {
             return null;
         }
@@ -62,7 +77,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    static JsonObject toExecutionYearJson(ExecutionYear executionYear) {
+    protected JsonObject toExecutionYearJson(ExecutionYear executionYear) {
         if (executionYear == null) {
             return null;
         }
@@ -75,11 +90,30 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    static JsonObject toLocaleJson(Locale locale) {
+    protected JsonObject toLocaleJson(Locale locale) {
         return JsonUtils.toJson(localeJson -> {
             localeJson.addProperty("locale", locale.toLanguageTag());
             localeJson.addProperty("name", locale.getDisplayName());
         });
+    }
+
+    protected JsonObject toRegistrationJson(Registration registration) {
+        return JsonUtils.toJson(data -> {
+            data.add("degreeName", registration.getDegree().getNameI18N().json());
+            data.addProperty("degreeAcronym", registration.getDegree().getSigla());
+            data.add("degreeType", registration.getDegree().getDegreeType().getName().json());
+            data.addProperty("degreeId", registration.getDegree().getExternalId());
+            final JsonArray academicTerms = registration.getEnrolmentsExecutionPeriods()
+                    .stream().map(this::toExecutionSemesterJson)
+                    .collect(jsonArrayCollector);
+            data.add("academicTerms", academicTerms);
+        });
+    }
+
+    protected <T> void addIfAndFormat(JsonObject object, String key, T value, Function<T, String> format) {
+        if (value != null) {
+            object.addProperty(key, format.apply(value));
+        }
     }
 
 }
