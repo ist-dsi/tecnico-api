@@ -50,7 +50,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             return null;
         }
         return JsonUtils.toJson(institution -> {
-            institution.addProperty("name", unit.getName());
+            institution.add("name", unit.getNameI18n().json());
             institution.addProperty("acronym", unit.getAcronym());
             if (unit.hasDefaultWebAddress()) {
                 institution.addProperty("url", unit.getDefaultWebAddressUrl());

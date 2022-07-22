@@ -3,7 +3,7 @@ required:
   - name
 properties:
   name:
-    type: string
+    $ref: "../LocalizedString.yaml"
   acronym:
     type: string
   url:
