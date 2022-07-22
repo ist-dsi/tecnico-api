@@ -14,6 +14,7 @@ import org.fenixedu.bennu.core.json.JsonUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.annotation.Nonnull;
 import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collector;
@@ -64,29 +65,39 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected JsonObject toExecutionSemesterJson(ExecutionSemester executionSemester) {
-        if (executionSemester == null) {
-            return null;
-        }
+    protected JsonObject toExecutionSemesterJson(@Nonnull ExecutionSemester executionSemester, boolean includeYear) {
         return JsonUtils.toJson(semester -> {
             semester.addProperty("displayName", executionSemester.getQualifiedName());
             semester.addProperty("semester", executionSemester.getSemester());
             semester.addProperty("beginDate", executionSemester.getBeginLocalDate().toString());
             semester.addProperty("endDate", executionSemester.getEndLocalDate().toString());
-            JsonUtils.addIf(semester, "year", toExecutionYearJson(executionSemester.getExecutionYear()));
+            if (includeYear) {
+                addIfAndFormatElement(semester, "year",
+                    executionSemester.getExecutionYear(),
+                    executionYear -> toExecutionYearJson(executionYear, false)
+                );
+            }
         });
     }
 
-    protected JsonObject toExecutionYearJson(ExecutionYear executionYear) {
-        if (executionYear == null) {
-            return null;
-        }
+    protected JsonObject toExecutionYearJson(@Nonnull ExecutionYear executionYear, boolean includeSemesters) {
         return JsonUtils.toJson(year -> {
             year.addProperty("displayName", executionYear.getQualifiedName());
             year.addProperty("beginYear", executionYear.getBeginCivilYear());
             year.addProperty("endYear", executionYear.getEndCivilYear());
             year.addProperty("beginDate", executionYear.getBeginLocalDate().toString());
             year.addProperty("endDate", executionYear.getEndLocalDate().toString());
+            
+            if (includeSemesters) {
+                year.add(
+                    "firstSemester",
+                    toExecutionSemesterJson(executionYear.getFirstExecutionPeriod(), false)
+                );
+                year.add(
+                    "secondSemester",
+                    toExecutionSemesterJson(executionYear.getLastExecutionPeriod(), false)
+                );
+            }
         });
     }
 
@@ -104,7 +115,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             data.add("degreeType", registration.getDegree().getDegreeType().getName().json());
             data.addProperty("degreeId", registration.getDegree().getExternalId());
             final JsonArray academicTerms = registration.getEnrolmentsExecutionPeriods()
-                    .stream().map(this::toExecutionSemesterJson)
+                    .stream().map(executionSemester -> this.toExecutionSemesterJson(executionSemester, true))
                     .collect(jsonArrayCollector);
             data.add("academicTerms", academicTerms);
         });
@@ -113,6 +124,12 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
     protected <T> void addIfAndFormat(JsonObject object, String key, T value, Function<T, String> format) {
         if (value != null) {
             object.addProperty(key, format.apply(value));
+        }
+    }
+
+    protected <T> void addIfAndFormatElement(JsonObject object, String key, T value, Function<T, JsonElement> format) {
+        if (value != null) {
+            object.add(key, format.apply(value));
         }
     }
 

@@ -7,6 +7,10 @@ servers:
 paths:
   /about:
     $ref: "./paths/about.yaml"
+  /academicterms:
+    $ref: "./paths/academicterms.yaml"
+  /academicterms/{beingYear}/{endYear}:
+    $ref: "./paths/academicterms-one.yaml"
   /person:
     $ref: "./paths/person.yaml"
 components:
