@@ -4,6 +4,8 @@ required:
 properties:
   name:
     type: string
+  acronym:
+    type: string
   url:
     type: string
     example: "https://tecnico.ulisboa.pt"

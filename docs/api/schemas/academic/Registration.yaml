@@ -1,0 +1,18 @@
+type: object
+required:
+  - degreeName
+properties:
+  degreeName:
+    $ref: "../LocalizedString.yaml"
+  degreeAcronym:
+    type: string
+    example: MEIC-A
+  degreeType:
+    $ref: "../LocalizedString.yaml"
+  degreeId:
+    type: string
+    example: 2761663971474
+  academicTerms:
+    type: array
+    items:
+      $ref: "./ExecutionSemester.yaml"

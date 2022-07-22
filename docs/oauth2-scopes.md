@@ -26,7 +26,7 @@ Example:
 
 ```java
 @RequestMapping(value = "/example", method = RequestMethod.GET)
-public ResponseEntity<?> example(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) String accessToken) {
+public ResponseEntity<?> example(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken) {
     requireOAuthScope(accessToken, APIScope.EXAMPLE);
     // ...
 }

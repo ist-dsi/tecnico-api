@@ -1,11 +1,27 @@
+# Common
+
+LocalizedString:
+  $ref: "./LocalizedString.yaml"
+
 # FenixEdu Academic
 
 ExecutionYear:
   $ref: "./academic/ExecutionYear.yaml"
 ExecutionSemester:
   $ref: "./academic/ExecutionSemester.yaml"
+Person:
+  $ref: "./academic/Person.yaml"
+Registration:
+  $ref: "./academic/Registration.yaml"
 Unit:
   $ref: "./academic/Unit.yaml"
+
+AlumniRole:
+  $ref: "./academic/person-roles/AlumniRole.yaml"
+StudentRole:
+  $ref: "./academic/person-roles/StudentRole.yaml"
+TeacherRole:
+  $ref: "./academic/person-roles/TeacherRole.yaml"
 
 # Java
 

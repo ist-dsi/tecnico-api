@@ -1,0 +1,6 @@
+type: object
+required:
+  - department
+properties:
+  department:
+    $ref: "../Unit.yaml"
