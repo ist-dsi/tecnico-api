@@ -1,0 +1,42 @@
+get:
+  description: >-
+    Fetch a single academic term
+  tags:
+    - public
+  parameters:
+    - in: path
+      name: beginYear
+      schema:
+        type: integer
+      description: >-
+        The first year of the execution year
+      example: 2021
+      required: true
+    - in: path
+      name: endYear
+      schema:
+        type: integer
+      description: >-
+        The last year of the execution year
+      example: 2022
+      required: true
+  responses:
+    "200":
+      description: >-
+        OK
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/academic/ExecutionYear.yaml"
+    "400":
+      description: >-
+        Invalid year supplied
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.academicterm.year.incorrect
+            message:
+              pt-PT: O ano inserido (2020/2022) é inválido ou não existe
+              en-GB: The inserted year (2020/2022) is invalid or does not exist

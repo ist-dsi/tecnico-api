@@ -4,7 +4,6 @@ required:
   - semester
   - beginDate
   - endDate
-  - year
 properties:
   displayName:
     type: string
@@ -16,8 +15,10 @@ properties:
   beginDate:
     type: string
     format: date
+    example: "2022-02-28"
   endDate:
     type: string
     format: date
+    example: "2022-09-14"
   year:
     $ref: "./ExecutionYear.yaml"
