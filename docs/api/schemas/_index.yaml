@@ -7,6 +7,10 @@ LocalizedString:
 
 # FenixEdu Academic
 
+Enrolment:
+  $ref: "./academic/Enrolment.yaml"
+ExecutionCourse:
+  $ref: "./academic/ExecutionCourse.yaml"
 ExecutionYear:
   $ref: "./academic/ExecutionYear.yaml"
 ExecutionSemester:

@@ -1,0 +1,20 @@
+type: object
+required:
+  - id
+  - acronym
+  - name
+  - url
+  - academicTerm
+properties:
+  id:
+    $ref: "../DomainObjectId.yaml"
+  acronym:
+    type: string
+    example: "Fis3"
+  name:
+    $ref: "../LocalizedString.yaml"
+  url:
+    type: string
+    example: https://example.com
+  academicTerm:
+    $ref: "./ExecutionSemester.yaml"

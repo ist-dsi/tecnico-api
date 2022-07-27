@@ -10,8 +10,7 @@ properties:
   degreeType:
     $ref: "../LocalizedString.yaml"
   degreeId:
-    type: string
-    example: 2761663971474
+    $ref: "../DomainObjectId.yaml"
   academicTerms:
     type: array
     items:

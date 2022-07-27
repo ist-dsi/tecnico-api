@@ -3,6 +3,7 @@ package org.fenixedu.api.ui;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
@@ -11,13 +12,18 @@ import org.fenixedu.api.oauth.OAuthAuthorizationProvider;
 import org.fenixedu.api.util.APIError;
 import org.fenixedu.api.util.APIScope;
 import org.fenixedu.bennu.core.json.JsonUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class BaseController extends org.fenixedu.bennu.spring.BaseController {
 
@@ -44,6 +50,48 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
      */
     protected void requireOAuthScope(String accessToken, APIScope scope) {
         OAuthAuthorizationProvider.requireOAuthScope(accessToken, scope.toString());
+    }
+
+    /**
+     * Parse an execution year from its name. Throws an APIError if it does not exist.
+     *
+     * @param year The name of the execution year
+     * @return The parsed execution year
+     * @throws APIError if the year does not exist or has invalid formatting
+     */
+    protected ExecutionYear parseExecutionYearOrThrow(String year) {
+        return Optional.ofNullable(ExecutionYear.readExecutionYearByName(year))
+                .orElseThrow(() -> new APIError(HttpStatus.BAD_REQUEST, "error.academicterm.year.incorrect", year));
+    }
+
+    /**
+     * Parse a given combination of year and semester, usually given as query parameters of some endpoints.
+     * This will follow the given logic:
+     * - if both year and semester are given, it returns only that semester of that year
+     * - if only the year is given, it returns both semesters of that year
+     * - if only the semester is given, it returns that semester of the current year
+     * - if neither the year nor semester are given, it returns the current semester of the current year
+     *
+     * @param year     The year to parse
+     * @param semester The semester to parse
+     * @return A set of execution semesters corresponding to the given input
+     * @throws APIError if either the year or the semester does not exist or has invalid formatting
+     */
+    protected Set<ExecutionSemester> parseExecutionSemestersOrThrow(Optional<String> year, Optional<Integer> semester) {
+        ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow).orElseGet(ExecutionYear::readCurrentExecutionYear);
+        Set<ExecutionSemester> semesters = executionYear.getExecutionPeriodsSet().stream()
+                .filter(executionSemester -> semester
+                        .map(semesterNumber -> Objects.equals(executionSemester.getSemester(), semesterNumber))
+                        .orElse(year.isPresent() || executionSemester.isCurrent())
+                )
+                .collect(Collectors.toSet());
+
+        if (semesters.isEmpty()) {
+            throw new APIError(HttpStatus.BAD_REQUEST, "error.academicterm.semester.incorrect",
+                    executionYear.getName(), semester.map(Objects::toString).orElse("none"));
+        }
+
+        return semesters;
     }
 
     protected JsonObject toUnitJson(Unit unit) {
@@ -73,8 +121,8 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             semester.addProperty("endDate", executionSemester.getEndLocalDate().toString());
             if (includeYear) {
                 addIfAndFormatElement(semester, "year",
-                    executionSemester.getExecutionYear(),
-                    executionYear -> toExecutionYearJson(executionYear, false)
+                        executionSemester.getExecutionYear(),
+                        executionYear -> toExecutionYearJson(executionYear, false)
                 );
             }
         });
@@ -87,15 +135,15 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             year.addProperty("endYear", executionYear.getEndCivilYear());
             year.addProperty("beginDate", executionYear.getBeginLocalDate().toString());
             year.addProperty("endDate", executionYear.getEndLocalDate().toString());
-            
+
             if (includeSemesters) {
                 year.add(
-                    "firstSemester",
-                    toExecutionSemesterJson(executionYear.getFirstExecutionPeriod(), false)
+                        "firstSemester",
+                        toExecutionSemesterJson(executionYear.getFirstExecutionPeriod(), false)
                 );
                 year.add(
-                    "secondSemester",
-                    toExecutionSemesterJson(executionYear.getLastExecutionPeriod(), false)
+                        "secondSemester",
+                        toExecutionSemesterJson(executionYear.getLastExecutionPeriod(), false)
                 );
             }
         });
@@ -118,6 +166,16 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
                     .stream().map(executionSemester -> this.toExecutionSemesterJson(executionSemester, true))
                     .collect(jsonArrayCollector);
             data.add("academicTerms", academicTerms);
+        });
+    }
+
+    protected JsonObject toExecutionCourseJson(ExecutionCourse course) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("id", course.getExternalId());
+            data.addProperty("acronym", course.getSigla());
+            data.add("name", course.getNameI18N().json());
+            data.add("academicTerm", toExecutionSemesterJson(course.getExecutionPeriod(), true));
+            data.addProperty("url", course.getSiteUrl());
         });
     }
 

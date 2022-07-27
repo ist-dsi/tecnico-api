@@ -13,6 +13,8 @@ paths:
     $ref: "./paths/academicterms-one.yaml"
   /person:
     $ref: "./paths/person.yaml"
+  /student/enrolments:
+    $ref: "./paths/student-enrolments.yaml"
 components:
   schemas:
     $ref: "./schemas/_index.yaml"
@@ -26,8 +28,11 @@ components:
           refreshUrl: https://fenix.tecnico.ulisboa.pt/oauth/refresh_token
           scopes:
             read:personal: Read user's personal information
+            read:student: Read student's curricular information
 tags:
   - name: public
     description: Endpoints that do not require authentication
   - name: person
     description: Endpoints related to user information
+  - name: curricular
+    description: Endpoints related to user academic information

@@ -1,0 +1,14 @@
+type: object
+required:
+  - ects
+properties:
+  grade:
+    type: string
+    example: "15"
+    # TODO check if "NA" is there
+    description: Grade can be null, a number, "NA" or "RE".
+  ects:
+    type: number
+    format: double
+  course:
+    $ref: "./ExecutionCourse.yaml"

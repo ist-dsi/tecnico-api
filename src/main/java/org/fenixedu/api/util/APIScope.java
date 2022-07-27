@@ -3,7 +3,8 @@ package org.fenixedu.api.util;
 public enum APIScope {
 
     PERSONAL_READ("read:personal"),
-    CURRICULAR_READ("read:curricular"),
+    STUDENT_READ("read:student"),
+    TEACHER_READ("read:teacher"),
     EVALUATIONS_READ("read:evaluations"),
     EVALUATIONS_WRITE("write:evaluations");
 
