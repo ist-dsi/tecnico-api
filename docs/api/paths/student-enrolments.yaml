@@ -1,0 +1,58 @@
+get:
+  description: |
+    Fetch enroled courses of the logged in student, including the student's grade and course's ECTS count.
+    Requires the `read:student` scope.
+    If the user is not a student, an empty list is returned.
+    Optionally, a year and semester can be passed to get the enrolments in that sepecific year (and semester).
+    If left empty, the current semester will be used.
+
+    The following logic will be used to decide which semesters to include in the response:
+      - if both year and semester are given, it returns only that semester of that year
+      - if only the year is given, it returns both semesters of that year
+      - if only the semester is given, it returns that semester of the current year
+      - if neither the year nor semester are given, it returns the current semester of the current year
+  tags:
+    - curricular
+  security:
+    - oauthApplication:
+        - read:student
+  parameters:
+    - in: query
+      name: year
+      schema:
+        type: string
+      description: >-
+        Use this year to get enrolments from.
+      example: 2021/2022
+      required: false
+    - in: query
+      name: semester
+      schema:
+        type: integer
+      description: >-
+        Use this semester (either with the given year or the current year) to get enrolments from.
+        If `year` above is set without setting this, the endpoint will return enrolments for the entire year.
+      example: 1
+      required: false
+  responses:
+    "200":
+      description: >-
+        OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../schemas/academic/Enrolment.yaml"
+    "400":
+      description: >-
+        Invalid year or semester supplied
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.academicterm.year.incorrect
+            message:
+              pt-PT: O ano inserido (2020/2022) é inválido ou não existe
+              en-GB: The inserted year (2020/2022) is invalid or does not exist

@@ -4,11 +4,9 @@ import com.google.gson.JsonObject;
 import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
-import org.fenixedu.api.util.APIError;
 import org.fenixedu.bennu.core.domain.Bennu;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,8 +47,7 @@ public class FenixEduAPIController extends BaseController {
         final Bennu bennu = Bennu.getInstance();
 
         if (from.isPresent()) {
-            final ExecutionYear firstExecutionYear = Optional.ofNullable(ExecutionYear.readExecutionYearByName(from.get()))
-                    .orElseThrow(() -> new APIError(HttpStatus.BAD_REQUEST, "error.academicterm.year.incorrect", from.get()));
+            final ExecutionYear firstExecutionYear = parseExecutionYearOrThrow(from.get());
 
             return ok(bennu.getExecutionYearsSet().stream()
                     .filter(executionYear -> executionYear.isAfterOrEquals(firstExecutionYear))
@@ -69,9 +66,7 @@ public class FenixEduAPIController extends BaseController {
     // gets a specific term
     @RequestMapping(value = "/academicterms/{beginYear}/{endYear}", method = RequestMethod.GET)
     public ResponseEntity<?> getAcademicTerm(@PathVariable String beginYear, @PathVariable String endYear) {
-        String year = beginYear + "/" + endYear;
-        final ExecutionYear executionYear = Optional.ofNullable(ExecutionYear.readExecutionYearByName(year))
-                .orElseThrow(() -> new APIError(HttpStatus.BAD_REQUEST, "error.academicterm.year.incorrect", year));
+        final ExecutionYear executionYear = parseExecutionYearOrThrow(beginYear + "/" + endYear);
         return ok(toExecutionYearJson(executionYear, true));
     }
 
