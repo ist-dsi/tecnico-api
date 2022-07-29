@@ -1,31 +1,40 @@
-type: object
-required:
-  - displayName
-  - beginYear
-  - endYear
-  - beginDate
-  - endDate
-properties:
-  displayName:
-    type: string
-    example: "2021/2022"
-  beginYear:
-    type: integer
-    format: int32
-    example: 2021
-  endYear:
-    type: integer
-    format: int32
-    example: 2022
-  beginDate:
-    type: string
-    format: date
-    example: "2021-09-01"
-  endDate:
-    type: string
-    format: date
-    example: "2022-08-31"
-  firstSemester:
-    $ref: "./ExecutionSemester.yaml"
-  secondSemester:
-    $ref: "./ExecutionSemester.yaml"
+BasicExecutionYearModel:
+  type: object
+  required:
+    - displayName
+    - beginYear
+    - endYear
+    - beginDate
+    - endDate
+  properties:
+    displayName:
+      type: string
+      example: "2021/2022"
+    beginYear:
+      type: integer
+      format: int32
+      example: 2021
+    endYear:
+      type: integer
+      format: int32
+      example: 2022
+    beginDate:
+      type: string
+      format: date
+      example: "2021-09-01"
+    endDate:
+      type: string
+      format: date
+      example: "2022-08-31"
+ExtendedExecutionYearModel:
+  allOf:
+    - $ref: "#/BasicExecutionYearModel"
+    - type: object
+      required:
+        - firstSemester
+        - secondSemester
+      properties:
+        firstSemester:
+          $ref: "./ExecutionSemester.yaml#/BasicExecutionSemesterModel"
+        secondSemester:
+          $ref: "./ExecutionSemester.yaml#/BasicExecutionSemesterModel"
