@@ -22,7 +22,7 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/ExecutionYear.yaml"
+              $ref: "../schemas/academic/ExecutionYear.yaml#/ExtendedExecutionYearModel"
     "400":
       description: >-
         Invalid year supplied
