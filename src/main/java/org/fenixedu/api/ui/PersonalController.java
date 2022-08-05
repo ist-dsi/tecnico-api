@@ -49,11 +49,21 @@ public class PersonalController extends BaseController {
             data.addProperty("displayName", person.getDisplayName());
 
             data.addProperty("gender", person.getGender().name());
-            addIfAndFormat(data, "dateOfBirth", person.getDateOfBirthYearMonthDay(), dob -> dob.toLocalDate().toString());
+            addIfAndFormat(
+                    data,
+                    "dateOfBirth",
+                    person.getDateOfBirthYearMonthDay(),
+                    dob -> dob.toLocalDate().toString()
+            );
             addIfAndFormat(data, "institutionalEmail", person.getInstitutionalEmailAddress(), EmailAddress::getValue);
 
             if (person.getStudent() != null) {
-                addIfAndFormat(data, "campus", person.getStudent().getLastActiveRegistration(), reg -> reg.getCampus().getName());
+                addIfAndFormat(
+                        data,
+                        "campus",
+                        person.getStudent().getLastActiveRegistration(),
+                        reg -> reg.getCampus().getName()
+                );
             }
 
             addPersonContactJson(data, person, false);
@@ -117,7 +127,8 @@ public class PersonalController extends BaseController {
 
         if (new ActiveStudentsGroup().isMember(user)) {
             roles.add("student", JsonUtils.toJson(role -> {
-                final JsonArray registrations = person.getStudent().getActiveRegistrationStream()
+                final JsonArray registrations = person.getStudent()
+                        .getActiveRegistrationStream()
                         .map(this::toRegistrationJson)
                         .collect(StreamUtils.toJsonArray());
                 role.add("registrations", registrations);
@@ -127,7 +138,9 @@ public class PersonalController extends BaseController {
         // FIXME The new `AlumniGroup.get().isMember(user)` method does not produce the same result
         if (new AllAlumniGroup().isMember(user)) {
             roles.add("alumni", JsonUtils.toJson(role -> {
-                final JsonArray registrations = person.getStudent().getConcludedRegistrations().stream()
+                final JsonArray registrations = person.getStudent()
+                        .getConcludedRegistrations()
+                        .stream()
                         .map(this::toRegistrationJson)
                         .collect(StreamUtils.toJsonArray());
                 role.add("concludedRegistrations", registrations);

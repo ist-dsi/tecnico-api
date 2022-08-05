@@ -10,12 +10,11 @@ variables:
 
 stages:
   - Install and Lint
-  - Validate OpenAPI Schema
   # - Test
   - Release
   - Notify
 
-Install and Lint:
+Install:
   stage: Install and Lint
   before_script:
     - cp -R /opt/config_m2/. $CI_PROJECT_DIR/.m2
@@ -25,8 +24,18 @@ Install and Lint:
   script:
     - mvn -s $CI_PROJECT_DIR/.m2/settings.xml clean install -Dmaven.test.skip=true
 
+Lint:
+  stage: Install and Lint
+  before_script:
+    - cp -R /opt/config_m2/. $CI_PROJECT_DIR/.m2
+    - export MAVEN_REPO_USER=$NEXUS_USERNAME
+    - export MAVEN_REPO_PASS=$NEXUS_PASSWORD
+    - export MAVEN_REPO_ID=dsi-maven-artifacts
+  script:
+    - mvn -s $CI_PROJECT_DIR/.m2/settings.xml clean formatter:validate -Dmaven.test.skip=true
+
 Validate OpenAPI Schema:
-  stage: Validate OpenAPI Schema
+  stage: Install and Lint
   script:
     - npx --yes swagger-cli validate ./docs/api/openapi.yaml
 

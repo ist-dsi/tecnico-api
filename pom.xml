@@ -23,8 +23,23 @@
     </scm>
 
     <properties>
+        <!-- Maximum version of the formatter that supports Java 8 is 2.16.0 -->
+        <version.net.revelc.code.formatter>2.16.0</version.net.revelc.code.formatter>
         <version.org.fenixedu.academic>31.0.2</version.org.fenixedu.academic>
     </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>net.revelc.code.formatter</groupId>
+                <artifactId>formatter-maven-plugin</artifactId>
+                <version>${version.net.revelc.code.formatter}</version>
+                <configuration>
+                    <configFile>${project.basedir}/formatter-config.xml</configFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>
