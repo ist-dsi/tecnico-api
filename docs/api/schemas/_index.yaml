@@ -7,18 +7,30 @@ LocalizedString:
 
 # FenixEdu Academic
 
+CurricularCourse:
+  $ref: "./academic/CurricularCourse.yaml"
+BasicDegreeModel:
+  $ref: "./academic/Degree.yaml#/BasicDegreeModel"
+ExtendedDegreeModel:
+  $ref: "./academic/Degree.yaml#/ExtendedDegreeModel"
 Enrolment:
   $ref: "./academic/Enrolment.yaml"
 ExecutionCourse:
   $ref: "./academic/ExecutionCourse.yaml"
-ExecutionYear:
-  $ref: "./academic/ExecutionYear.yaml"
-ExecutionSemester:
-  $ref: "./academic/ExecutionSemester.yaml"
+BasicExecutionYearModel:
+  $ref: "./academic/ExecutionYear.yaml#/BasicExecutionYearModel"
+ExtendedExecutionYearModel:
+  $ref: "./academic/ExecutionYear.yaml#/ExtendedExecutionYearModel"
+BasicExecutionSemesterModel:
+  $ref: "./academic/ExecutionSemester.yaml#/BasicExecutionSemesterModel"
+ExtendedExecutionSemesterModel:
+  $ref: "./academic/ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
 Person:
   $ref: "./academic/Person.yaml"
 Registration:
   $ref: "./academic/Registration.yaml"
+Teacher:
+  $ref: "./academic/Teacher.yaml"
 Unit:
   $ref: "./academic/Unit.yaml"
 

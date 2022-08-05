@@ -1,4 +1,5 @@
 get:
+  summary: Fetch enroled courses
   description: |
     Fetch enroled courses of the logged in student, including the student's grade and course's ECTS count.
     Requires the `read:student` scope.

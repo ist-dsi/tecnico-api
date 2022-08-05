@@ -1,0 +1,22 @@
+type: object
+required:
+  - id
+  - name
+  - acronym
+  - credits
+properties:
+  id:
+    $ref: "../DomainObjectId.yaml"
+  name:
+    allOf:
+      - $ref: "../LocalizedString.yaml"
+    example:
+      pt-PT: "Redes de Computadores"
+      en-GB: "Computer Networks"
+  acronym:
+    type: string
+    example: "RC"
+  credits:
+    type: number
+    format: double
+    multipleOf: 0.1

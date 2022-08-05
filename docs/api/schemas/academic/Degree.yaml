@@ -1,0 +1,96 @@
+BasicDegreeModel:
+  type: object
+  required:
+    - id
+    - name
+    - acronym
+    - campi
+    - degreeType
+  properties:
+    id:
+      $ref: "../DomainObjectId.yaml"
+    name:
+      $ref: "../LocalizedString.yaml"
+      example:
+        pt-PT: "Engenharia Informática e de Computadores - Alameda"
+        en-GB: "Computer Science and Engineering - Alameda"
+    acronym:
+      type: string
+      example: "LEIC-A"
+    url:
+      type: string
+      example: "https://www.tecnico.ulisboa.pt"
+    campi:
+      type: array
+      items:
+        type: string
+        example: "Alameda"
+    degreeType:
+      allOf:
+        - $ref: "../LocalizedString.yaml"
+      example:
+        pt-PT: Licenciatura Bolonha
+        en-GB: Bologna Degree
+ExtendedDegreeModel:
+  allOf:
+    - $ref: "#/BasicDegreeModel"
+    - type: object
+      required:
+        - academicTerms
+      properties:
+        academicTerms:
+          type: array
+          items:
+            $ref: "./ExecutionYear.yaml#/BasicExecutionYearModel"
+        description:
+          allOf:
+            - $ref: "../LocalizedString.yaml"
+          example:
+            pt-PT: Descrição do curso
+            en-GB: Degree's description
+        designedFor:
+          allOf:
+            - $ref: "../LocalizedString.yaml"
+          example:
+            pt-PT: Este curso é direcionado a estas pessoas
+            en-GB: This degree is designed for these people
+        history:
+          allOf:
+            - $ref: "../LocalizedString.yaml"
+          example:
+            pt-PT: História do curso
+            en-GB: Degree's history
+        objectives:
+          allOf:
+            - $ref: "../LocalizedString.yaml"
+          example:
+            pt-PT: Objetivos do curso
+            en-GB: Degree's objectives
+        operationalRegime:
+          allOf:
+            - $ref: "../LocalizedString.yaml"
+          example:
+            pt-PT: Regime operacional do curso
+            en-GB: Degree's operational regime
+        professionalExits:
+          allOf:
+            - $ref: "../LocalizedString.yaml"
+          example:
+            pt-PT: Saídas profissionais do curso
+            en-GB: Degree's professional exits
+        tuitionFees:
+          allOf:
+            - $ref: "../LocalizedString.yaml"
+          example:
+            pt-PT: Custo das propinas do curso
+            en-GB: Degree's tuition fees
+        coordinators:
+          type: array
+          items:
+            allOf:
+              - $ref: "./Teacher.yaml"
+            example:
+              istId: "ist135791"
+              name: "André Celes Mateus"
+              emailAddress: "example@tecnico.ulisboa.pt"
+              webAddress: "https://www.tecnico.ulisboa.pt"

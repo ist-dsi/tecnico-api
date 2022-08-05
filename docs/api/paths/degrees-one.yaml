@@ -1,0 +1,34 @@
+get:
+  summary: Fetch a single degree
+  description: >-
+    Fetch information about a specific degree, given its ID
+  tags:
+    - public
+  parameters:
+    - in: path
+      name: id
+      schema:
+        $ref: "../schemas/DomainObjectId.yaml"
+      description: >-
+        The degree's unique ID.
+      required: true
+  responses:
+    "200":
+      description: >-
+        OK
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/academic/Degree.yaml#/ExtendedDegreeModel"
+    "400":
+      description: >-
+        Invalid degree ID supplied
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.degree.not.found
+            message:
+              pt-PT: O curso com o ID 16467887136714 não foi encontrado
+              en-GB: The degree with ID 16467887136714 was not found

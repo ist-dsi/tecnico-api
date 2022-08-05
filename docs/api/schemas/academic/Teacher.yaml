@@ -1,0 +1,19 @@
+type: object
+required:
+  - istId
+  - name
+  - emailAddress
+  - webAddress
+properties:
+  istId:
+    type: string
+    example: "ist135791"
+  name:
+    type: string
+    example: "André Celes Mateus"
+  emailAddress:
+    type: string
+    example: "example@tecnico.ulisboa.pt"
+  webAddress:
+    type: string
+    example: "https://www.tecnico.ulisboa.pt"

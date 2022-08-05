@@ -1,18 +1,18 @@
 get:
-  summary: Fetch academic terms
+  summary: Fetch degrees in given year
   description: >-
-    Fetch all (or starting in a given year) the academic terms available to be used in other endpoints.
-    Sorted by newest to oldest
+    Fetch the degrees available in a given year
   tags:
     - public
   parameters:
     - in: query
-      name: from
+      name: year
       schema:
         type: string
       description: >-
-        Only fetch academic terms after this year (inclusive)
-      example: 2021/2022
+        The specific year to fetch degrees from.
+        If not provided, the current execution year will be used.
+      example: "2021/2022"
       required: false
   responses:
     "200":
@@ -23,10 +23,10 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/ExecutionYear.yaml#/ExtendedExecutionYearModel"
+              $ref: "../schemas/academic/Degree.yaml#/BasicDegreeModel"
     "400":
       description: >-
-        Invalid year supplied
+        Invalid year
       content:
         application/json:
           schema:
