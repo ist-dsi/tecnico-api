@@ -1,0 +1,46 @@
+get:
+  summary: Fetch courses of a degree
+  description: >-
+    Fetch information about a specific degree's courses, given its ID.
+    The degree's year can be specified, defaulting to the current execution year if it is not
+  tags:
+    - public
+  parameters:
+    - in: path
+      name: id
+      schema:
+        type: string
+      description: >-
+        The degree's unique ID.
+      example: 21743746736
+      required: true
+    - in: query
+      name: year
+      schema:
+        type: string
+      description: >-
+        The specific year to fetch courses from.
+      example: "2021/2022"
+      required: false
+  responses:
+    "200":
+      description: >-
+        OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../schemas/academic/CurricularCourse.yaml"
+    "400":
+      description: >-
+        Invalid degree ID supplied
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.degree.not.found
+            message:
+              pt-PT: O curso com o ID 16467887136714 não foi encontrado
+              en-GB: The degree with ID 16467887136714 was not found

@@ -1,4 +1,5 @@
 type: object
+description: "A LocalizedString is a Map<Locale, String>, where each value is the string in its locale."
 additionalProperties:
   type: string
 example:

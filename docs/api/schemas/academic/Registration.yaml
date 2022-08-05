@@ -14,4 +14,4 @@ properties:
   academicTerms:
     type: array
     items:
-      $ref: "./ExecutionSemester.yaml"
+      $ref: "./ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"

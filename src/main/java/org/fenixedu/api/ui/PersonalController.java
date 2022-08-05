@@ -15,6 +15,7 @@ import org.fenixedu.api.util.PhotoUtils;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.security.Authenticate;
+import org.fenixedu.commons.stream.StreamUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -107,7 +108,7 @@ public class PersonalController extends BaseController {
                 .filter(contact -> !checkAccess || contact.isVisible())
                 .map(PartyContact::getPresentationValue)
                 .map(JsonPrimitive::new)
-                .collect(jsonArrayCollector);
+                .collect(StreamUtils.toJsonArray());
     }
 
     protected JsonObject toPersonRolesJson(final Person person) {
@@ -118,7 +119,7 @@ public class PersonalController extends BaseController {
             roles.add("student", JsonUtils.toJson(role -> {
                 final JsonArray registrations = person.getStudent().getActiveRegistrationStream()
                         .map(this::toRegistrationJson)
-                        .collect(jsonArrayCollector);
+                        .collect(StreamUtils.toJsonArray());
                 role.add("registrations", registrations);
             }));
         }
@@ -128,7 +129,7 @@ public class PersonalController extends BaseController {
             roles.add("alumni", JsonUtils.toJson(role -> {
                 final JsonArray registrations = person.getStudent().getConcludedRegistrations().stream()
                         .map(this::toRegistrationJson)
-                        .collect(jsonArrayCollector);
+                        .collect(StreamUtils.toJsonArray());
                 role.add("concludedRegistrations", registrations);
             }));
         }

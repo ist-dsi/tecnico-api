@@ -1,4 +1,5 @@
 get:
+  summary: Fetch a single academic term
   description: >-
     Fetch a single academic term
   tags:

@@ -1,5 +1,6 @@
 package org.fenixedu.api.util;
 
+import com.google.gson.JsonObject;
 import org.fenixedu.bennu.FenixEduAPIConfiguration;
 import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.json.JsonUtils;
@@ -44,7 +45,7 @@ public class APIError extends Error {
         return status;
     }
 
-    public String toResponseBody() {
+    public JsonObject toResponseBody() {
         return JsonUtils.toJson(data -> {
             data.addProperty("key", getMessage());
             if (description != null) {
@@ -52,7 +53,7 @@ public class APIError extends Error {
             } else if (CoreConfiguration.supportedLocales().stream().allMatch(locale -> ResourceBundle.getBundle(this.bundle, locale).containsKey(getMessage()))) {
                 data.add("message", BundleUtil.getLocalizedString(this.bundle, getMessage(), args).json());
             }
-        }).toString();
+        });
     }
 
 }

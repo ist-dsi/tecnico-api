@@ -3,18 +3,26 @@ package org.fenixedu.api.ui;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.fenixedu.academic.domain.ExecutionCourse;
-import org.fenixedu.academic.domain.ExecutionSemester;
-import org.fenixedu.academic.domain.ExecutionYear;
+import com.google.gson.JsonPrimitive;
+
+import org.fenixedu.academic.domain.*;
+import org.fenixedu.academic.domain.contacts.EmailAddress;
+import org.fenixedu.academic.domain.contacts.WebAddress;
+import org.fenixedu.academic.domain.curricularPeriod.CurricularPeriod;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.api.oauth.OAuthAuthorizationProvider;
 import org.fenixedu.api.util.APIError;
 import org.fenixedu.api.util.APIScope;
 import org.fenixedu.bennu.core.json.JsonUtils;
+import org.fenixedu.commons.i18n.LocalizedString;
+import org.fenixedu.commons.stream.StreamUtils;
+import org.fenixedu.spaces.domain.Space;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import pt.ist.fenixframework.DomainObject;
 
 import javax.annotation.Nonnull;
 import java.util.Locale;
@@ -27,18 +35,24 @@ import java.util.stream.Collectors;
 
 public class BaseController extends org.fenixedu.bennu.spring.BaseController {
 
-    protected final static Collector<JsonElement, JsonArray, JsonArray> jsonArrayCollector = Collector.of(
-            JsonArray::new,
-            JsonArray::add,
-            (a1, a2) -> JsonUtils.toJsonArray(array -> {
-                array.addAll(a1);
-                array.addAll(a2);
-            })
-    );
-
     @ExceptionHandler({APIError.class})
     public ResponseEntity<?> handleApiError(final APIError error) {
-        return ResponseEntity.status(error.getStatus()).body(error.toResponseBody());
+        return respond(error.getStatus(), error.toResponseBody());
+    }
+
+    /**
+     * Send a JSON error if a String cannot be converted to a DomainObject
+     * instead of Spring's default HTML error
+     */
+    @ExceptionHandler({ConversionFailedException.class})
+    public ResponseEntity<?> handleConversionException(final ConversionFailedException exception) {
+        final Class<?> sourceType = exception.getSourceType().getType();
+        final Class<?> targetType = exception.getTargetType().getType();
+        if (String.class.equals(sourceType) && DomainObject.class.isAssignableFrom(targetType)) {
+            final String value = Objects.toString(exception.getValue());
+            return handleApiError(new APIError(HttpStatus.BAD_REQUEST, "error." + targetType.getSimpleName().toLowerCase() + ".not.found", value));
+        }
+        throw exception;
     }
 
     /**
@@ -48,6 +62,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
      *
      * @see OAuthAuthorizationProvider#requireOAuthScope(String, String)
      */
+
     protected void requireOAuthScope(String accessToken, APIScope scope) {
         OAuthAuthorizationProvider.requireOAuthScope(accessToken, scope.toString());
     }
@@ -113,6 +128,107 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
+    // will probably be expanded while creating the courses endpoint
+    protected JsonObject toCurricularCourseJson(CurricularCourse course, ExecutionYear executionYear) {
+        if (course == null) {
+            return null;
+        }
+        return JsonUtils.toJson(courseJson -> {
+            courseJson.addProperty("id", course.getExternalId());
+            courseJson.add("name", course.getNameI18N().json());
+            courseJson.addProperty("acronym", course.getAcronym());
+            courseJson.addProperty("credits", course.getEctsCredits(null, executionYear));
+        });
+    }
+
+    protected JsonObject toDegreeJson(Degree degree, boolean specifyDegree) {
+        if (degree == null) {
+            return null;
+        }
+        return JsonUtils.toJson(degreeJson -> {
+            degreeJson.addProperty("id", degree.getExternalId());
+            degreeJson.add("name", degree.getNameI18N().json());
+            degreeJson.addProperty("acronym", degree.getSigla());
+            JsonUtils.addIf(degreeJson, "url", degree.getSiteUrl());
+            addIfAndFormatElement(degreeJson, "campi",
+                    degree.getCurrentCampus(),
+                    data -> data.stream()
+                            .map(Space::getName)
+                            .map(JsonPrimitive::new)
+                            .collect(StreamUtils.toJsonArray())
+            );
+            addIfAndFormatElement(degreeJson, "degreeType",
+                    degree.getDegreeType().getName(),
+                    LocalizedString::json
+            );
+
+            if (specifyDegree) {
+                addIfAndFormatElement(degreeJson, "academicTerms",
+                        degree.getExecutionDegrees(),
+                        data -> data.stream()
+                                // sorted in ascending order
+                                .sorted(ExecutionDegree.REVERSE_EXECUTION_DEGREE_COMPARATORY_BY_YEAR)
+                                .map(ExecutionDegree::getExecutionYear)
+                                .map(year -> toExecutionYearJson(year, false))
+                                .collect(StreamUtils.toJsonArray())
+                );
+
+                // below are the fields used in each degree's homepage
+                // e.g https://fenix.tecnico.ulisboa.pt/cursos/leic-a/descricao
+                final DegreeInfo degreeInfo = degree.getMostRecentDegreeInfo();
+                final ExecutionYear executionYear = degreeInfo.getExecutionYear();
+                addIfAndFormatElement(degreeJson, "accessRequisites",
+                        degreeInfo.getAccessRequisites(),
+                        LocalizedString::json
+                );
+                addIfAndFormatElement(degreeJson, "description",
+                        degreeInfo.getDescription(),
+                        LocalizedString::json
+                );
+                addIfAndFormatElement(degreeJson, "designedFor",
+                        degreeInfo.getDesignedFor(),
+                        LocalizedString::json
+                );
+                addIfAndFormatElement(degreeJson, "history",
+                        degreeInfo.getHistory(),
+                        LocalizedString::json
+                );
+                addIfAndFormatElement(degreeJson, "objectives",
+                        degreeInfo.getObjectives(),
+                        LocalizedString::json
+                );
+                addIfAndFormatElement(degreeJson, "operationalRegime",
+                        degreeInfo.getOperationalRegime(),
+                        LocalizedString::json
+                );
+                addIfAndFormatElement(degreeJson, "professionalExits",
+                        degreeInfo.getProfessionalExits(),
+                        LocalizedString::json
+                );
+                addIfAndFormatElement(degreeJson, "tuitionFees",
+                        degreeInfo.getGratuity(),
+                        LocalizedString::json
+                );
+                addIfAndFormatElement(degreeJson, "coordinators",
+                        degree.getResponsibleCoordinatorsTeachers(executionYear),
+                        data -> data.stream()
+                                .map(this::toTeacherJson)
+                                .collect(StreamUtils.toJsonArray())
+                );
+            }
+        });
+    }
+
+    protected JsonObject toExecutionCourseJson(ExecutionCourse course) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("id", course.getExternalId());
+            data.addProperty("acronym", course.getSigla());
+            data.add("name", course.getNameI18N().json());
+            data.add("academicTerm", toExecutionSemesterJson(course.getExecutionPeriod(), true));
+            data.addProperty("url", course.getSiteUrl());
+        });
+    }
+
     protected JsonObject toExecutionSemesterJson(@Nonnull ExecutionSemester executionSemester, boolean includeYear) {
         return JsonUtils.toJson(semester -> {
             semester.addProperty("displayName", executionSemester.getQualifiedName());
@@ -164,18 +280,21 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             data.addProperty("degreeId", registration.getDegree().getExternalId());
             final JsonArray academicTerms = registration.getEnrolmentsExecutionPeriods()
                     .stream().map(executionSemester -> this.toExecutionSemesterJson(executionSemester, true))
-                    .collect(jsonArrayCollector);
+                    .collect(StreamUtils.toJsonArray());
             data.add("academicTerms", academicTerms);
         });
     }
 
-    protected JsonObject toExecutionCourseJson(ExecutionCourse course) {
-        return JsonUtils.toJson(data -> {
-            data.addProperty("id", course.getExternalId());
-            data.addProperty("acronym", course.getSigla());
-            data.add("name", course.getNameI18N().json());
-            data.add("academicTerm", toExecutionSemesterJson(course.getExecutionPeriod(), true));
-            data.addProperty("url", course.getSiteUrl());
+    protected JsonObject toTeacherJson(Teacher teacher) {
+        Person person = teacher.getPerson();
+
+        return JsonUtils.toJson(teacherJson -> {
+            teacherJson.addProperty("istId", teacher.getTeacherId());
+            teacherJson.addProperty("name", person.getName());
+            // FIXME: the old API returned a list of mails - is one enough (same for web addresses)?
+            teacherJson.addProperty("emailAddress", person.getDefaultEmailAddressValue());
+            // clicking on the teacher's name will redirect to the teacher's designated "homepage", hence returning the web address(es)
+            teacherJson.addProperty("webAddress", person.getDefaultWebAddressUrl());
         });
     }
 

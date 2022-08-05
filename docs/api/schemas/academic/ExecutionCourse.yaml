@@ -17,4 +17,4 @@ properties:
     type: string
     example: https://example.com
   academicTerm:
-    $ref: "./ExecutionSemester.yaml"
+    $ref: "./ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"

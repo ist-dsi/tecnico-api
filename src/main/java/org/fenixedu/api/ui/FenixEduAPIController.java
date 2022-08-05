@@ -45,21 +45,14 @@ public class FenixEduAPIController extends BaseController {
     @RequestMapping(value = "/academicterms", method = RequestMethod.GET)
     public ResponseEntity<?> academicTerms(@RequestParam(required = false) Optional<String> from) {
         final Bennu bennu = Bennu.getInstance();
+        final ExecutionYear firstExecutionYear = from
+                .map(this::parseExecutionYearOrThrow)
+                .orElse(ExecutionYear.readFirstExecutionYear());
 
-        if (from.isPresent()) {
-            final ExecutionYear firstExecutionYear = parseExecutionYearOrThrow(from.get());
-
-            return ok(bennu.getExecutionYearsSet().stream()
-                    .filter(executionYear -> executionYear.isAfterOrEquals(firstExecutionYear))
-                    .sorted(ExecutionYear.REVERSE_COMPARATOR_BY_YEAR)
-                    .map(executionYear -> toExecutionYearJson(executionYear, true))
-                    .collect(jsonArrayCollector)
-            );
-        }
-        return ok(bennu.getExecutionYearsSet().stream()
+        return respond(bennu.getExecutionYearsSet().stream()
+                .filter(executionYear -> executionYear.isAfterOrEquals(firstExecutionYear))
                 .sorted(ExecutionYear.REVERSE_COMPARATOR_BY_YEAR)
                 .map(executionYear -> toExecutionYearJson(executionYear, true))
-                .collect(jsonArrayCollector)
         );
     }
 
