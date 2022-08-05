@@ -50,7 +50,13 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         final Class<?> targetType = exception.getTargetType().getType();
         if (String.class.equals(sourceType) && DomainObject.class.isAssignableFrom(targetType)) {
             final String value = Objects.toString(exception.getValue());
-            return handleApiError(new APIError(HttpStatus.BAD_REQUEST, "error." + targetType.getSimpleName().toLowerCase() + ".not.found", value));
+            return handleApiError(
+                    new APIError(
+                            HttpStatus.BAD_REQUEST,
+                            "error." + targetType.getSimpleName().toLowerCase() + ".not.found",
+                            value
+                    )
+            );
         }
         throw exception;
     }
@@ -93,17 +99,24 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
      * @throws APIError if either the year or the semester does not exist or has invalid formatting
      */
     protected Set<ExecutionSemester> parseExecutionSemestersOrThrow(Optional<String> year, Optional<Integer> semester) {
-        ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow).orElseGet(ExecutionYear::readCurrentExecutionYear);
-        Set<ExecutionSemester> semesters = executionYear.getExecutionPeriodsSet().stream()
-                .filter(executionSemester -> semester
-                        .map(semesterNumber -> Objects.equals(executionSemester.getSemester(), semesterNumber))
-                        .orElse(year.isPresent() || executionSemester.isCurrent())
+        ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow)
+                .orElseGet(ExecutionYear::readCurrentExecutionYear);
+        Set<ExecutionSemester> semesters = executionYear.getExecutionPeriodsSet()
+                .stream()
+                .filter(
+                        executionSemester -> semester
+                                .map(semesterNumber -> Objects.equals(executionSemester.getSemester(), semesterNumber))
+                                .orElse(year.isPresent() || executionSemester.isCurrent())
                 )
                 .collect(Collectors.toSet());
 
         if (semesters.isEmpty()) {
-            throw new APIError(HttpStatus.BAD_REQUEST, "error.academicterm.semester.incorrect",
-                    executionYear.getName(), semester.map(Objects::toString).orElse("none"));
+            throw new APIError(
+                    HttpStatus.BAD_REQUEST,
+                    "error.academicterm.semester.incorrect",
+                    executionYear.getName(),
+                    semester.map(Objects::toString).orElse("none")
+            );
         }
 
         return semesters;
@@ -150,20 +163,26 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             degreeJson.add("name", degree.getNameI18N().json());
             degreeJson.addProperty("acronym", degree.getSigla());
             JsonUtils.addIf(degreeJson, "url", degree.getSiteUrl());
-            addIfAndFormatElement(degreeJson, "campi",
+            addIfAndFormatElement(
+                    degreeJson,
+                    "campi",
                     degree.getCurrentCampus(),
                     data -> data.stream()
                             .map(Space::getName)
                             .map(JsonPrimitive::new)
                             .collect(StreamUtils.toJsonArray())
             );
-            addIfAndFormatElement(degreeJson, "degreeType",
+            addIfAndFormatElement(
+                    degreeJson,
+                    "degreeType",
                     degree.getDegreeType().getName(),
                     LocalizedString::json
             );
 
             if (specifyDegree) {
-                addIfAndFormatElement(degreeJson, "academicTerms",
+                addIfAndFormatElement(
+                        degreeJson,
+                        "academicTerms",
                         degree.getExecutionDegrees(),
                         data -> data.stream()
                                 // sorted in ascending order
@@ -177,39 +196,57 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
                 // e.g https://fenix.tecnico.ulisboa.pt/cursos/leic-a/descricao
                 final DegreeInfo degreeInfo = degree.getMostRecentDegreeInfo();
                 final ExecutionYear executionYear = degreeInfo.getExecutionYear();
-                addIfAndFormatElement(degreeJson, "accessRequisites",
+                addIfAndFormatElement(
+                        degreeJson,
+                        "accessRequisites",
                         degreeInfo.getAccessRequisites(),
                         LocalizedString::json
                 );
-                addIfAndFormatElement(degreeJson, "description",
+                addIfAndFormatElement(
+                        degreeJson,
+                        "description",
                         degreeInfo.getDescription(),
                         LocalizedString::json
                 );
-                addIfAndFormatElement(degreeJson, "designedFor",
+                addIfAndFormatElement(
+                        degreeJson,
+                        "designedFor",
                         degreeInfo.getDesignedFor(),
                         LocalizedString::json
                 );
-                addIfAndFormatElement(degreeJson, "history",
+                addIfAndFormatElement(
+                        degreeJson,
+                        "history",
                         degreeInfo.getHistory(),
                         LocalizedString::json
                 );
-                addIfAndFormatElement(degreeJson, "objectives",
+                addIfAndFormatElement(
+                        degreeJson,
+                        "objectives",
                         degreeInfo.getObjectives(),
                         LocalizedString::json
                 );
-                addIfAndFormatElement(degreeJson, "operationalRegime",
+                addIfAndFormatElement(
+                        degreeJson,
+                        "operationalRegime",
                         degreeInfo.getOperationalRegime(),
                         LocalizedString::json
                 );
-                addIfAndFormatElement(degreeJson, "professionalExits",
+                addIfAndFormatElement(
+                        degreeJson,
+                        "professionalExits",
                         degreeInfo.getProfessionalExits(),
                         LocalizedString::json
                 );
-                addIfAndFormatElement(degreeJson, "tuitionFees",
+                addIfAndFormatElement(
+                        degreeJson,
+                        "tuitionFees",
                         degreeInfo.getGratuity(),
                         LocalizedString::json
                 );
-                addIfAndFormatElement(degreeJson, "coordinators",
+                addIfAndFormatElement(
+                        degreeJson,
+                        "coordinators",
                         degree.getResponsibleCoordinatorsTeachers(executionYear),
                         data -> data.stream()
                                 .map(this::toTeacherJson)
@@ -236,7 +273,9 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             semester.addProperty("beginDate", executionSemester.getBeginLocalDate().toString());
             semester.addProperty("endDate", executionSemester.getEndLocalDate().toString());
             if (includeYear) {
-                addIfAndFormatElement(semester, "year",
+                addIfAndFormatElement(
+                        semester,
+                        "year",
                         executionSemester.getExecutionYear(),
                         executionYear -> toExecutionYearJson(executionYear, false)
                 );
@@ -279,7 +318,8 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             data.add("degreeType", registration.getDegree().getDegreeType().getName().json());
             data.addProperty("degreeId", registration.getDegree().getExternalId());
             final JsonArray academicTerms = registration.getEnrolmentsExecutionPeriods()
-                    .stream().map(executionSemester -> this.toExecutionSemesterJson(executionSemester, true))
+                    .stream()
+                    .map(executionSemester -> this.toExecutionSemesterJson(executionSemester, true))
                     .collect(StreamUtils.toJsonArray());
             data.add("academicTerms", academicTerms);
         });

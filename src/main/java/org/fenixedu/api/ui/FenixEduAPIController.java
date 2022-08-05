@@ -31,9 +31,14 @@ public class FenixEduAPIController extends BaseController {
         return ok(data -> {
             JsonUtils.addIf(data, "institution", toUnitJson(institution));
             JsonUtils.addIf(data, "activeSemester", toExecutionSemesterJson(currentSemester, true));
-            data.add("languages", JsonUtils.toJsonArray(languages -> CoreConfiguration.supportedLocales().stream()
-                    .map(this::toLocaleJson)
-                    .forEach(languages::add))
+            data.add(
+                    "languages",
+                    JsonUtils.toJsonArray(
+                            languages -> CoreConfiguration.supportedLocales()
+                                    .stream()
+                                    .map(this::toLocaleJson)
+                                    .forEach(languages::add)
+                    )
             );
             data.add("defaultLanguage", toLocaleJson(Locale.getDefault()));
 
@@ -49,10 +54,12 @@ public class FenixEduAPIController extends BaseController {
                 .map(this::parseExecutionYearOrThrow)
                 .orElse(ExecutionYear.readFirstExecutionYear());
 
-        return respond(bennu.getExecutionYearsSet().stream()
-                .filter(executionYear -> executionYear.isAfterOrEquals(firstExecutionYear))
-                .sorted(ExecutionYear.REVERSE_COMPARATOR_BY_YEAR)
-                .map(executionYear -> toExecutionYearJson(executionYear, true))
+        return respond(
+                bennu.getExecutionYearsSet()
+                        .stream()
+                        .filter(executionYear -> executionYear.isAfterOrEquals(firstExecutionYear))
+                        .sorted(ExecutionYear.REVERSE_COMPARATOR_BY_YEAR)
+                        .map(executionYear -> toExecutionYearJson(executionYear, true))
         );
     }
 

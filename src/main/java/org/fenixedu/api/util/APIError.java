@@ -36,7 +36,10 @@ public class APIError extends Error {
         this.cause = cause;
     }
 
-    public APIError(final HttpStatus status, final String message, final LocalizedString description, final String... args) {
+    public APIError(final HttpStatus status,
+                    final String message,
+                    final LocalizedString description,
+                    final String... args) {
         this(status, message, args);
         this.description = description;
     }
@@ -50,7 +53,10 @@ public class APIError extends Error {
             data.addProperty("key", getMessage());
             if (description != null) {
                 data.add("message", description.json());
-            } else if (CoreConfiguration.supportedLocales().stream().allMatch(locale -> ResourceBundle.getBundle(this.bundle, locale).containsKey(getMessage()))) {
+            } else if (CoreConfiguration.supportedLocales()
+                    .stream()
+                    .allMatch(locale -> ResourceBundle.getBundle(this.bundle, locale).containsKey(getMessage()))
+            ) {
                 data.add("message", BundleUtil.getLocalizedString(this.bundle, getMessage(), args).json());
             }
         });

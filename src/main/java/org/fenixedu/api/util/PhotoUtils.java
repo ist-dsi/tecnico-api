@@ -22,7 +22,8 @@ public class PhotoUtils {
     }
 
     private static byte[] mysteryMan() {
-        try (final InputStream mm = PhotographController.class.getClassLoader().getResourceAsStream("META-INF/resources/img/mysteryman.png")) {
+        try (final InputStream mm = PhotographController.class.getClassLoader()
+                .getResourceAsStream("META-INF/resources/img/mysteryman.png")) {
             return Avatar.process(mm, "image/png", 100);
         } catch (final IOException ex) {
             throw new Error(ex);

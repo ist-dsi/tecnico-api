@@ -4,7 +4,6 @@ import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.ExecutionDegree;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.time.calendarStructure.AcademicInterval;
-import org.fenixedu.bennu.core.domain.Bennu;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,8 @@ public class DegreeController extends BaseController {
                 .orElseGet(ExecutionYear::readCurrentExecutionYear);
         final AcademicInterval academicInterval = executionYear.getAcademicInterval();
         return respond(
-                ExecutionDegree.filterByAcademicInterval(academicInterval).stream()
+                ExecutionDegree.filterByAcademicInterval(academicInterval)
+                        .stream()
                         .map(ExecutionDegree::getDegree)
                         .map(degree -> toDegreeJson(degree, false))
         );
@@ -29,7 +29,8 @@ public class DegreeController extends BaseController {
     @RequestMapping(value = "/degrees/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllDegrees() {
         return respond(
-                Degree.readNotEmptyDegrees().stream()
+                Degree.readNotEmptyDegrees()
+                        .stream()
                         .map(degree -> toDegreeJson(degree, false))
         );
     }
@@ -40,13 +41,15 @@ public class DegreeController extends BaseController {
     }
 
     @RequestMapping(value = "/degrees/{degree}/courses", method = RequestMethod.GET)
-    public ResponseEntity<?> getDegreeCourses(@PathVariable Degree degree, @RequestParam(required = false) Optional<String> year) {
+    public ResponseEntity<?> getDegreeCourses(@PathVariable Degree degree,
+                                              @RequestParam(required = false) Optional<String> year) {
         // defaults to the current year if not specified
         final ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow)
                 .orElseGet(ExecutionYear::readCurrentExecutionYear);
         return respond(
                 degree
-                        .getAllCurricularCourses(executionYear).stream()
+                        .getAllCurricularCourses(executionYear)
+                        .stream()
                         .map(course -> toCurricularCourseJson(course, executionYear))
         );
     }

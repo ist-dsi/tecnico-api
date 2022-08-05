@@ -38,11 +38,12 @@ public class CurricularController extends BaseController {
 
         // TODO The APIv1 has an "attending" field that we don't know what's for
         return respond(
-                semesters.stream().flatMap(executionSemester ->
-                        student.getRegistrationStream()
-                                .flatMap(registration -> registration.getEnrolments(executionSemester).stream())
-                                .map(enrolment -> toEnrolmentJson(enrolment, executionSemester))
-                )
+                semesters.stream()
+                        .flatMap(
+                                executionSemester -> student.getRegistrationStream()
+                                        .flatMap(registration -> registration.getEnrolments(executionSemester).stream())
+                                        .map(enrolment -> toEnrolmentJson(enrolment, executionSemester))
+                        )
         );
     }
 
