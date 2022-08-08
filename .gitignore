@@ -5,12 +5,12 @@
 *.jar
 *.war
 *.ear
+openapi/openapi.bundled.yaml
 
 # Maven #
 target/
 bin/
 **/src/main/webapp/fenixedu-api
-package-lock.json
 .DS_Store
 node_modules/
 dist/

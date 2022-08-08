@@ -1,3 +1,31 @@
 {
-  "apps":[]
+  "apps": [
+    {
+      "title": {
+        "en-GB": "FenixEdu API Frontend",
+        "pt-PT": "FenixEdu API Frontend"
+      },
+      "description": {
+        "en-GB": "FenixEdu API Frontend",
+        "pt-PT": "FenixEdu API Frontend"
+      },
+      "fullLayout": true,
+      "accessExpression": "anyone",
+      "path": "fenixedu-api",
+      "functionalities": [
+        {
+          "title": {
+            "en-GB": "FenixEdu API Frontend",
+            "pt-PT": "FenixEdu API Frontend"
+          },
+          "description": {
+            "en-GB": "FenixEdu API Frontend",
+            "pt-PT": "FenixEdu API Frontend"
+          },
+          "path": "fenixedu-api",
+          "accessExpression": "anyone"
+        }
+      ]
+    }
+  ]
 }

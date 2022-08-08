@@ -1,0 +1,20 @@
+{
+  "name": "fenixedu-api-openapi",
+  "version": "2.0.0",
+  "description": "OpenAPI's schema for fenixedu-api",
+  "scripts": {
+    "serve": "serve .",
+    "start": "npm run serve",
+    "build": "npm run bundle",
+    "validate": "swagger-cli validate ./openapi.yaml",
+    "bundle": "swagger-cli bundle ./openapi.yaml -o ./openapi.bundled.yaml --type yaml",
+    "copy": "cp ./openapi.bundled.yaml ../src/main/webapp/fenixedu-api/openapi.yaml; cp ./index.html ../src/main/webapp/fenixedu-api/",
+    "clean:packages": "rm -rf node_modules",
+    "clean:dist": "mkdir -p ../src/main/webapp/fenixedu-api; rm -rf ../src/main/webapp/fenixedu-api/*; rm openapi.bundled.yaml",
+    "package:production": "npm run clean:dist; npm run bundle; npm run copy"
+  },
+  "devDependencies": {
+    "serve": "^14.0.1",
+    "swagger-cli": "^4.0.4"
+  }
+}

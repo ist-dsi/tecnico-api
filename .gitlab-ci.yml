@@ -4,6 +4,7 @@ cache:
   paths:
     - .m2/repository/
     - target/
+    - openapi/node_modules/
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
@@ -37,7 +38,9 @@ Lint:
 Validate OpenAPI Schema:
   stage: Install and Lint
   script:
-    - npx --yes swagger-cli validate ./docs/api/openapi.yaml
+    - cd $CI_PROJECT_DIR/openapi
+    - npm ci
+    - npm run validate
 
 # Test:
 #   stage: Test
