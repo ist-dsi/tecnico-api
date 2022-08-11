@@ -1,0 +1,53 @@
+type: object
+required:
+  - degreeName
+  - degreeAcronym
+  - degreeId
+  - academicTerms
+  - startDate
+  - curricularYear
+  - credits
+  - average
+  - roundedAverage
+  - isConcluded
+  - approvedCourses
+properties:
+  degreeName:
+    allOf:
+      - $ref: "../LocalizedString.yaml"
+    example:
+      pt-PT: "Engenharia Informática e de Computadores - Alameda"
+      en-GB: "Computer Science and Engineering - Alameda"
+  degreeAcronym:
+    type: string
+    example: "LEIC-A"
+  degreeId:
+    $ref: "../DomainObjectId.yaml"
+  academicTerms:
+    type: array
+    items:
+      $ref: "./ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
+  startDate:
+    type: string
+    format: date
+  endDate:
+    type: string
+    format: date
+  curricularYear:
+    type: integer
+    description: The curricular year the student is currently in.
+  credits:
+    type: number
+    format: double
+  average:
+    type: number
+    format: double
+    description: The weighted average of the grades of approved courses.
+  roundedAverage:
+    type: integer
+  isConcluded:
+    type: boolean
+  approvedCourses:
+    type: array
+    items:
+      $ref: "./CurriculumCourse.yaml#/CurriculumCourse"

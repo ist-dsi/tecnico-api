@@ -340,13 +340,19 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
 
     protected <T> void addIfAndFormat(JsonObject object, String key, T value, Function<T, String> format) {
         if (value != null) {
-            object.addProperty(key, format.apply(value));
+            String formattedValue = format.apply(value);
+            if (formattedValue != null) {
+                object.addProperty(key, formattedValue);
+            }
         }
     }
 
     protected <T> void addIfAndFormatElement(JsonObject object, String key, T value, Function<T, JsonElement> format) {
         if (value != null) {
-            object.add(key, format.apply(value));
+            JsonElement formattedValue = format.apply(value);
+            if (formattedValue != null) {
+                object.add(key, formattedValue);
+            }
         }
     }
 

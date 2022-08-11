@@ -23,6 +23,10 @@ paths:
     $ref: "./paths/person.yaml"
   /student/enrolments:
     $ref: "./paths/student-enrolments.yaml"
+  /student/curriculum:
+    $ref: "./paths/student-curriculum.yaml"
+  /teacher/professorships:
+    $ref: "./paths/teacher-professorships.yaml"
 components:
   schemas:
     $ref: "./schemas/_index.yaml"
@@ -37,6 +41,7 @@ components:
           scopes:
             read:personal: Read user's personal information
             read:student: Read student's curricular information
+            read:teacher: Read teachers's curricular information
 tags:
   - name: public
     description: Endpoints that do not require authentication

@@ -9,6 +9,14 @@ LocalizedString:
 
 CurricularCourse:
   $ref: "./academic/CurricularCourse.yaml"
+CurriculumCourse:
+  $ref: "./academic/CurriculumCourse.yaml#/CurriculumCourse"
+GenericCurriculumCourse:
+  $ref: "./academic/CurriculumCourse.yaml#/GenericCurriculumCourse"
+EnrolmentCurriculumCourse:
+  $ref: "./academic/CurriculumCourse.yaml#/EnrolmentCurriculumCourse"
+DismissalCurriculumCourse:
+  $ref: "./academic/CurriculumCourse.yaml#/DismissalCurriculumCourse"
 BasicDegreeModel:
   $ref: "./academic/Degree.yaml#/BasicDegreeModel"
 ExtendedDegreeModel:
@@ -27,8 +35,12 @@ ExtendedExecutionSemesterModel:
   $ref: "./academic/ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
 Person:
   $ref: "./academic/Person.yaml"
+Professorship:
+  $ref: "./academic/Professorship.yaml"
 Registration:
   $ref: "./academic/Registration.yaml"
+StudentCurricularPlan:
+  $ref: "./academic/StudentCurricularPlan.yaml"
 Teacher:
   $ref: "./academic/Teacher.yaml"
 Unit:
