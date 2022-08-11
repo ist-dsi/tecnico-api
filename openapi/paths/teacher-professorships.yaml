@@ -1,10 +1,10 @@
 get:
-  summary: Fetch enroled courses
+  summary: Fetch courses of logged in teacher
   description: |
-    Fetch enroled courses of the logged in student, including the student's grade and course's ECTS count.
-    Requires the `read:student` scope.
-    If the user is not a student, an empty list is returned.
-    Optionally, a year and semester can be passed to get the enrolments in that sepecific year (and semester).
+    Fetch courses of the logged in teacher.
+    Requires the `read:teacher` scope.
+    If the user is not a teacher, an empty list is returned.
+    Optionally, a year and semester can be passed to get the professorships in that sepecific year (and semester).
     If left empty, the current semester will be used.
 
     The following logic will be used to decide which semesters to include in the response:
@@ -16,14 +16,14 @@ get:
     - curricular
   security:
     - oauthApplication:
-        - read:student
+        - read:teacher
   parameters:
     - in: query
       name: year
       schema:
         type: string
       description: >-
-        Use this year to get enrolments from.
+        Use this year to get professorships from.
       example: 2021/2022
       required: false
     - in: query
@@ -31,8 +31,8 @@ get:
       schema:
         type: integer
       description: >-
-        Use this semester (either with the given year or the current year) to get enrolments from.
-        If `year` above is set without setting this, the endpoint will return enrolments for the entire year.
+        Use this semester (either with the given year or the current year) to get professorships from.
+        If `year` above is set without setting this, the endpoint will return professorships for the entire year.
       example: 1
       required: false
   responses:
@@ -44,7 +44,7 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/Enrolment.yaml"
+              $ref: "../schemas/academic/Professorship.yaml"
     "400":
       description: >-
         Invalid year or semester supplied
