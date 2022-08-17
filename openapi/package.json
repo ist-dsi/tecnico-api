@@ -8,9 +8,9 @@
     "build": "npm run bundle",
     "validate": "swagger-cli validate ./openapi.yaml",
     "bundle": "swagger-cli bundle ./openapi.yaml -o ./openapi.bundled.yaml --type yaml",
-    "copy": "cp ./openapi.bundled.yaml ../src/main/webapp/fenixedu-api/openapi.yaml; cp ./index.html ../src/main/webapp/fenixedu-api/",
+    "copy": "cp ./openapi.bundled.yaml ../src/main/webapp/fenixedu-api/docs/openapi.yaml; cp ./index.html ../src/main/webapp/fenixedu-api/docs/",
     "clean:packages": "rm -rf node_modules",
-    "clean:dist": "mkdir -p ../src/main/webapp/fenixedu-api; rm -rf ../src/main/webapp/fenixedu-api/*; rm openapi.bundled.yaml",
+    "clean:dist": "mkdir -p ../src/main/webapp/fenixedu-api/docs; rm -rf ../src/main/webapp/fenixedu-api/docs/*; rm openapi.bundled.yaml",
     "package:production": "npm run clean:dist; npm run bundle; npm run copy"
   },
   "devDependencies": {
