@@ -11,7 +11,7 @@
       },
       "fullLayout": true,
       "accessExpression": "anyone",
-      "path": "fenixedu-api",
+      "path": "fenixedu-api/docs",
       "functionalities": [
         {
           "title": {
@@ -22,7 +22,7 @@
             "en-GB": "FenixEdu API Frontend",
             "pt-PT": "FenixEdu API Frontend"
           },
-          "path": "fenixedu-api",
+          "path": "fenixedu-api/docs",
           "accessExpression": "anyone"
         }
       ]

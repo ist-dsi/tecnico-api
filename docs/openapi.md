@@ -7,7 +7,7 @@ This specification is frontend-independent and may also be used to [generate SDK
 For this project, we've opted for the [Rapidoc frontend](https://rapidocweb.com/),
 due to its simplicity and compatibility with OpenAPI v3.1.0.
 
-A version of this frontend with this project's specification is available in production at `/fenixedu-api/`.
+A version of this frontend with this project's specification is available in production at `/fenixedu-api/docs`.
 
 All branches merged into the default branch (i.e. `master`) must update
 the OpenAPI documentation with the respective changes, in order to avoid
@@ -27,5 +27,11 @@ npm install && npm run start
 
 ## Validating the Config
 
-Before commiting, you may validate the OpenAPI config by running `npm run validate`
+Before committing, you may validate the OpenAPI config by running `npm run validate`
 in the `openapi` folder.
+
+## Adding the Menu Entry
+
+To add the menu entry for the OpenAPI documentation, that is, for the static files
+to be served, you must go to _System Management > Portal Configuration > Manage Menu_.
+Then, click _Install_, search for _FenixEdu API Frontend_ and click _Install Application_.
