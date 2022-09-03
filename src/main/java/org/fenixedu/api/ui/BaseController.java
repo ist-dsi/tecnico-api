@@ -4,13 +4,32 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-
-import org.fenixedu.academic.domain.*;
-import org.fenixedu.academic.domain.contacts.EmailAddress;
-import org.fenixedu.academic.domain.contacts.WebAddress;
-import org.fenixedu.academic.domain.curricularPeriod.CurricularPeriod;
+import org.fenixedu.academic.domain.AdHocEvaluation;
+import org.fenixedu.academic.domain.Attends;
+import org.fenixedu.academic.domain.CompetenceCourse;
+import org.fenixedu.academic.domain.CurricularCourse;
+import org.fenixedu.academic.domain.Degree;
+import org.fenixedu.academic.domain.DegreeInfo;
+import org.fenixedu.academic.domain.Evaluation;
+import org.fenixedu.academic.domain.ExecutionCourse;
+import org.fenixedu.academic.domain.ExecutionDegree;
+import org.fenixedu.academic.domain.ExecutionSemester;
+import org.fenixedu.academic.domain.ExecutionYear;
+import org.fenixedu.academic.domain.Grouping;
+import org.fenixedu.academic.domain.Person;
+import org.fenixedu.academic.domain.Professorship;
+import org.fenixedu.academic.domain.Project;
+import org.fenixedu.academic.domain.Shift;
+import org.fenixedu.academic.domain.StudentGroup;
+import org.fenixedu.academic.domain.Teacher;
+import org.fenixedu.academic.domain.WrittenEvaluation;
+import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences;
+import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences.BibliographicReference;
+import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences.BibliographicReferenceType;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.util.EnrolmentGroupPolicyType;
+import org.fenixedu.academic.util.EvaluationType;
 import org.fenixedu.api.oauth.OAuthAuthorizationProvider;
 import org.fenixedu.api.util.APIError;
 import org.fenixedu.api.util.APIScope;
@@ -25,12 +44,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import pt.ist.fenixframework.DomainObject;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class BaseController extends org.fenixedu.bennu.spring.BaseController {
@@ -122,10 +142,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return semesters;
     }
 
-    protected JsonObject toUnitJson(Unit unit) {
-        if (unit == null) {
-            return null;
-        }
+    protected JsonObject toUnitJson(@Nonnull Unit unit) {
         return JsonUtils.toJson(institution -> {
             institution.add("name", unit.getNameI18n().json());
             institution.addProperty("acronym", unit.getAcronym());
@@ -141,177 +158,355 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    // will probably be expanded while creating the courses endpoint
-    protected JsonObject toCurricularCourseJson(CurricularCourse course, ExecutionYear executionYear) {
-        if (course == null) {
-            return null;
-        }
-        return JsonUtils.toJson(courseJson -> {
-            courseJson.addProperty("id", course.getExternalId());
-            courseJson.add("name", course.getNameI18N().json());
-            courseJson.addProperty("acronym", course.getAcronym());
-            courseJson.addProperty("credits", course.getEctsCredits(null, executionYear));
+    protected JsonObject toAttendsJson(@Nonnull Attends attends) {
+        final Registration registration = attends.getRegistration();
+        final Person person = registration.getPerson();
+        final Degree degree = registration.getDegree();
+        return JsonUtils.toJson(data -> {
+            data.addProperty("username", person.getUsername());
+            data.add("degree", toDegreeJson(degree));
         });
     }
 
-    protected JsonObject toDegreeJson(Degree degree, boolean specifyDegree) {
-        if (degree == null) {
-            return null;
-        }
-        return JsonUtils.toJson(degreeJson -> {
-            degreeJson.addProperty("id", degree.getExternalId());
-            degreeJson.add("name", degree.getNameI18N().json());
-            degreeJson.addProperty("acronym", degree.getSigla());
-            JsonUtils.addIf(degreeJson, "url", degree.getSiteUrl());
+    protected JsonObject toBibliographicReferenceJson(@Nonnull BibliographicReference bibliographicReference) {
+        return JsonUtils.toJson(data -> {
+            addIfAndFormat(data, "authors", bibliographicReference, BibliographicReference::getAuthors);
+            addIfAndFormat(data, "title", bibliographicReference, BibliographicReference::getTitle);
+            addIfAndFormat(data, "publisherReference", bibliographicReference, BibliographicReference::getReference);
+            addIfAndFormat(data, "type", bibliographicReference.getType(), BibliographicReferenceType::getName);
+            addIfAndFormat(data, "url", bibliographicReference, BibliographicReference::getUrl);
+            addIfAndFormat(data, "year", bibliographicReference, BibliographicReference::getYear);
+        });
+    }
+
+    protected JsonObject toCurricularCourseJson(@Nonnull CurricularCourse course, ExecutionYear executionYear) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("id", course.getExternalId());
+            data.add("name", course.getNameI18N().json());
+            data.addProperty("acronym", course.getAcronym());
+            data.addProperty("credits", course.getEctsCredits(null, executionYear));
+            data.add(
+                    "executionCourses",
+                    course.getExecutionCoursesByExecutionYear(executionYear)
+                            .stream()
+                            .map(this::toExecutionCourseJson)
+                            .collect(StreamUtils.toJsonArray())
+            );
+        });
+    }
+
+    protected JsonObject toDegreeJson(@Nonnull Degree degree) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("id", degree.getExternalId());
+            data.add("name", degree.getNameI18N().json());
+            data.addProperty("acronym", degree.getSigla());
+            JsonUtils.addIf(data, "url", degree.getSiteUrl());
             addIfAndFormatElement(
-                    degreeJson,
+                    data,
                     "campi",
                     degree.getCurrentCampus(),
-                    data -> data.stream()
+                    campus -> campus.stream()
                             .map(Space::getName)
                             .map(JsonPrimitive::new)
                             .collect(StreamUtils.toJsonArray())
             );
             addIfAndFormatElement(
-                    degreeJson,
+                    data,
                     "degreeType",
                     degree.getDegreeType().getName(),
                     LocalizedString::json
             );
-
-            if (specifyDegree) {
-                addIfAndFormatElement(
-                        degreeJson,
-                        "academicTerms",
-                        degree.getExecutionDegrees(),
-                        data -> data.stream()
-                                // sorted in ascending order
-                                .sorted(ExecutionDegree.REVERSE_EXECUTION_DEGREE_COMPARATORY_BY_YEAR)
-                                .map(ExecutionDegree::getExecutionYear)
-                                .map(year -> toExecutionYearJson(year, false))
-                                .collect(StreamUtils.toJsonArray())
-                );
-
-                // below are the fields used in each degree's homepage
-                // e.g https://fenix.tecnico.ulisboa.pt/cursos/leic-a/descricao
-                final DegreeInfo degreeInfo = degree.getMostRecentDegreeInfo();
-                final ExecutionYear executionYear = degreeInfo.getExecutionYear();
-                addIfAndFormatElement(
-                        degreeJson,
-                        "accessRequisites",
-                        degreeInfo.getAccessRequisites(),
-                        LocalizedString::json
-                );
-                addIfAndFormatElement(
-                        degreeJson,
-                        "description",
-                        degreeInfo.getDescription(),
-                        LocalizedString::json
-                );
-                addIfAndFormatElement(
-                        degreeJson,
-                        "designedFor",
-                        degreeInfo.getDesignedFor(),
-                        LocalizedString::json
-                );
-                addIfAndFormatElement(
-                        degreeJson,
-                        "history",
-                        degreeInfo.getHistory(),
-                        LocalizedString::json
-                );
-                addIfAndFormatElement(
-                        degreeJson,
-                        "objectives",
-                        degreeInfo.getObjectives(),
-                        LocalizedString::json
-                );
-                addIfAndFormatElement(
-                        degreeJson,
-                        "operationalRegime",
-                        degreeInfo.getOperationalRegime(),
-                        LocalizedString::json
-                );
-                addIfAndFormatElement(
-                        degreeJson,
-                        "professionalExits",
-                        degreeInfo.getProfessionalExits(),
-                        LocalizedString::json
-                );
-                addIfAndFormatElement(
-                        degreeJson,
-                        "tuitionFees",
-                        degreeInfo.getGratuity(),
-                        LocalizedString::json
-                );
-                addIfAndFormatElement(
-                        degreeJson,
-                        "coordinators",
-                        degree.getResponsibleCoordinatorsTeachers(executionYear),
-                        data -> data.stream()
-                                .map(this::toTeacherJson)
-                                .collect(StreamUtils.toJsonArray())
-                );
-            }
         });
     }
 
-    protected JsonObject toExecutionCourseJson(ExecutionCourse course) {
+    protected JsonObject toExtendedDegreeJson(@Nonnull Degree degree) {
+        JsonObject data = toDegreeJson(degree);
+        addIfAndFormatElement(
+                data,
+                "academicTerms",
+                degree.getExecutionDegrees(),
+                degrees -> degrees.stream()
+                        // sorted in ascending order
+                        .sorted(ExecutionDegree.REVERSE_EXECUTION_DEGREE_COMPARATORY_BY_YEAR)
+                        .map(ExecutionDegree::getExecutionYear)
+                        .map(this::toExecutionYearJson)
+                        .collect(StreamUtils.toJsonArray())
+        );
+
+        // below are the fields used in each degree's homepage
+        // e.g https://fenix.tecnico.ulisboa.pt/cursos/leic-a/descricao
+        final DegreeInfo degreeInfo = degree.getMostRecentDegreeInfo();
+        final ExecutionYear executionYear = degreeInfo.getExecutionYear();
+        addIfAndFormatElement(
+                data,
+                "accessRequisites",
+                degreeInfo.getAccessRequisites(),
+                LocalizedString::json
+        );
+        addIfAndFormatElement(
+                data,
+                "description",
+                degreeInfo.getDescription(),
+                LocalizedString::json
+        );
+        addIfAndFormatElement(
+                data,
+                "designedFor",
+                degreeInfo.getDesignedFor(),
+                LocalizedString::json
+        );
+        addIfAndFormatElement(
+                data,
+                "history",
+                degreeInfo.getHistory(),
+                LocalizedString::json
+        );
+        addIfAndFormatElement(
+                data,
+                "objectives",
+                degreeInfo.getObjectives(),
+                LocalizedString::json
+        );
+        addIfAndFormatElement(
+                data,
+                "operationalRegime",
+                degreeInfo.getOperationalRegime(),
+                LocalizedString::json
+        );
+        addIfAndFormatElement(
+                data,
+                "professionalExits",
+                degreeInfo.getProfessionalExits(),
+                LocalizedString::json
+        );
+        addIfAndFormatElement(
+                data,
+                "tuitionFees",
+                degreeInfo.getGratuity(),
+                LocalizedString::json
+        );
+        addIfAndFormatElement(
+                data,
+                "coordinators",
+                degree.getResponsibleCoordinatorsTeachers(executionYear),
+                teachers -> teachers.stream()
+                        .map(this::toTeacherJson)
+                        .collect(StreamUtils.toJsonArray())
+        );
+        return data;
+    }
+
+    protected @Nonnull JsonObject toEvaluationJson(@Nonnull Evaluation evaluation) {
+        return JsonUtils.toJson(eval -> {
+            eval.addProperty("id", evaluation.getExternalId());
+            eval.addProperty("name", evaluation.getPresentationName());
+            eval.add("type", toEvaluationTypeJson(evaluation.getEvaluationType()));
+        });
+    }
+
+    protected @Nonnull JsonPrimitive toEvaluationTypeJson(@Nonnull EvaluationType evaluationType) {
+        switch (evaluationType.getType()) {
+            case 1:
+                return new JsonPrimitive("EXAM");
+            case 2:
+                return new JsonPrimitive("FINAL");
+            case 3:
+                return new JsonPrimitive("ONLINE_TEST");
+            case 4:
+                return new JsonPrimitive("TEST");
+            case 5:
+                return new JsonPrimitive("PROJECT");
+            case 6:
+                return new JsonPrimitive("AD_HOC");
+            default:
+                return new JsonPrimitive("UNKNOWN");
+        }
+    }
+
+    protected @Nonnull JsonObject toExtendedEvaluationJson(@Nonnull AdHocEvaluation evaluation) {
+        JsonObject data = toEvaluationJson(evaluation);
+        data.addProperty("description", evaluation.getDescription());
+        return data;
+    }
+
+    protected @Nonnull JsonObject toExtendedEvaluationJson(@Nonnull Project project) {
+        JsonObject data = toEvaluationJson(project);
+        data.add("evaluationPeriod", JsonUtils.toJson(period -> {
+            period.addProperty("start", project.getProjectBeginDateTime().toString());
+            period.addProperty("end", project.getProjectEndDateTime().toString());
+        }));
+        return data;
+    }
+
+    protected @Nonnull JsonObject toExtendedEvaluationJson(@Nonnull WrittenEvaluation evaluation) {
+        JsonObject data = toEvaluationJson(evaluation);
+        if (evaluation.getEnrolmentPeriodStart() != null && evaluation.getEnrolmentPeriodEnd() != null) {
+            data.add("enrollmentPeriod", JsonUtils.toJson(period -> {
+                period.addProperty("currentlyOpen", evaluation.isInEnrolmentPeriod());
+                period.addProperty("start", evaluation.getEnrolmentPeriodStart().toString());
+                period.addProperty("end", evaluation.getEnrolmentPeriodEnd().toString());
+            }));
+        }
+        data.add("evaluationPeriod", JsonUtils.toJson(period -> {
+            period.addProperty("start", evaluation.getBeginningDateTime().toString());
+            period.addProperty("end", evaluation.getEndDateTime().toString());
+        }));
+        // TODO: toSpaceJson will be done when the spaces endpoint is created
+        // addIfAndFormatElement(data, "rooms", evaluation.getAssociatedRooms(), this::toSpaceJson);
+        return data;
+    }
+
+    protected @Nonnull JsonObject toExecutionCourseJson(@Nonnull ExecutionCourse course) {
         return JsonUtils.toJson(data -> {
             data.addProperty("id", course.getExternalId());
             data.addProperty("acronym", course.getSigla());
             data.add("name", course.getNameI18N().json());
-            data.add("academicTerm", toExecutionSemesterJson(course.getExecutionPeriod(), true));
-            data.addProperty("url", course.getSiteUrl());
+            data.add("academicTerm", toExtendedExecutionSemesterJson(course.getExecutionPeriod()));
+            data.add("courseInformation", JsonUtils.toJson(info -> {
+                info.add("urls", JsonUtils.toJson(urls -> {
+                    final String url = course.getSiteUrl();
+                    urls.addProperty("courseUrl", url);
+                    urls.addProperty("rssAnnouncementsUrl", url.concat("/rss/announcement"));
+                    urls.addProperty("rssSummariesUrl", url.concat("/rss/summary"));
+                }));
+            }));
         });
     }
 
-    protected JsonObject toExecutionSemesterJson(@Nonnull ExecutionSemester executionSemester, boolean includeYear) {
-        return JsonUtils.toJson(semester -> {
-            semester.addProperty("displayName", executionSemester.getQualifiedName());
-            semester.addProperty("semester", executionSemester.getSemester());
-            semester.addProperty("beginDate", executionSemester.getBeginLocalDate().toString());
-            semester.addProperty("endDate", executionSemester.getEndLocalDate().toString());
-            if (includeYear) {
+    protected @Nonnull JsonObject toExtendedExecutionCourseJson(@Nonnull ExecutionCourse course) {
+        JsonObject data = toExecutionCourseJson(course);
+        JsonObject courseInformation = data.getAsJsonObject("courseInformation");
+        courseInformation.add(
+                "bibliography",
+                course.getCompetenceCourses()
+                        .stream()
+                        .map(CompetenceCourse::getBibliographicReferences)
+                        .map(BibliographicReferences::getBibliographicReferencesSortedByOrder)
+                        .flatMap(Collection::stream)
+                        .map(this::toBibliographicReferenceJson)
+                        .collect(StreamUtils.toJsonArray())
+        );
+        courseInformation.add(
+                "degrees",
+                course.getDegreesSortedByDegreeName()
+                        .stream()
+                        .map(this::toDegreeJson)
+                        .collect(StreamUtils.toJsonArray())
+        );
+        // a non-public version of this could probably return the actual list of enrolled students?
+        courseInformation.addProperty("enrolledStudents", course.getTotalEnrolmentStudentNumber());
+        courseInformation.addProperty("evaluationMethods", course.getLocalizedEvaluationMethodText());
+        courseInformation.add(
+                "teachers",
+                course.getProfessorshipsSet()
+                        .stream()
+                        .map(Professorship::getTeacher)
+                        .map(this::toTeacherJson)
+                        .collect(StreamUtils.toJsonArray())
+        );
+        data.add("courseInformation", courseInformation);
+        return data;
+    }
+
+    protected @Nonnull JsonObject toExecutionSemesterJson(@Nonnull ExecutionSemester executionSemester) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("displayName", executionSemester.getQualifiedName());
+            data.addProperty("semester", executionSemester.getSemester());
+            data.addProperty("beginDate", executionSemester.getBeginLocalDate().toString());
+            data.addProperty("endDate", executionSemester.getEndLocalDate().toString());
+        });
+    }
+
+    protected @Nonnull JsonObject toExtendedExecutionSemesterJson(@Nonnull ExecutionSemester executionSemester) {
+        JsonObject data = toExecutionSemesterJson(executionSemester);
+        addIfAndFormatElement(
+                data,
+                "year",
+                executionSemester.getExecutionYear(),
+                this::toExecutionYearJson
+        );
+        return data;
+    }
+
+    protected @Nonnull JsonObject toExecutionYearJson(@Nonnull ExecutionYear executionYear) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("displayName", executionYear.getQualifiedName());
+            data.addProperty("beginYear", executionYear.getBeginCivilYear());
+            data.addProperty("endYear", executionYear.getEndCivilYear());
+            data.addProperty("beginDate", executionYear.getBeginLocalDate().toString());
+            data.addProperty("endDate", executionYear.getEndLocalDate().toString());
+        });
+    }
+
+    protected @Nonnull JsonObject toExtendedExecutionYearJson(@Nonnull ExecutionYear executionYear) {
+        JsonObject data = toExecutionYearJson(executionYear);
+        data.add(
+                "firstSemester",
+                toExecutionSemesterJson(executionYear.getFirstExecutionPeriod())
+        );
+        data.add(
+                "secondSemester",
+                toExecutionSemesterJson(executionYear.getLastExecutionPeriod())
+        );
+        return data;
+    }
+
+    protected @Nonnull JsonObject toGroupingJson(@Nonnull Grouping grouping) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("name", grouping.getName());
+            data.addProperty("description", grouping.getProjectDescription());
+            data.add("enrollmentPeriod", JsonUtils.toJson(period -> {
+                period.addProperty("start", grouping.getEnrolmentBeginDayDateDateTime().toString());
+                period.addProperty("end", grouping.getEnrolmentEndDayDateDateTime().toString());
                 addIfAndFormatElement(
-                        semester,
-                        "year",
-                        executionSemester.getExecutionYear(),
-                        executionYear -> toExecutionYearJson(executionYear, false)
+                        period,
+                        "policy",
+                        grouping.getEnrolmentPolicy(),
+                        this::toEnrolmentPolicyJson
                 );
-            }
+            }));
+            data.add("capacity", JsonUtils.toJson(capacity -> {
+                capacity.addProperty("minimum", grouping.getMinimumCapacity());
+                capacity.addProperty("maximum", grouping.getMaximumCapacity());
+                capacity.addProperty("ideal", grouping.getIdealCapacity());
+            }));
+            data.add(
+                    "courses",
+                    grouping.getExecutionCourses()
+                            .stream()
+                            .sorted(ExecutionCourse.EXECUTION_COURSE_NAME_COMPARATOR)
+                            .map(this::toExecutionCourseJson)
+                            .collect(StreamUtils.toJsonArray())
+            );
+            data.add(
+                    "groups",
+                    grouping.getStudentGroupsSet()
+                            .stream()
+                            .sorted(StudentGroup.COMPARATOR_BY_GROUP_NUMBER)
+                            .map(this::toStudentGroupJson)
+                            .collect(StreamUtils.toJsonArray())
+            );
         });
     }
 
-    protected JsonObject toExecutionYearJson(@Nonnull ExecutionYear executionYear, boolean includeSemesters) {
-        return JsonUtils.toJson(year -> {
-            year.addProperty("displayName", executionYear.getQualifiedName());
-            year.addProperty("beginYear", executionYear.getBeginCivilYear());
-            year.addProperty("endYear", executionYear.getEndCivilYear());
-            year.addProperty("beginDate", executionYear.getBeginLocalDate().toString());
-            year.addProperty("endDate", executionYear.getEndLocalDate().toString());
+    protected @Nullable JsonPrimitive toEnrolmentPolicyJson(@Nonnull EnrolmentGroupPolicyType enrolmentGroupPolicyType) {
+        switch (enrolmentGroupPolicyType.getType()) {
+            case 1:
+                return new JsonPrimitive("ATOMIC");
+            case 2:
+                return new JsonPrimitive("INDIVIDUAL");
+        }
+        return null;
+    }
 
-            if (includeSemesters) {
-                year.add(
-                        "firstSemester",
-                        toExecutionSemesterJson(executionYear.getFirstExecutionPeriod(), false)
-                );
-                year.add(
-                        "secondSemester",
-                        toExecutionSemesterJson(executionYear.getLastExecutionPeriod(), false)
-                );
-            }
+    protected @Nonnull JsonObject toLocaleJson(@Nonnull Locale locale) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("locale", locale.toLanguageTag());
+            data.addProperty("name", locale.getDisplayName());
         });
     }
 
-    protected JsonObject toLocaleJson(Locale locale) {
-        return JsonUtils.toJson(localeJson -> {
-            localeJson.addProperty("locale", locale.toLanguageTag());
-            localeJson.addProperty("name", locale.getDisplayName());
-        });
-    }
-
-    protected JsonObject toRegistrationJson(Registration registration) {
+    protected @Nonnull JsonObject toRegistrationJson(@Nonnull Registration registration) {
         return JsonUtils.toJson(data -> {
             data.add("degreeName", registration.getDegree().getNameI18N().json());
             data.addProperty("degreeAcronym", registration.getDegree().getSigla());
@@ -319,26 +514,49 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             data.addProperty("degreeId", registration.getDegree().getExternalId());
             final JsonArray academicTerms = registration.getEnrolmentsExecutionPeriods()
                     .stream()
-                    .map(executionSemester -> this.toExecutionSemesterJson(executionSemester, true))
+                    .sorted(ExecutionSemester.COMPARATOR_BY_SEMESTER_AND_YEAR)
+                    .map(this::toExtendedExecutionSemesterJson)
                     .collect(StreamUtils.toJsonArray());
             data.add("academicTerms", academicTerms);
         });
     }
 
-    protected JsonObject toTeacherJson(Teacher teacher) {
-        Person person = teacher.getPerson();
-
-        return JsonUtils.toJson(teacherJson -> {
-            teacherJson.addProperty("istId", teacher.getTeacherId());
-            teacherJson.addProperty("name", person.getName());
-            // FIXME: the old API returned a list of mails - is one enough (same for web addresses)?
-            teacherJson.addProperty("emailAddress", person.getDefaultEmailAddressValue());
-            // clicking on the teacher's name will redirect to the teacher's designated "homepage", hence returning the web address(es)
-            teacherJson.addProperty("webAddress", person.getDefaultWebAddressUrl());
+    protected @Nonnull JsonObject toStudentGroupJson(@Nonnull StudentGroup studentGroup) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("groupNumber", studentGroup.getGroupNumber());
+            addIfAndFormat(data, "shift", studentGroup.getShift(), Shift::getPresentationName);
+            data.add(
+                    "members",
+                    studentGroup.getAttendsSet()
+                            .stream()
+                            .sorted(Attends.COMPARATOR_BY_STUDENT_NUMBER)
+                            .map(this::toAttendsJson)
+                            .collect(StreamUtils.toJsonArray())
+            );
         });
     }
 
-    protected <T> void addIfAndFormat(JsonObject object, String key, T value, Function<T, String> format) {
+    protected @Nonnull JsonObject toTeacherJson(@Nonnull Teacher teacher) {
+        Person person = teacher.getPerson();
+
+        return JsonUtils.toJson(data -> {
+            data.addProperty("username", teacher.getTeacherId());
+            data.addProperty("name", person.getName());
+            // FIXME: the old API returned a list of mails - is one enough (same for web addresses)?
+            if (person.hasDefaultEmailAddress()) {
+                data.addProperty("emailAddress", person.getDefaultEmailAddressValue());
+            }
+            // clicking on the teacher's name will redirect to the teacher's designated "homepage", hence returning the web address(es)
+            if (person.hasDefaultWebAddress()) {
+                data.addProperty("webAddress", person.getDefaultWebAddressUrl());
+            }
+        });
+    }
+
+    protected <T> void addIfAndFormat(@Nonnull JsonObject object,
+                                      @Nonnull String key,
+                                      @Nullable T value,
+                                      @Nonnull Function<T, String> format) {
         if (value != null) {
             String formattedValue = format.apply(value);
             if (formattedValue != null) {

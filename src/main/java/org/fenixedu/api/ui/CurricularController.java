@@ -135,7 +135,7 @@ public class CurricularController extends BaseController {
             data.add("name", curriculumEntry.getPresentationName().json());
             data.addProperty("grade", curriculumEntry.getGradeValue());
             data.addProperty("ects", curriculumEntry.getEctsCreditsForCurriculum());
-            data.add("semester", toExecutionSemesterJson(curriculumEntry.getExecutionPeriod(), true));
+            data.add("semester", toExtendedExecutionSemesterJson(curriculumEntry.getExecutionPeriod()));
             if (curriculumEntry instanceof Enrolment) {
                 Enrolment enrolment = (Enrolment) curriculumEntry;
                 CurricularCourse course = enrolment.getCurricularCourse();

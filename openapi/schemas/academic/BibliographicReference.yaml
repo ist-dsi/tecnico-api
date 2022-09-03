@@ -1,0 +1,23 @@
+type: object
+properties:
+  authors:
+    type: string
+    example: "John Doe, Jane Doe"
+  title:
+    type: string
+    example: "Programação em Python: Introdução à programação com múltiplos paradigmas"
+  publisherReference:
+    type: string
+    example: "IST Press"
+  type:
+    type: string
+    example: "MAIN"
+    enum:
+      - MAIN
+      - SECONDARY
+  url:
+    type: string
+    example: "https://example.com/books"
+  year:
+    type: string
+    example: "2018"

@@ -30,7 +30,7 @@ public class FenixEduAPIController extends BaseController {
 
         return ok(data -> {
             JsonUtils.addIf(data, "institution", toUnitJson(institution));
-            JsonUtils.addIf(data, "activeSemester", toExecutionSemesterJson(currentSemester, true));
+            JsonUtils.addIf(data, "activeSemester", toExtendedExecutionSemesterJson(currentSemester));
             data.add(
                     "languages",
                     JsonUtils.toJsonArray(
@@ -59,7 +59,7 @@ public class FenixEduAPIController extends BaseController {
                         .stream()
                         .filter(executionYear -> executionYear.isAfterOrEquals(firstExecutionYear))
                         .sorted(ExecutionYear.REVERSE_COMPARATOR_BY_YEAR)
-                        .map(executionYear -> toExecutionYearJson(executionYear, true))
+                        .map(this::toExtendedExecutionYearJson)
         );
     }
 
@@ -67,7 +67,7 @@ public class FenixEduAPIController extends BaseController {
     @RequestMapping(value = "/academicterms/{beginYear}/{endYear}", method = RequestMethod.GET)
     public ResponseEntity<?> getAcademicTerm(@PathVariable String beginYear, @PathVariable String endYear) {
         final ExecutionYear executionYear = parseExecutionYearOrThrow(beginYear + "/" + endYear);
-        return ok(toExecutionYearJson(executionYear, true));
+        return ok(toExtendedExecutionYearJson(executionYear));
     }
 
 }

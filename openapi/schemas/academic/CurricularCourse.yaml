@@ -20,3 +20,8 @@ properties:
     type: number
     format: double
     multipleOf: 0.1
+  executions:
+    type: array
+    items:
+      $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
+    description: The executions of this curricular course in the given year.

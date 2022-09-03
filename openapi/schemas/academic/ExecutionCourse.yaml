@@ -1,20 +1,81 @@
-type: object
-required:
-  - id
-  - acronym
-  - name
-  - url
-  - academicTerm
-properties:
-  id:
-    $ref: "../DomainObjectId.yaml"
-  acronym:
-    type: string
-    example: "Fis3"
-  name:
-    $ref: "../LocalizedString.yaml"
-  url:
-    type: string
-    example: https://example.com
-  academicTerm:
-    $ref: "./ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
+BasicExecutionCourseModel:
+  type: object
+  required:
+    - id
+    - acronym
+    - name
+    - academicTerm
+    - courseInformation
+  properties:
+    id:
+      $ref: "../DomainObjectId.yaml"
+    acronym:
+      type: string
+      example: "Fis3"
+    name:
+      $ref: "../LocalizedString.yaml"
+    academicTerm:
+      $ref: "./ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
+    courseInformation:
+      $ref: "./ExecutionCourse.yaml#/BasicCourseInformation"
+ExtendedExecutionCourseModel:
+  allOf:
+    - $ref: "#/BasicExecutionCourseModel"
+    - type: object
+      properties:
+        # courseInformation should have now more information
+        courseInformation:
+          $ref: "./ExecutionCourse.yaml#/ExtendedCourseInformation"
+
+# course information models (for better integration with basic and extended execution course models)
+BasicCourseInformation:
+  type: object
+  required:
+    - urls
+  properties:
+    urls:
+      required:
+        - courseUrl
+        - rssAnnouncementsUrl
+        - rssSummariesUrl
+      properties:
+        courseUrl:
+          type: string
+          example: "https://fenix.tecnico.ulisboa.pt/disciplinas/PEstatisticad10/2021-2022/2-semestre"
+        rssAnnouncementsUrl:
+          type: string
+          example: "https://fenix.tecnico.ulisboa.pt/disciplinas/PEstatisticad10/2021-2022/2-semestre/rss/announcement"
+        rssSummariesUrl:
+          type: string
+          example: "https://fenix.tecnico.ulisboa.pt/disciplinas/PEstatisticad10/2021-2022/2-semestre/rss/summary"
+ExtendedCourseInformation:
+  allOf:
+    - $ref: "#/BasicCourseInformation"
+    - type: object
+      required:
+        - bibliography
+        - degrees
+        - enrolledStudents
+        - evaluationMethods
+        - teachers
+      properties:
+        bibliography:
+          type: array
+          items:
+            $ref: "./BibliographicReference.yaml"
+        degrees:
+          type: array
+          items:
+            $ref: "./Degree.yaml#/BasicDegreeModel"
+        enrolledStudents:
+          type: integer
+          format: int32
+          example: 100
+        evaluationMethods:
+          type: string
+          description: Might contain HTML tags
+          example: "These are this course's evaluation methods"
+        teachers:
+          type: array
+          items:
+            $ref: "./Teacher.yaml"

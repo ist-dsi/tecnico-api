@@ -1,0 +1,55 @@
+type: object
+required:
+  - name
+  - description
+  - enrollmentPeriod
+  - capacity
+  - courses
+  - groups
+properties:
+  name:
+    type: string
+    example: "Projeto 1"
+  description:
+    type: string
+    example: "Grupos para a realização do projeto 1 de FP"
+  enrollmentPeriod:
+    required:
+      - start
+      - end
+      - policy
+    properties:
+      start:
+        type: string
+        format: date-time
+      end:
+        type: string
+        format: date-time
+      policy:
+        type: string
+        enum:
+          - ATOMIC
+          - INDIVIDUAL
+  capacity:
+    required:
+      - minimum
+      - maximum
+      - ideal
+    properties:
+      minimum:
+        type: integer
+        example: 2
+      maximum:
+        type: integer
+        example: 3
+      ideal:
+        type: integer
+        example: 3
+  courses:
+    type: array
+    items:
+      $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
+  groups:
+    type: array
+    items:
+      $ref: "./StudentGroup.yaml"

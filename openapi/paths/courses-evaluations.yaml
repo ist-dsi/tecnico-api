@@ -1,0 +1,40 @@
+get:
+  summary: Fetch a single course's evaluations
+  description: >-
+    Fetch a specific course' evaluations, given its ID
+  tags:
+    - public
+  parameters:
+    - in: path
+      name: id
+      schema:
+        $ref: "../schemas/DomainObjectId.yaml"
+      description: >-
+        The course's unique ID.
+      required: true
+  responses:
+    "200":
+      description: >-
+        OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              oneOf:
+                - $ref: "../schemas/academic/Evaluation.yaml#/GenericEvaluationModel"
+                - $ref: "../schemas/academic/Evaluation.yaml#/AdHocEvaluationModel"
+                - $ref: "../schemas/academic/Evaluation.yaml#/ProjectModel"
+                - $ref: "../schemas/academic/Evaluation.yaml#/WrittenEvaluationModel"
+    "400":
+      description: >-
+        Invalid course ID supplied
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.executioncourse.not.found
+            message:
+              pt-PT: A unidade curricular com o ID 16467887136714 não foi encontrado
+              en-GB: The execution course with ID 16467887136714 was not found

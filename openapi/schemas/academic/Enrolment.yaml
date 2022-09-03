@@ -11,4 +11,4 @@ properties:
     type: number
     format: double
   course:
-    $ref: "./ExecutionCourse.yaml"
+    $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
