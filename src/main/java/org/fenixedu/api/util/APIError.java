@@ -6,6 +6,8 @@ import org.fenixedu.bennu.core.i18n.BundleUtil;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.util.CoreConfiguration;
 import org.fenixedu.commons.i18n.LocalizedString;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.PropertyKey;
 import org.springframework.http.HttpStatus;
 
 import java.util.ResourceBundle;
@@ -17,38 +19,48 @@ public class APIError extends Error {
     private LocalizedString description;
     private String bundle = FenixEduAPIConfiguration.BUNDLE;
 
-    public APIError(final HttpStatus status, final String message, final String... args) {
+    public APIError(final @NotNull HttpStatus status,
+                    final @NotNull
+                    @PropertyKey(resourceBundle = FenixEduAPIConfiguration.BUNDLE) String message,
+                    final @NotNull String... args) {
         super(message);
         this.status = status;
         this.args = args;
         this.cause = null;
     }
 
-    public APIError(final String bundle, final HttpStatus status, final String message, final String... args) {
+    public APIError(final @NotNull String bundle,
+                    final @NotNull HttpStatus status,
+                    final @NotNull String message,
+                    final @NotNull String... args) {
         this(status, message, args);
         this.bundle = bundle;
     }
 
-    public APIError(final Throwable cause, final HttpStatus status, final String message, final String... args) {
+    public APIError(final @NotNull Throwable cause,
+                    final @NotNull HttpStatus status,
+                    final @PropertyKey(resourceBundle = FenixEduAPIConfiguration.BUNDLE) String message,
+                    final @NotNull String... args) {
         super(message);
         this.status = status;
         this.args = args;
         this.cause = cause;
     }
 
-    public APIError(final HttpStatus status,
-                    final String message,
-                    final LocalizedString description,
-                    final String... args) {
+    public APIError(final @NotNull HttpStatus status,
+                    final @NotNull
+                    @PropertyKey(resourceBundle = FenixEduAPIConfiguration.BUNDLE) String message,
+                    final @NotNull LocalizedString description,
+                    final @NotNull String... args) {
         this(status, message, args);
         this.description = description;
     }
 
-    public HttpStatus getStatus() {
+    public @NotNull HttpStatus getStatus() {
         return status;
     }
 
-    public JsonObject toResponseBody() {
+    public @NotNull JsonObject toResponseBody() {
         return JsonUtils.toJson(data -> {
             data.addProperty("key", getMessage());
             if (description != null) {

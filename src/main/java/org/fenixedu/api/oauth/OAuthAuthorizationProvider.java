@@ -9,6 +9,9 @@ import org.fenixedu.bennu.oauth.domain.ExternalApplication;
 import org.fenixedu.bennu.oauth.domain.ExternalApplicationScope;
 import org.fenixedu.bennu.oauth.domain.ServiceApplication;
 import org.fenixedu.bennu.oauth.util.OAuthUtils;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.http.HttpStatus;
 
 import java.nio.charset.StandardCharsets;
@@ -25,7 +28,7 @@ public class OAuthAuthorizationProvider {
      * @param scopeKey    The key of the scope.
      * @throws APIError if the token is invalid, the app does not have the required scope, or the token has expired.
      */
-    public static void requireOAuthScope(String accessToken, String scopeKey) {
+    public static void requireOAuthScope(@Nullable String accessToken, @NotNull String scopeKey) {
         accessToken = parseAccessToken(accessToken);
 
         Optional<ExternalApplicationScope> scope = ExternalApplicationScope.forKey(scopeKey);
@@ -76,7 +79,7 @@ public class OAuthAuthorizationProvider {
         // TODO
     }
 
-    private static Optional<String> extractAccessToken(String accessToken) {
+    private static @NotNull Optional<String> extractAccessToken(@Nullable String accessToken) {
         if (Strings.isNullOrEmpty(accessToken)) {
             return Optional.empty();
         }
@@ -93,7 +96,7 @@ public class OAuthAuthorizationProvider {
         }
     }
 
-    private static Optional<ServiceApplication> extractServiceApplication(String accessToken) {
+    private static @NotNull Optional<ServiceApplication> extractServiceApplication(@Nullable String accessToken) {
         Optional<String> objectId = extractAccessToken(accessToken);
         if (!objectId.isPresent()) {
             return Optional.empty();
@@ -101,7 +104,7 @@ public class OAuthAuthorizationProvider {
         return OAuthUtils.getDomainObject(objectId.get(), ServiceApplication.class);
     }
 
-    private static Optional<ApplicationUserSession> extractUserSession(String accessToken) {
+    private static @NotNull Optional<ApplicationUserSession> extractUserSession(@Nullable String accessToken) {
         Optional<String> objectId = extractAccessToken(accessToken);
         if (!objectId.isPresent()) {
             return Optional.empty();
@@ -109,7 +112,8 @@ public class OAuthAuthorizationProvider {
         return OAuthUtils.getDomainObject(objectId.get(), ApplicationUserSession.class);
     }
 
-    private static String parseAccessToken(String accessToken) {
+    @Contract("null -> null")
+    private static @Nullable String parseAccessToken(@Nullable String accessToken) {
         if (accessToken != null && accessToken.startsWith(OAuthUtils.TOKEN_TYPE_HEADER_ACCESS_TOKEN)) {
             return accessToken.substring(OAuthUtils.TOKEN_TYPE_HEADER_ACCESS_TOKEN.length()).trim();
         }

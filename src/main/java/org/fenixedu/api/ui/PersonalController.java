@@ -16,6 +16,7 @@ import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.commons.stream.StreamUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -39,7 +40,7 @@ public class PersonalController extends BaseController {
         return ok(toPersonJson(person));
     }
 
-    protected JsonObject toPersonJson(final Person person) {
+    protected @NotNull JsonObject toPersonJson(final @NotNull Person person) {
         return JsonUtils.toJson(data -> {
             data.addProperty("username", person.getUsername());
 
@@ -74,7 +75,7 @@ public class PersonalController extends BaseController {
         });
     }
 
-    protected JsonObject toPersonPhotoDataUri(final Person person) {
+    protected @NotNull JsonObject toPersonPhotoDataUri(final @NotNull Person person) {
         String base64Png = PhotoUtils.toBase64Png(person, true);
         String mimeType = ContentType.PNG.getMimeType();
         return JsonUtils.toJson(photo -> {
@@ -83,7 +84,9 @@ public class PersonalController extends BaseController {
         });
     }
 
-    protected void addPersonContactJson(final JsonObject data, final Person person, boolean checkAccess) {
+    protected void addPersonContactJson(final @NotNull JsonObject data,
+                                        final @NotNull Person person,
+                                        boolean checkAccess) {
         final JsonArray personalEmailAddresses = collectPartyContactStream(
                 person.getEmailAddressStream().filter(PartyContact::isPersonalType),
                 checkAccess
@@ -113,7 +116,8 @@ public class PersonalController extends BaseController {
         data.addProperty("email", primaryEmail);
     }
 
-    private JsonArray collectPartyContactStream(Stream<? extends PartyContact> contactStream, boolean checkAccess) {
+    private @NotNull JsonArray collectPartyContactStream(@NotNull Stream<? extends PartyContact> contactStream,
+                                                         boolean checkAccess) {
         return contactStream.filter(PartyContact::isActiveAndValid)
                 .filter(contact -> !checkAccess || contact.isVisible())
                 .map(PartyContact::getPresentationValue)
@@ -121,7 +125,7 @@ public class PersonalController extends BaseController {
                 .collect(StreamUtils.toJsonArray());
     }
 
-    protected JsonObject toPersonRolesJson(final Person person) {
+    protected @NotNull JsonObject toPersonRolesJson(final @NotNull Person person) {
         final User user = person.getUser();
         final JsonObject roles = new JsonObject();
 

@@ -14,6 +14,7 @@ import org.fenixedu.api.util.APIScope;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.commons.stream.StreamUtils;
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.YearMonthDay;
 import org.springframework.http.HttpHeaders;
@@ -93,7 +94,7 @@ public class CurricularController extends BaseController {
         );
     }
 
-    protected JsonObject toRegistrationJsonWithCurriculumInformation(Registration registration) {
+    protected @NotNull JsonObject toRegistrationJsonWithCurriculumInformation(@NotNull Registration registration) {
         JsonObject data = toRegistrationJson(registration);
 
         final StudentCurricularPlan lastCurricularPlan = registration.getLastStudentCurricularPlan();
@@ -130,7 +131,7 @@ public class CurricularController extends BaseController {
         return data;
     }
 
-    private JsonObject toICurriculumEntryJson(ICurriculumEntry curriculumEntry) {
+    private @NotNull JsonObject toICurriculumEntryJson(@NotNull ICurriculumEntry curriculumEntry) {
         return JsonUtils.toJson(data -> {
             data.add("name", curriculumEntry.getPresentationName().json());
             data.addProperty("grade", curriculumEntry.getGradeValue());
@@ -167,7 +168,8 @@ public class CurricularController extends BaseController {
         });
     }
 
-    private JsonObject toEnrolmentJson(Enrolment enrolment, ExecutionSemester executionSemester) {
+    private @NotNull JsonObject toEnrolmentJson(@NotNull Enrolment enrolment,
+                                                @NotNull ExecutionSemester executionSemester) {
         return JsonUtils.toJson(data -> {
             data.addProperty("grade", enrolment.getGradeValue());
             data.addProperty("ects", enrolment.getEctsCredits());
@@ -175,7 +177,7 @@ public class CurricularController extends BaseController {
         });
     }
 
-    private JsonObject toProfessorshipJson(Professorship professorship) {
+    private @NotNull JsonObject toProfessorshipJson(@NotNull Professorship professorship) {
         return JsonUtils.toJson(data -> {
             data.addProperty("isResponsibleFor", professorship.isResponsibleFor());
             data.add("course", toExecutionCourseJson(professorship.getExecutionCourse()));

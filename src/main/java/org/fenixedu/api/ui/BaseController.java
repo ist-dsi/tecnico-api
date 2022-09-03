@@ -37,6 +37,8 @@ import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.stream.StreamUtils;
 import org.fenixedu.spaces.domain.Space;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +46,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import pt.ist.fenixframework.DomainObject;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Objects;
@@ -89,7 +90,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
      * @see OAuthAuthorizationProvider#requireOAuthScope(String, String)
      */
 
-    protected void requireOAuthScope(String accessToken, APIScope scope) {
+    protected void requireOAuthScope(@Nullable String accessToken, @NotNull APIScope scope) {
         OAuthAuthorizationProvider.requireOAuthScope(accessToken, scope.toString());
     }
 
@@ -100,7 +101,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
      * @return The parsed execution year
      * @throws APIError if the year does not exist or has invalid formatting
      */
-    protected ExecutionYear parseExecutionYearOrThrow(String year) {
+    protected @NotNull ExecutionYear parseExecutionYearOrThrow(@NotNull String year) {
         return Optional.ofNullable(ExecutionYear.readExecutionYearByName(year))
                 .orElseThrow(() -> new APIError(HttpStatus.BAD_REQUEST, "error.academicterm.year.incorrect", year));
     }
@@ -118,7 +119,9 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
      * @return A set of execution semesters corresponding to the given input
      * @throws APIError if either the year or the semester does not exist or has invalid formatting
      */
-    protected Set<ExecutionSemester> parseExecutionSemestersOrThrow(Optional<String> year, Optional<Integer> semester) {
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    protected @NotNull Set<ExecutionSemester> parseExecutionSemestersOrThrow(@Nonnull Optional<String> year,
+                                                                             @NotNull Optional<Integer> semester) {
         ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow)
                 .orElseGet(ExecutionYear::readCurrentExecutionYear);
         Set<ExecutionSemester> semesters = executionYear.getExecutionPeriodsSet()
@@ -142,7 +145,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return semesters;
     }
 
-    protected JsonObject toUnitJson(@Nonnull Unit unit) {
+    protected @NotNull JsonObject toUnitJson(@NotNull Unit unit) {
         return JsonUtils.toJson(institution -> {
             institution.add("name", unit.getNameI18n().json());
             institution.addProperty("acronym", unit.getAcronym());
@@ -158,7 +161,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected JsonObject toAttendsJson(@Nonnull Attends attends) {
+    protected @NotNull JsonObject toAttendsJson(@NotNull Attends attends) {
         final Registration registration = attends.getRegistration();
         final Person person = registration.getPerson();
         final Degree degree = registration.getDegree();
@@ -168,7 +171,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected JsonObject toBibliographicReferenceJson(@Nonnull BibliographicReference bibliographicReference) {
+    protected @NotNull JsonObject toBibliographicReferenceJson(@NotNull BibliographicReference bibliographicReference) {
         return JsonUtils.toJson(data -> {
             addIfAndFormat(data, "authors", bibliographicReference, BibliographicReference::getAuthors);
             addIfAndFormat(data, "title", bibliographicReference, BibliographicReference::getTitle);
@@ -179,7 +182,8 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected JsonObject toCurricularCourseJson(@Nonnull CurricularCourse course, ExecutionYear executionYear) {
+    protected @NotNull JsonObject toCurricularCourseJson(@NotNull CurricularCourse course,
+                                                         @NotNull ExecutionYear executionYear) {
         return JsonUtils.toJson(data -> {
             data.addProperty("id", course.getExternalId());
             data.add("name", course.getNameI18N().json());
@@ -195,7 +199,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected JsonObject toDegreeJson(@Nonnull Degree degree) {
+    protected @NotNull JsonObject toDegreeJson(@NotNull Degree degree) {
         return JsonUtils.toJson(data -> {
             data.addProperty("id", degree.getExternalId());
             data.add("name", degree.getNameI18N().json());
@@ -219,7 +223,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected JsonObject toExtendedDegreeJson(@Nonnull Degree degree) {
+    protected @NotNull JsonObject toExtendedDegreeJson(@NotNull Degree degree) {
         JsonObject data = toDegreeJson(degree);
         addIfAndFormatElement(
                 data,
@@ -296,7 +300,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return data;
     }
 
-    protected @Nonnull JsonObject toEvaluationJson(@Nonnull Evaluation evaluation) {
+    protected @NotNull JsonObject toEvaluationJson(@NotNull Evaluation evaluation) {
         return JsonUtils.toJson(eval -> {
             eval.addProperty("id", evaluation.getExternalId());
             eval.addProperty("name", evaluation.getPresentationName());
@@ -304,7 +308,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected @Nonnull JsonPrimitive toEvaluationTypeJson(@Nonnull EvaluationType evaluationType) {
+    protected @NotNull JsonPrimitive toEvaluationTypeJson(@NotNull EvaluationType evaluationType) {
         switch (evaluationType.getType()) {
             case 1:
                 return new JsonPrimitive("EXAM");
@@ -323,13 +327,13 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         }
     }
 
-    protected @Nonnull JsonObject toExtendedEvaluationJson(@Nonnull AdHocEvaluation evaluation) {
+    protected @NotNull JsonObject toExtendedEvaluationJson(@NotNull AdHocEvaluation evaluation) {
         JsonObject data = toEvaluationJson(evaluation);
         data.addProperty("description", evaluation.getDescription());
         return data;
     }
 
-    protected @Nonnull JsonObject toExtendedEvaluationJson(@Nonnull Project project) {
+    protected @NotNull JsonObject toExtendedEvaluationJson(@NotNull Project project) {
         JsonObject data = toEvaluationJson(project);
         data.add("evaluationPeriod", JsonUtils.toJson(period -> {
             period.addProperty("start", project.getProjectBeginDateTime().toString());
@@ -338,7 +342,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return data;
     }
 
-    protected @Nonnull JsonObject toExtendedEvaluationJson(@Nonnull WrittenEvaluation evaluation) {
+    protected @NotNull JsonObject toExtendedEvaluationJson(@NotNull WrittenEvaluation evaluation) {
         JsonObject data = toEvaluationJson(evaluation);
         if (evaluation.getEnrolmentPeriodStart() != null && evaluation.getEnrolmentPeriodEnd() != null) {
             data.add("enrollmentPeriod", JsonUtils.toJson(period -> {
@@ -356,7 +360,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return data;
     }
 
-    protected @Nonnull JsonObject toExecutionCourseJson(@Nonnull ExecutionCourse course) {
+    protected @NotNull JsonObject toExecutionCourseJson(@NotNull ExecutionCourse course) {
         return JsonUtils.toJson(data -> {
             data.addProperty("id", course.getExternalId());
             data.addProperty("acronym", course.getSigla());
@@ -373,7 +377,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected @Nonnull JsonObject toExtendedExecutionCourseJson(@Nonnull ExecutionCourse course) {
+    protected @NotNull JsonObject toExtendedExecutionCourseJson(@NotNull ExecutionCourse course) {
         JsonObject data = toExecutionCourseJson(course);
         JsonObject courseInformation = data.getAsJsonObject("courseInformation");
         courseInformation.add(
@@ -408,7 +412,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return data;
     }
 
-    protected @Nonnull JsonObject toExecutionSemesterJson(@Nonnull ExecutionSemester executionSemester) {
+    protected @NotNull JsonObject toExecutionSemesterJson(@NotNull ExecutionSemester executionSemester) {
         return JsonUtils.toJson(data -> {
             data.addProperty("displayName", executionSemester.getQualifiedName());
             data.addProperty("semester", executionSemester.getSemester());
@@ -417,7 +421,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected @Nonnull JsonObject toExtendedExecutionSemesterJson(@Nonnull ExecutionSemester executionSemester) {
+    protected @NotNull JsonObject toExtendedExecutionSemesterJson(@NotNull ExecutionSemester executionSemester) {
         JsonObject data = toExecutionSemesterJson(executionSemester);
         addIfAndFormatElement(
                 data,
@@ -428,7 +432,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return data;
     }
 
-    protected @Nonnull JsonObject toExecutionYearJson(@Nonnull ExecutionYear executionYear) {
+    protected @NotNull JsonObject toExecutionYearJson(@NotNull ExecutionYear executionYear) {
         return JsonUtils.toJson(data -> {
             data.addProperty("displayName", executionYear.getQualifiedName());
             data.addProperty("beginYear", executionYear.getBeginCivilYear());
@@ -438,7 +442,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected @Nonnull JsonObject toExtendedExecutionYearJson(@Nonnull ExecutionYear executionYear) {
+    protected @NotNull JsonObject toExtendedExecutionYearJson(@NotNull ExecutionYear executionYear) {
         JsonObject data = toExecutionYearJson(executionYear);
         data.add(
                 "firstSemester",
@@ -451,7 +455,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return data;
     }
 
-    protected @Nonnull JsonObject toGroupingJson(@Nonnull Grouping grouping) {
+    protected @NotNull JsonObject toGroupingJson(@NotNull Grouping grouping) {
         return JsonUtils.toJson(data -> {
             data.addProperty("name", grouping.getName());
             data.addProperty("description", grouping.getProjectDescription());
@@ -489,7 +493,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected @Nullable JsonPrimitive toEnrolmentPolicyJson(@Nonnull EnrolmentGroupPolicyType enrolmentGroupPolicyType) {
+    protected @Nullable JsonPrimitive toEnrolmentPolicyJson(@NotNull EnrolmentGroupPolicyType enrolmentGroupPolicyType) {
         switch (enrolmentGroupPolicyType.getType()) {
             case 1:
                 return new JsonPrimitive("ATOMIC");
@@ -499,14 +503,14 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return null;
     }
 
-    protected @Nonnull JsonObject toLocaleJson(@Nonnull Locale locale) {
+    protected @NotNull JsonObject toLocaleJson(@NotNull Locale locale) {
         return JsonUtils.toJson(data -> {
             data.addProperty("locale", locale.toLanguageTag());
             data.addProperty("name", locale.getDisplayName());
         });
     }
 
-    protected @Nonnull JsonObject toRegistrationJson(@Nonnull Registration registration) {
+    protected @NotNull JsonObject toRegistrationJson(@NotNull Registration registration) {
         return JsonUtils.toJson(data -> {
             data.add("degreeName", registration.getDegree().getNameI18N().json());
             data.addProperty("degreeAcronym", registration.getDegree().getSigla());
@@ -521,7 +525,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected @Nonnull JsonObject toStudentGroupJson(@Nonnull StudentGroup studentGroup) {
+    protected @NotNull JsonObject toStudentGroupJson(@NotNull StudentGroup studentGroup) {
         return JsonUtils.toJson(data -> {
             data.addProperty("groupNumber", studentGroup.getGroupNumber());
             addIfAndFormat(data, "shift", studentGroup.getShift(), Shift::getPresentationName);
@@ -536,7 +540,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected @Nonnull JsonObject toTeacherJson(@Nonnull Teacher teacher) {
+    protected @NotNull JsonObject toTeacherJson(@NotNull Teacher teacher) {
         Person person = teacher.getPerson();
 
         return JsonUtils.toJson(data -> {
@@ -553,10 +557,10 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
-    protected <T> void addIfAndFormat(@Nonnull JsonObject object,
-                                      @Nonnull String key,
+    protected <T> void addIfAndFormat(@NotNull JsonObject object,
+                                      @NotNull String key,
                                       @Nullable T value,
-                                      @Nonnull Function<T, String> format) {
+                                      @NotNull Function<@NotNull T, @Nullable String> format) {
         if (value != null) {
             String formattedValue = format.apply(value);
             if (formattedValue != null) {
@@ -565,7 +569,10 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         }
     }
 
-    protected <T> void addIfAndFormatElement(JsonObject object, String key, T value, Function<T, JsonElement> format) {
+    protected <T> void addIfAndFormatElement(@NotNull JsonObject object,
+                                             @NotNull String key,
+                                             @Nullable T value,
+                                             Function<@NotNull T, @Nullable JsonElement> format) {
         if (value != null) {
             JsonElement formattedValue = format.apply(value);
             if (formattedValue != null) {
