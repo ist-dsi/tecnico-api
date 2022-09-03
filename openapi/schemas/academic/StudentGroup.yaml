@@ -1,0 +1,15 @@
+type: object
+required:
+  - groupNumber
+  - members
+properties:
+  groupNumber:
+    type: integer
+    example: 4
+  shift:
+    type: string
+    example: "L04"
+  members:
+    type: array
+    items:
+      $ref: "./Attends.yaml"

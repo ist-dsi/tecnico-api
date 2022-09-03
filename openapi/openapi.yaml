@@ -11,6 +11,17 @@ paths:
     $ref: "./paths/academicterms.yaml"
   /academicterms/{beginYear}/{endYear}:
     $ref: "./paths/academicterms-one.yaml"
+  /courses/{id}:
+    $ref: "./paths/courses-one.yaml"
+  /courses/{id}/evaluations:
+    $ref: "./paths/courses-evaluations.yaml"
+  /courses/{id}/groups:
+    $ref: "./paths/courses-groups.yaml"
+  # TODO: add schedule
+  # /courses/{id}/schedule:
+    # $ref: "./paths/courses-schedule.yaml"
+  /courses/{id}/students:
+    $ref: "./paths/courses-students.yaml"
   /degrees:
     $ref: "./paths/degrees.yaml"
   /degrees/all:

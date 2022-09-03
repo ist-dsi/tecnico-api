@@ -6,7 +6,10 @@ LocalizedString:
   $ref: "./LocalizedString.yaml"
 
 # FenixEdu Academic
-
+Attends:
+  $ref: "./academic/Attends.yaml"
+BibliographicReference:
+  $ref: "./academic/BibliographicReference.yaml"
 CurricularCourse:
   $ref: "./academic/CurricularCourse.yaml"
 CurriculumCourse:
@@ -23,8 +26,18 @@ ExtendedDegreeModel:
   $ref: "./academic/Degree.yaml#/ExtendedDegreeModel"
 Enrolment:
   $ref: "./academic/Enrolment.yaml"
-ExecutionCourse:
-  $ref: "./academic/ExecutionCourse.yaml"
+GenericEvaluationModel:
+  $ref: "./academic/Evaluation.yaml#/GenericEvaluationModel"
+AdHocEvaluationModel:
+  $ref: "./academic/Evaluation.yaml#/AdHocEvaluationModel"
+ProjectModel:
+  $ref: "./academic/Evaluation.yaml#/ProjectModel"
+WrittenEvaluationModel:
+  $ref: "./academic/Evaluation.yaml#/WrittenEvaluationModel"
+BasicExecutionCourseModel:
+  $ref: "./academic/ExecutionCourse.yaml#/BasicExecutionCourseModel"
+ExtendedExecutionCourseModel:
+  $ref: "./academic/ExecutionCourse.yaml#/ExtendedExecutionCourseModel"
 BasicExecutionYearModel:
   $ref: "./academic/ExecutionYear.yaml#/BasicExecutionYearModel"
 ExtendedExecutionYearModel:
@@ -33,6 +46,8 @@ BasicExecutionSemesterModel:
   $ref: "./academic/ExecutionSemester.yaml#/BasicExecutionSemesterModel"
 ExtendedExecutionSemesterModel:
   $ref: "./academic/ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
+Grouping:
+  $ref: "./academic/Grouping.yaml"
 Person:
   $ref: "./academic/Person.yaml"
 Professorship:
@@ -41,6 +56,8 @@ Registration:
   $ref: "./academic/Registration.yaml"
 StudentCurricularPlan:
   $ref: "./academic/StudentCurricularPlan.yaml"
+StudentGroup:
+  $ref: "./academic/StudentGroup.yaml"
 Teacher:
   $ref: "./academic/Teacher.yaml"
 Unit:

@@ -1,11 +1,11 @@
 type: object
 required:
-  - istId
+  - username
   - name
   - emailAddress
   - webAddress
 properties:
-  istId:
+  username:
     type: string
     example: "ist135791"
   name:

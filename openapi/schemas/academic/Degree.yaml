@@ -10,10 +10,11 @@ BasicDegreeModel:
     id:
       $ref: "../DomainObjectId.yaml"
     name:
-      $ref: "../LocalizedString.yaml"
-      example:
-        pt-PT: "Engenharia Informática e de Computadores - Alameda"
-        en-GB: "Computer Science and Engineering - Alameda"
+      allOf:
+        - $ref: "../LocalizedString.yaml"
+        - example:
+            pt-PT: "Engenharia Informática e de Computadores - Alameda"
+            en-GB: "Computer Science and Engineering - Alameda"
     acronym:
       type: string
       example: "LEIC-A"
@@ -90,7 +91,7 @@ ExtendedDegreeModel:
             allOf:
               - $ref: "./Teacher.yaml"
             example:
-              istId: "ist135791"
+              username: "ist135791"
               name: "André Celes Mateus"
               emailAddress: "example@tecnico.ulisboa.pt"
               webAddress: "https://www.tecnico.ulisboa.pt"

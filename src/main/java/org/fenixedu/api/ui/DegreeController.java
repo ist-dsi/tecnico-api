@@ -22,7 +22,7 @@ public class DegreeController extends BaseController {
                 ExecutionDegree.filterByAcademicInterval(academicInterval)
                         .stream()
                         .map(ExecutionDegree::getDegree)
-                        .map(degree -> toDegreeJson(degree, false))
+                        .map(this::toDegreeJson)
         );
     }
 
@@ -31,13 +31,13 @@ public class DegreeController extends BaseController {
         return respond(
                 Degree.readNotEmptyDegrees()
                         .stream()
-                        .map(degree -> toDegreeJson(degree, false))
+                        .map(this::toDegreeJson)
         );
     }
 
     @RequestMapping(value = "/degrees/{degree}", method = RequestMethod.GET)
     public ResponseEntity<?> getDegree(@PathVariable Degree degree) {
-        return ok(toDegreeJson(degree, true));
+        return ok(toExtendedDegreeJson(degree));
     }
 
     @RequestMapping(value = "/degrees/{degree}/courses", method = RequestMethod.GET)
@@ -47,8 +47,7 @@ public class DegreeController extends BaseController {
         final ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow)
                 .orElseGet(ExecutionYear::readCurrentExecutionYear);
         return respond(
-                degree
-                        .getAllCurricularCourses(executionYear)
+                degree.getAllCurricularCourses(executionYear)
                         .stream()
                         .map(course -> toCurricularCourseJson(course, executionYear))
         );
