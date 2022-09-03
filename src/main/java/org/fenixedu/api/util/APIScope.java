@@ -1,5 +1,7 @@
 package org.fenixedu.api.util;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum APIScope {
 
     PERSONAL_READ("read:personal"),
@@ -8,14 +10,14 @@ public enum APIScope {
     EVALUATIONS_READ("read:evaluations"),
     EVALUATIONS_WRITE("write:evaluations");
 
-    private final String key;
+    private final @NotNull String key;
 
-    APIScope(String key) {
+    APIScope(@NotNull String key) {
         this.key = key;
     }
 
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return key;
     }
 }

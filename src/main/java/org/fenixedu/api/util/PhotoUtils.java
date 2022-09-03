@@ -6,13 +6,14 @@ import org.fenixedu.academic.domain.photograph.PictureMode;
 import org.fenixedu.academic.ui.spring.controller.PhotographController;
 import org.fenixedu.bennu.core.domain.Avatar;
 import org.fenixedu.bennu.core.domain.User;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class PhotoUtils {
 
-    public static String toBase64Png(final Person person, final boolean checkAccess) {
+    public static @NotNull String toBase64Png(final @NotNull Person person, final boolean checkAccess) {
         final User user = person.getUser();
         final Avatar.PhotoProvider photoProvider = user == null ? null : Avatar.photoProvider.apply(user);
         final byte[] content = photoProvider == null || (checkAccess && !person.isPhotoAvailableToCurrentUser())
@@ -21,7 +22,7 @@ public class PhotoUtils {
         return BaseEncoding.base64().encode(content);
     }
 
-    private static byte[] mysteryMan() {
+    private static byte @NotNull [] mysteryMan() {
         try (final InputStream mm = PhotographController.class.getClassLoader()
                 .getResourceAsStream("META-INF/resources/img/mysteryman.png")) {
             return Avatar.process(mm, "image/png", 100);
