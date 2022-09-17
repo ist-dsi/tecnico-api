@@ -1,4 +1,5 @@
 get:
+  operationId: getTeacherProfessorships
   summary: Fetch courses of logged in teacher
   description: |
     Fetch courses of the logged in teacher.

@@ -6,15 +6,15 @@
     "serve": "serve .",
     "start": "npm run serve",
     "build": "npm run bundle",
-    "validate": "swagger-cli validate ./openapi.yaml",
-    "bundle": "swagger-cli bundle ./openapi.yaml -o ./openapi.bundled.yaml --type yaml",
+    "validate": "redocly lint",
+    "bundle": "redocly bundle -o ./openapi.bundled.yaml --ext yaml fenixedu-api@v2",
     "copy": "cp ./openapi.bundled.yaml ../src/main/webapp/fenixedu-api/docs/openapi.yaml; cp ./index.html ../src/main/webapp/fenixedu-api/docs/",
     "clean:packages": "rm -rf node_modules",
     "clean:dist": "mkdir -p ../src/main/webapp/fenixedu-api/docs; rm -rf ../src/main/webapp/fenixedu-api/docs/*; rm openapi.bundled.yaml",
     "package:production": "npm run clean:dist; npm run bundle; npm run copy"
   },
   "devDependencies": {
-    "serve": "^14.0.1",
-    "swagger-cli": "^4.0.4"
+    "@redocly/cli": "^1.0.0-beta.109",
+    "serve": "^14.0.1"
   }
 }

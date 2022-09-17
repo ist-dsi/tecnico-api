@@ -1,4 +1,5 @@
 get:
+  operationId: getStudentCurriculum
   summary: Fetch curriculum information of student
   description: |
     Fetch enroled degrees and approved courses of the logged in student, including the student's grade and course's ECTS count.
@@ -19,3 +20,7 @@ get:
             type: array
             items:
               $ref: "../schemas/academic/StudentCurricularPlan.yaml"
+    "401":
+      $ref: "../responses/OAuthUnauthorizedResponse.yaml"
+    "403":
+      $ref: "../responses/OAuthForbiddenResponse.yaml"

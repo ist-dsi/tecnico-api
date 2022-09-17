@@ -1,0 +1,23 @@
+description: |
+  Either the authorization token is not set, has invalid format or it has expired.
+
+  Authorization tokens must be sent in the `Authorization` header with format `Bearer <token>`.
+content:
+  application/json:
+    schema:
+      $ref: "../schemas/Error.yaml"
+    examples:
+      token-not-set:
+        summary: OAuth Authorization token is not set
+        value:
+          key: error.oauth.accessToken.invalid
+          message:
+            pt-PT: O access token é inválido ou não existe
+            en-GB: The access token is not set or is invalid
+      token-expired:
+        summary: OAuth Authorization token expired
+        value:
+          key: error.oauth.accessToken.expired
+          message:
+            pt-PT: O access token expirou. Utilize o refresh token endpoint para gerar um novo token
+            en-GB: The access token has expired. Use the refresh token endpoint to generate a new one

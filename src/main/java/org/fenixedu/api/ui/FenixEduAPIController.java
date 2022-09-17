@@ -48,7 +48,7 @@ public class FenixEduAPIController extends BaseController {
 
     // gets all terms
     @RequestMapping(value = "/academicterms", method = RequestMethod.GET)
-    public ResponseEntity<?> academicTerms(@RequestParam(required = false) Optional<String> from) {
+    public ResponseEntity<?> getAcademicTerms(@RequestParam(required = false) Optional<String> from) {
         final Bennu bennu = Bennu.getInstance();
         final ExecutionYear firstExecutionYear = from
                 .map(this::parseExecutionYearOrThrow)

@@ -1,4 +1,5 @@
 get:
+  operationId: getDegreesOfYear
   summary: Fetch degrees in given year
   description: >-
     Fetch the degrees available in a given year
@@ -14,6 +15,7 @@ get:
         If not provided, the current execution year will be used.
       example: "2021/2022"
       required: false
+  security: []
   responses:
     "200":
       description: >-

@@ -14,7 +14,7 @@ import java.util.Optional;
 public class DegreeController extends BaseController {
 
     @RequestMapping(value = "/degrees", method = RequestMethod.GET)
-    public ResponseEntity<?> degrees(@RequestParam(required = false) Optional<String> year) {
+    public ResponseEntity<?> getDegreesOfYear(@RequestParam(required = false) Optional<String> year) {
         final ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow)
                 .orElseGet(ExecutionYear::readCurrentExecutionYear);
         final AcademicInterval academicInterval = executionYear.getAcademicInterval();

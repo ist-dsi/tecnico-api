@@ -1,4 +1,5 @@
 get:
+  operationId: getAcademicTerm
   summary: Fetch a single academic term
   description: >-
     Fetch a single academic term
@@ -21,6 +22,7 @@ get:
         The last year of the execution year
       example: 2022
       required: true
+  security: []
   responses:
     "200":
       description: >-

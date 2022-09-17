@@ -1,0 +1,8 @@
+# This file instructs Redocly's linter to ignore the rules contained for specific parts of your API.
+# See https://redoc.ly/docs/cli/ for more information.
+paths/about.yaml:
+  operation-4xx-response:
+    - "#/get/responses"
+paths/degrees-all.yaml:
+  operation-4xx-response:
+    - "#/get/responses"

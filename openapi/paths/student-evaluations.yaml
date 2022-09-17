@@ -1,4 +1,5 @@
 get:
+  operationId: getStudentEvaluations
   summary: Fetch evaluations of enroled courses
   description: |
     Fetch evaluations of all the courses the logged in student is enroled in.

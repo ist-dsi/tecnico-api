@@ -1,0 +1,7 @@
+# Configuration for redocly cli
+# https://redocly.com/docs/cli/configuration/
+extends:
+  - recommended
+apis:
+  fenixedu-api@v2:
+    root: "./openapi.yaml"

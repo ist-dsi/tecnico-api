@@ -1,9 +1,11 @@
 get:
+  operationId: about
   summary: Fetch information about the institution
   description: >-
     Fetch information about the institution
   tags:
     - public
+  security: []
   responses:
     "200":
       description: OK

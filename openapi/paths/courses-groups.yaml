@@ -1,4 +1,5 @@
 get:
+  operationId: getCourseGroups
   summary: Fetch a single course's groupings
   description: >-
     Fetch a specific course' groupings, given its ID
@@ -12,6 +13,7 @@ get:
       description: >-
         The course's unique ID.
       required: true
+  security: []
   responses:
     "200":
       description: >-

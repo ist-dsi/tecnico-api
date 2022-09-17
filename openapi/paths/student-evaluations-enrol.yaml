@@ -1,4 +1,5 @@
 put:
+  operationId: enrolStudentInEvaluation
   summary: Enrol evaluations of courses
   description: |
     Enrol in an evaluation of a course.
@@ -10,6 +11,14 @@ put:
     If the user is already enroled, a conflict response will be sent.
   tags:
     - curricular
+  parameters:
+    - in: path
+      name: evaluation
+      schema:
+        $ref: "../schemas/DomainObjectId.yaml"
+      description: >-
+        The evaluation's unique ID.
+      required: true
   security:
     - oauthApplication:
         - write:evaluations
@@ -29,11 +38,19 @@ put:
             message:
               pt-PT: A avaliação com o ID 123456789 não foi encontrada ou não é do tipo "teste" ou "exame"
               en-GB: The evaluation with ID 123456789 was not found or is not of type "test" or "exam"
+    "401":
+      $ref: "../responses/OAuthUnauthorizedResponse.yaml"
     "403":
       description: |-
         One of:
         - The user is not a student or it is not enroled in the evaluation's course.
         - The evaluation does not have an enrolment period or it is closed.
+
+        ---
+
+        OAuth errors may still apply:  
+        Either the OAuth application associated with the authorization token does not have
+        the required scope(s) for this endpoint, or it has been banned.
       content:
         application/json:
           schema:
@@ -53,6 +70,10 @@ put:
                 message:
                   pt-PT: O período de inscrição para esta avaliação está fechado
                   en-GB: The enrolment period for this evaluation is closed
+            app-banned:
+              $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/app-banned"
+            insufficient-scopes:
+              $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/insufficient-scopes"
     "409":
       description: >-
         The user is already enroled in this evaluation
@@ -79,6 +100,7 @@ put:
               en-GB: An unknown error occurred while enroling or unenroling from evaluation
 
 delete:
+  operationId: unEnrolStudentFromEvaluation
   summary: Unenrol evaluations of courses
   description: |
     Unenrol from an evaluation of a course.
@@ -90,6 +112,14 @@ delete:
     If the user is not enroled in the evaluation, a conflict response will be sent.
   tags:
     - curricular
+  parameters:
+    - in: path
+      name: evaluation
+      schema:
+        $ref: "../schemas/DomainObjectId.yaml"
+      description: >-
+        The evaluation's unique ID.
+      required: true
   security:
     - oauthApplication:
         - write:evaluations
@@ -109,11 +139,19 @@ delete:
             message:
               pt-PT: A avaliação com o ID 123456789 não foi encontrada ou não é do tipo "teste" ou "exame"
               en-GB: The evaluation with ID 123456789 was not found or is not of type "test" or "exam"
+    "401":
+      $ref: "../responses/OAuthUnauthorizedResponse.yaml"
     "403":
       description: |-
         One of:
         - The user is not a student or it is not enroled in the evaluation's course.
         - The evaluation does not have an enrolment period or it is closed.
+
+        ---
+
+        OAuth errors may still apply:  
+        Either the OAuth application associated with the authorization token does not have
+        the required scope(s) for this endpoint, or it has been banned.
       content:
         application/json:
           schema:
@@ -133,6 +171,10 @@ delete:
                 message:
                   pt-PT: O período de inscrição para esta avaliação está fechado
                   en-GB: The enrolment period for this evaluation is closed
+            app-banned:
+              $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/app-banned"
+            insufficient-scopes:
+              $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/insufficient-scopes"
     "409":
       description: >-
         The user is not enroled in this evaluation

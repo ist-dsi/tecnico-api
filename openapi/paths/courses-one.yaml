@@ -1,4 +1,5 @@
 get:
+  operationId: getCourse
   summary: Fetch a single course
   description: >-
     Fetch information about a specific course, given its ID
@@ -12,6 +13,7 @@ get:
       description: >-
         The course's unique ID.
       required: true
+  security: []
   responses:
     "200":
       description: >-

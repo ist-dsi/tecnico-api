@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 public class PersonalController extends BaseController {
 
     @RequestMapping(value = "/person", method = RequestMethod.GET)
-    public ResponseEntity<?> person(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken) {
+    public ResponseEntity<?> getPerson(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken) {
         requireOAuthScope(accessToken, APIScope.PERSONAL_READ);
 
         final Person person = Authenticate.getUser().getPerson();
