@@ -1,16 +1,15 @@
 package org.fenixedu.api.ui;
 
-import org.fenixedu.academic.domain.AdHocEvaluation;
+import com.google.gson.JsonObject;
 import org.fenixedu.academic.domain.Attends;
 import org.fenixedu.academic.domain.ExecutionCourse;
-import org.fenixedu.academic.domain.Project;
-import org.fenixedu.academic.domain.WrittenEvaluation;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.commons.stream.StreamUtils;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import com.google.gson.JsonObject;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/fenixedu-api/v2")

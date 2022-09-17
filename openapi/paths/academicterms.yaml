@@ -1,4 +1,5 @@
 get:
+  operationId: getAcademicTerms
   summary: Fetch academic terms
   description: >-
     Fetch all (or starting in a given year) the academic terms available to be used in other endpoints.
@@ -14,6 +15,7 @@ get:
         Only fetch academic terms after this year (inclusive)
       example: 2021/2022
       required: false
+  security: []
   responses:
     "200":
       description: >-

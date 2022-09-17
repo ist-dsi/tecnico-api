@@ -1,9 +1,11 @@
 get:
+  operationId: getAllDegrees
   summary: Fetch all degrees
   description: >-
     Fetch all degrees, past or current.
   tags:
     - public
+  security: []
   responses:
     "200":
       description: >-

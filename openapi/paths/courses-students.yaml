@@ -1,4 +1,5 @@
 get:
+  operationId: getCourseStudents
   summary: Fetch a single course's attending students
   description: >-
     Fetch a single course's attending students', given its ID
@@ -12,6 +13,7 @@ get:
       description: >-
         The course's unique ID.
       required: true
+  security: []
   responses:
     "200":
       description: >-

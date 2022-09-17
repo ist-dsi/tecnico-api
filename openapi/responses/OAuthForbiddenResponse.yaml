@@ -1,0 +1,22 @@
+description: |
+  Either the OAuth application associated with the authorization token does not have
+  the required scope(s) for this endpoint, or it has been banned.
+content:
+  application/json:
+    schema:
+      $ref: "../schemas/Error.yaml"
+    examples:
+      app-banned:
+        summary: OAuth application banned
+        value:
+          key: error.oauth.app.banned
+          message:
+            pt-PT: A aplicação associada a este access token encontra-se banida
+            en-GB: The application associated to this access token has been banned
+      insufficient-scopes:
+        summary: OAuth Insufficient scopes
+        value:
+          key: error.oauth.scopes.insufficient
+          message:
+            pt-PT: A aplicação não possui as scopes necessárias (example-scope) para este endpoint
+            en-GB: The application does not have the required scopes (example-scope) for this endpoint

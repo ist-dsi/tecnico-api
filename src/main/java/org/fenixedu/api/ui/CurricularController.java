@@ -52,9 +52,9 @@ import java.util.Optional;
 public class CurricularController extends BaseController {
 
     @RequestMapping(value = "/student/enrolments", method = RequestMethod.GET)
-    public ResponseEntity<?> studentEnrolments(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
-                                               @RequestParam(required = false) Optional<String> year,
-                                               @RequestParam(required = false) Optional<Integer> semester) {
+    public ResponseEntity<?> getStudentEnrolments(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
+                                                  @RequestParam(required = false) Optional<String> year,
+                                                  @RequestParam(required = false) Optional<Integer> semester) {
         requireOAuthScope(accessToken, APIScope.STUDENT_READ);
 
         final Collection<ExecutionSemester> semesters = parseExecutionSemestersOrThrow(year, semester);
@@ -78,7 +78,7 @@ public class CurricularController extends BaseController {
     }
 
     @RequestMapping(value = "/student/curriculum", method = RequestMethod.GET)
-    public ResponseEntity<?> studentCurriculum(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken) {
+    public ResponseEntity<?> getStudentCurriculum(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken) {
         requireOAuthScope(accessToken, APIScope.STUDENT_READ);
 
         final Person person = Authenticate.getUser().getPerson();
@@ -96,9 +96,9 @@ public class CurricularController extends BaseController {
     }
 
     @RequestMapping(value = "/teacher/professorships", method = RequestMethod.GET)
-    public ResponseEntity<?> teacherProfessorships(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
-                                                   @RequestParam(required = false) Optional<String> year,
-                                                   @RequestParam(required = false) Optional<Integer> semester) {
+    public ResponseEntity<?> getTeacherProfessorships(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
+                                                      @RequestParam(required = false) Optional<String> year,
+                                                      @RequestParam(required = false) Optional<Integer> semester) {
         requireOAuthScope(accessToken, APIScope.TEACHER_READ);
 
         final Collection<ExecutionSemester> semesters = parseExecutionSemestersOrThrow(year, semester);
@@ -118,9 +118,9 @@ public class CurricularController extends BaseController {
     }
 
     @RequestMapping(value = "/student/evaluations", method = RequestMethod.GET)
-    public ResponseEntity<?> studentEvaluations(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
-                                                @RequestParam(required = false) Optional<String> year,
-                                                @RequestParam(required = false) Optional<Integer> semester) {
+    public ResponseEntity<?> getStudentEvaluations(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
+                                                   @RequestParam(required = false) Optional<String> year,
+                                                   @RequestParam(required = false) Optional<Integer> semester) {
         requireOAuthScope(accessToken, APIScope.EVALUATIONS_READ);
 
         final Person person = Authenticate.getUser().getPerson();
@@ -157,7 +157,7 @@ public class CurricularController extends BaseController {
 
     @SkipCSRF
     @RequestMapping(value = "/student/evaluations/{evaluation}", method = RequestMethod.PUT)
-    public ResponseEntity<?> studentEnrolInEvaluation(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
+    public ResponseEntity<?> enrolStudentInEvaluation(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
                                                       @PathVariable WrittenEvaluation evaluation) {
         requireOAuthScope(accessToken, APIScope.EVALUATIONS_WRITE);
 
@@ -170,8 +170,8 @@ public class CurricularController extends BaseController {
 
     @SkipCSRF
     @RequestMapping(value = "/student/evaluations/{evaluation}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> studentUnEnrolInEvaluation(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
-                                                        @PathVariable WrittenEvaluation evaluation) {
+    public ResponseEntity<?> unEnrolStudentFromEvaluation(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
+                                                          @PathVariable WrittenEvaluation evaluation) {
         requireOAuthScope(accessToken, APIScope.EVALUATIONS_WRITE);
 
         final Person person = Authenticate.getUser().getPerson();

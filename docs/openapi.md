@@ -35,3 +35,55 @@ in the `openapi` folder.
 To add the menu entry for the OpenAPI documentation, that is, for the static files
 to be served, you must go to _System Management > Portal Configuration > Manage Menu_.
 Then, click _Install_, search for _FenixEdu API Frontend_ and click _Install Application_.
+
+## Project Good-Practices
+
+### operationId
+
+All route definitions must contain an `operationId`.
+The value of this field should match the name of the Java controller function for the endpoint.
+
+### Authenticated Routes
+
+All routes that required an OAuth scope must have 401 and 403 on their responses definition.
+
+For routes that don't already have a 401 and 403, it's easy to do this:
+
+```yaml
+responses:
+  # ... other responses
+  "401":
+    $ref: "../responses/OAuthUnauthorizedResponse.yaml"
+  "403":
+    $ref: "../responses/OAuthForbiddenResponse.yaml"
+```
+
+For routes that already have one (or both) of these responses, you have to manually merge the response object.  
+For example:
+
+```yaml
+responses:
+  # ... other responses
+  "401":
+    $ref: "../responses/OAuthUnauthorizedResponse.yaml"
+  "403":
+    description: |-
+      [original description of response]
+
+      ---
+
+      OAuth errors may still apply:  
+      [original description of oauth response]
+    content:
+      application/json:
+        schema:
+          $ref: "../schemas/Error.yaml"
+        examples:
+          # ... errors of endpoint response
+
+          # manually add all examples for the oauth response (example below for 403 forbidden)
+          app-banned:
+            $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/app-banned"
+          insufficient-scopes:
+            $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/insufficient-scopes"
+```
