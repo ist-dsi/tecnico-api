@@ -19,7 +19,7 @@ paths:
     $ref: "./paths/courses-groups.yaml"
   # TODO: add schedule
   # /courses/{id}/schedule:
-    # $ref: "./paths/courses-schedule.yaml"
+  #   $ref: "./paths/courses-schedule.yaml"
   /courses/{id}/students:
     $ref: "./paths/courses-students.yaml"
   /degrees:
@@ -32,10 +32,14 @@ paths:
     $ref: "./paths/degree-courses.yaml"
   /person:
     $ref: "./paths/person.yaml"
-  /student/enrolments:
-    $ref: "./paths/student-enrolments.yaml"
   /student/curriculum:
     $ref: "./paths/student-curriculum.yaml"
+  /student/enrolments:
+    $ref: "./paths/student-enrolments.yaml"
+  /student/evaluations:
+    $ref: "./paths/student-evaluations.yaml"
+  /student/evaluations/{evaluation}:
+    $ref: "./paths/student-evaluations-enrol.yaml"
   /teacher/professorships:
     $ref: "./paths/teacher-professorships.yaml"
 components:
@@ -52,6 +56,8 @@ components:
           scopes:
             read:personal: Read user's personal information
             read:student: Read student's curricular information
+            read:evaluations: Read student's evaluation information and state
+            write:evaluations: Change student's evaluation state (i.e. enrol and unenrol)
             read:teacher: Read teachers's curricular information
 tags:
   - name: public

@@ -1,0 +1,2 @@
+type: object
+description: Generic Evaluation (type is FINAL, ONLINE_TEST or UNKNOWN)

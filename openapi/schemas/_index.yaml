@@ -6,6 +6,35 @@ LocalizedString:
   $ref: "./LocalizedString.yaml"
 
 # FenixEdu Academic
+
+## Evaluation
+
+AdHocEvaluation:
+  $ref: "./academic/evaluation/AdHocEvaluation.yaml"
+Evaluation:
+  $ref: "./academic/evaluation/Evaluation.yaml"
+EvaluationWithEnrolmentState:
+  $ref: "./academic/evaluation/EvaluationWithEnrolmentState.yaml"
+GenericEvaluation:
+  $ref: "./academic/evaluation/GenericEvaluation.yaml"
+Project:
+  $ref: "./academic/evaluation/Project.yaml"
+WrittenEvaluation:
+  $ref: "./academic/evaluation/WrittenEvaluation.yaml"
+WrittenEvaluationWithEnrolmentState:
+  $ref: "./academic/evaluation/WrittenEvaluationWithEnrolmentState.yaml"
+
+## Person Roles
+
+AlumniRole:
+  $ref: "./academic/person-roles/AlumniRole.yaml"
+StudentRole:
+  $ref: "./academic/person-roles/StudentRole.yaml"
+TeacherRole:
+  $ref: "./academic/person-roles/TeacherRole.yaml"
+
+## ---
+
 Attends:
   $ref: "./academic/Attends.yaml"
 BibliographicReference:
@@ -26,14 +55,7 @@ ExtendedDegreeModel:
   $ref: "./academic/Degree.yaml#/ExtendedDegreeModel"
 Enrolment:
   $ref: "./academic/Enrolment.yaml"
-GenericEvaluationModel:
-  $ref: "./academic/Evaluation.yaml#/GenericEvaluationModel"
-AdHocEvaluationModel:
-  $ref: "./academic/Evaluation.yaml#/AdHocEvaluationModel"
-ProjectModel:
-  $ref: "./academic/Evaluation.yaml#/ProjectModel"
-WrittenEvaluationModel:
-  $ref: "./academic/Evaluation.yaml#/WrittenEvaluationModel"
+
 BasicExecutionCourseModel:
   $ref: "./academic/ExecutionCourse.yaml#/BasicExecutionCourseModel"
 ExtendedExecutionCourseModel:
@@ -62,13 +84,6 @@ Teacher:
   $ref: "./academic/Teacher.yaml"
 Unit:
   $ref: "./academic/Unit.yaml"
-
-AlumniRole:
-  $ref: "./academic/person-roles/AlumniRole.yaml"
-StudentRole:
-  $ref: "./academic/person-roles/StudentRole.yaml"
-TeacherRole:
-  $ref: "./academic/person-roles/TeacherRole.yaml"
 
 # Java
 

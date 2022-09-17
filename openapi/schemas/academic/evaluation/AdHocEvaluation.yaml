@@ -1,0 +1,8 @@
+type: object
+description: AdHoc (type is AD_HOC)
+required:
+  - description
+properties:
+  description:
+    type: string
+    example: "Descrição da avaliação"

@@ -1,0 +1,37 @@
+type: object
+required:
+  - id
+  - name
+  - type
+properties:
+  id:
+    type: string
+    example: "2512556536511"
+  name:
+    type: string
+    example: "Avaliação 1"
+  type:
+    type: string
+    enum:
+      - EXAM
+      - FINAL
+      - ONLINE_TEST # deprecated
+      - TEST
+      - PROJECT
+      - AD_HOC
+      - UNKNOWN # should never happen
+oneOf:
+  - $ref: "./GenericEvaluation.yaml"
+  - $ref: "./AdHocEvaluation.yaml"
+  - $ref: "./Project.yaml"
+  - $ref: "./WrittenEvaluation.yaml"
+discriminator:
+  propertyName: type
+  mapping:
+    EXAM: "./WrittenEvaluation.yaml"
+    FINAL: "./GenericEvaluation.yaml"
+    ONLINE_TEST: "./GenericEvaluation.yaml"
+    TEST: "./WrittenEvaluation.yaml"
+    PROJECT: "./Project.yaml"
+    AD_HOC: "./AdHocEvaluation.yaml"
+    UNKNOWN: "./GenericEvaluation.yaml"

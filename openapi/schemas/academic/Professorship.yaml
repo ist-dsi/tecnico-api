@@ -7,4 +7,4 @@ properties:
     type: boolean
     description: Whether or not the teacher is responsible for this course
   course:
-    $ref: "./ExecutionCourse.yaml"
+    $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"

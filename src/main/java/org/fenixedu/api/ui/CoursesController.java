@@ -26,16 +26,7 @@ public class CoursesController extends BaseController {
         return respond(
                 executionCourse.getOrderedAssociatedEvaluations()
                         .stream()
-                        .map(evaluation -> {
-                            if (evaluation instanceof AdHocEvaluation) {
-                                return toExtendedEvaluationJson((AdHocEvaluation) evaluation);
-                            } else if (evaluation instanceof Project) {
-                                return toExtendedEvaluationJson((Project) evaluation);
-                            } else if (evaluation instanceof WrittenEvaluation) {
-                                return toExtendedEvaluationJson((WrittenEvaluation) evaluation);
-                            }
-                            return toEvaluationJson(evaluation);
-                        })
+                        .map(this::toExtendedEvaluationJson)
         );
     }
 
