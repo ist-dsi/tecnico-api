@@ -21,11 +21,7 @@ get:
           schema:
             type: array
             items:
-              oneOf:
-                - $ref: "../schemas/academic/Evaluation.yaml#/GenericEvaluationModel"
-                - $ref: "../schemas/academic/Evaluation.yaml#/AdHocEvaluationModel"
-                - $ref: "../schemas/academic/Evaluation.yaml#/ProjectModel"
-                - $ref: "../schemas/academic/Evaluation.yaml#/WrittenEvaluationModel"
+              $ref: "../schemas/academic/evaluation/Evaluation.yaml"
     "400":
       description: >-
         Invalid course ID supplied

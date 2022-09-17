@@ -1,0 +1,16 @@
+type: object
+description: Project (type if PROJECT)
+required:
+  - evaluationPeriod
+properties:
+  evaluationPeriod:
+    required:
+      - start
+      - end
+    properties:
+      start:
+        type: string
+        format: date-time
+      end:
+        type: string
+        format: date-time

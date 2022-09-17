@@ -1,0 +1,42 @@
+type: object
+required:
+  - id
+  - name
+  - type
+  - course
+properties:
+  id:
+    type: string
+    example: "2512556536511"
+  name:
+    type: string
+    example: "Avaliação 1"
+  type:
+    type: string
+    enum:
+      - EXAM
+      - FINAL
+      - ONLINE_TEST # deprecated
+      - TEST
+      - PROJECT
+      - AD_HOC
+      - UNKNOWN # should never happen
+  course:
+    # FIXME RapiDoc seems to be having trouble with this
+    # https://github.com/rapi-doc/RapiDoc/issues/825
+    $ref: "../ExecutionCourse.yaml#/BasicExecutionCourseModel"
+oneOf:
+  - $ref: "./GenericEvaluation.yaml"
+  - $ref: "./AdHocEvaluation.yaml"
+  - $ref: "./Project.yaml"
+  - $ref: "./WrittenEvaluationWithEnrolmentState.yaml"
+discriminator:
+  propertyName: type
+  mapping:
+    EXAM: "./WrittenEvaluationWithEnrolmentState.yaml"
+    FINAL: "./GenericEvaluation.yaml"
+    ONLINE_TEST: "./GenericEvaluation.yaml"
+    TEST: "./WrittenEvaluationWithEnrolmentState.yaml"
+    PROJECT: "./Project.yaml"
+    AD_HOC: "./AdHocEvaluation.yaml"
+    UNKNOWN: "./GenericEvaluation.yaml"

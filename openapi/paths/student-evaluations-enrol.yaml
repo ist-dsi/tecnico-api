@@ -1,0 +1,159 @@
+put:
+  summary: Enrol evaluations of courses
+  description: |
+    Enrol in an evaluation of a course.
+    The evaluation must be of type EXAM or TEST, otherwise a bad request response will be sent.
+    Requires the `write:evaluations` scope.
+    If the user is not a student or is not enroled in the course, a forbidden response will be sent.
+    If the enrolment period is closed or not defined, a forbidden response will also be sent.
+
+    If the user is already enroled, a conflict response will be sent.
+  tags:
+    - curricular
+  security:
+    - oauthApplication:
+        - write:evaluations
+  responses:
+    "204":
+      description: >-
+        Enroled successfully (returns no content)
+    "400":
+      description: >-
+        Invalid evaluation supplied. Must be of type EXAME or TEST.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.writtenevaluation.year.incorrect
+            message:
+              pt-PT: A avaliação com o ID 123456789 não foi encontrada ou não é do tipo "teste" ou "exame"
+              en-GB: The evaluation with ID 123456789 was not found or is not of type "test" or "exam"
+    "403":
+      description: |-
+        One of:
+        - The user is not a student or it is not enroled in the evaluation's course.
+        - The evaluation does not have an enrolment period or it is closed.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          examples:
+            no-registration:
+              summary: Not enroled in the evaluation's course
+              value:
+                key: error.evaluation.enrolment.no.registration
+                message:
+                  pt-PT: Não estás inscrito numa das unidades curriculares a que esta avaliação pertence
+                  en-GB: You are not enroled in a course that this evaluation belongs to
+            enrolment-period-closed:
+              summary: Enrolment period closed
+              value:
+                key: error.evaluation.enrolment.period.closed
+                message:
+                  pt-PT: O período de inscrição para esta avaliação está fechado
+                  en-GB: The enrolment period for this evaluation is closed
+    "409":
+      description: >-
+        The user is already enroled in this evaluation
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.evaluation.enrolment.already.enroled
+            message:
+              pt-PT: Já estás inscrito nesta avaliação
+              en-GB: You're already enroled in this evaluation
+    "500":
+      description: >-
+        An unknown error occurred
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.evaluation.enrolment.unknown.error
+            message:
+              pt-PT: Ocorreu um erro desconhecido ao inscrever ou deinscrever da avaliação
+              en-GB: An unknown error occurred while enroling or unenroling from evaluation
+
+delete:
+  summary: Unenrol evaluations of courses
+  description: |
+    Unenrol from an evaluation of a course.
+    The evaluation must be of type EXAM or TEST, otherwise a bad request response will be sent.
+    Requires the `write:evaluations` scope.
+    If the user is not a student or is not enroled in the course, a forbidden response will be sent.
+    If the enrolment period is closed or not defined, a forbidden response will also be sent.
+
+    If the user is not enroled in the evaluation, a conflict response will be sent.
+  tags:
+    - curricular
+  security:
+    - oauthApplication:
+        - write:evaluations
+  responses:
+    "204":
+      description: >-
+        Unenroled successfully (returns no content)
+    "400":
+      description: >-
+        Invalid evaluation supplied. Must be of type EXAME or TEST.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.writtenevaluation.year.incorrect
+            message:
+              pt-PT: A avaliação com o ID 123456789 não foi encontrada ou não é do tipo "teste" ou "exame"
+              en-GB: The evaluation with ID 123456789 was not found or is not of type "test" or "exam"
+    "403":
+      description: |-
+        One of:
+        - The user is not a student or it is not enroled in the evaluation's course.
+        - The evaluation does not have an enrolment period or it is closed.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          examples:
+            no-registration:
+              summary: Not enroled in the evaluation's course
+              value:
+                key: error.evaluation.enrolment.no.registration
+                message:
+                  pt-PT: Não estás inscrito numa das unidades curriculares a que esta avaliação pertence
+                  en-GB: You are not enroled in a course that this evaluation belongs to
+            enrolment-period-closed:
+              summary: Enrolment period closed
+              value:
+                key: error.evaluation.enrolment.period.closed
+                message:
+                  pt-PT: O período de inscrição para esta avaliação está fechado
+                  en-GB: The enrolment period for this evaluation is closed
+    "409":
+      description: >-
+        The user is not enroled in this evaluation
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.evaluation.enrolment.not.enroled
+            message:
+              pt-PT: Não estás atualmente inscrito nesta avaliação
+              en-GB: You're not currently enroled in this evaluation
+    "500":
+      description: >-
+        An unknown error occurred
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.evaluation.enrolment.unknown.error
+            message:
+              pt-PT: Ocorreu um erro desconhecido ao inscrever ou deinscrever da avaliação
+              en-GB: An unknown error occurred while enroling or unenroling from evaluation

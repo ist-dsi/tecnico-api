@@ -1,0 +1,32 @@
+type: object
+description: Written Evaluation (type is EXAM or TEST)
+required:
+  - evaluationPeriod
+properties:
+  enrolmentPeriod:
+    required:
+      - currentlyOpen
+      - start
+      - end
+    properties:
+      currentlyOpen:
+        type: boolean
+        example: true
+      start:
+        type: string
+        format: date-time
+      end:
+        type: string
+        format: date-time
+  evaluationPeriod:
+    required:
+      - start
+      - end
+    properties:
+      start:
+        type: string
+        format: date-time
+      end:
+        type: string
+        format: date-time
+      # TODO: whenever created, add rooms field

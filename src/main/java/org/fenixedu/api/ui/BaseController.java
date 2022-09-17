@@ -114,7 +114,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
      * - if only the semester is given, it returns that semester of the current year
      * - if neither the year nor semester are given, it returns the current semester of the current year
      *
-     * @param year     The year to parse
+     * @param year     The year to parse, in format "2022/2023"
      * @param semester The semester to parse
      * @return A set of execution semesters corresponding to the given input
      * @throws APIError if either the year or the semester does not exist or has invalid formatting
@@ -327,6 +327,17 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         }
     }
 
+    protected @NotNull JsonObject toExtendedEvaluationJson(@NotNull Evaluation evaluation) {
+        if (evaluation instanceof AdHocEvaluation) {
+            return toExtendedEvaluationJson((AdHocEvaluation) evaluation);
+        } else if (evaluation instanceof Project) {
+            return toExtendedEvaluationJson((Project) evaluation);
+        } else if (evaluation instanceof WrittenEvaluation) {
+            return toExtendedEvaluationJson((WrittenEvaluation) evaluation);
+        }
+        return toEvaluationJson(evaluation);
+    }
+
     protected @NotNull JsonObject toExtendedEvaluationJson(@NotNull AdHocEvaluation evaluation) {
         JsonObject data = toEvaluationJson(evaluation);
         data.addProperty("description", evaluation.getDescription());
@@ -345,7 +356,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
     protected @NotNull JsonObject toExtendedEvaluationJson(@NotNull WrittenEvaluation evaluation) {
         JsonObject data = toEvaluationJson(evaluation);
         if (evaluation.getEnrolmentPeriodStart() != null && evaluation.getEnrolmentPeriodEnd() != null) {
-            data.add("enrollmentPeriod", JsonUtils.toJson(period -> {
+            data.add("enrolmentPeriod", JsonUtils.toJson(period -> {
                 period.addProperty("currentlyOpen", evaluation.isInEnrolmentPeriod());
                 period.addProperty("start", evaluation.getEnrolmentPeriodStart().toString());
                 period.addProperty("end", evaluation.getEnrolmentPeriodEnd().toString());
