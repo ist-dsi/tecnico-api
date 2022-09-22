@@ -1,8 +1,8 @@
 get:
-  operationId: getCourseStudents
-  summary: Fetch a single course's attending students
+  operationId: getCourseSchedule
+  summary: Fetch a single course's schedule
   description: >-
-    Fetch a single course's attending students', given its ID
+    Fetch a single course's schedule, given its ID
   tags:
     - courses
   parameters:
@@ -22,20 +22,19 @@ get:
         application/json:
           schema:
             required:
-              - attendingCount
-              - enrolledCount
-              - attendingStudents
+              # - lessonPeriods
+              - courseLoads
+              - shifts
             properties:
-              attendingCount:
-                type: integer
-                example: 223
-              enrolledCount:
-                type: integer
-                example: 208
-              attendingStudents:
+              # TODO: add lessonPeriods whenever working
+              courseLoads:
                 type: array
                 items:
-                  $ref: "../schemas/academic/Attends.yaml"
+                  $ref: "../schemas/academic/CourseLoad.yaml"
+              shifts:
+                type: array
+                items:
+                  $ref: "../schemas/academic/Shift.yaml#/ExtendedShiftModel"
     "400":
       description: >-
         Invalid course ID supplied

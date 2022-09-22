@@ -1,0 +1,14 @@
+type: object
+required:
+  - start
+  - end
+  - room
+properties:
+  start:
+    type: string
+    format: date-time
+  end:
+    type: string
+    format: date-time
+  room:
+    $ref: "./Space.yaml#/BasicSpaceModel"

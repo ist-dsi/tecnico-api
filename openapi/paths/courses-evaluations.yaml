@@ -4,7 +4,7 @@ get:
   description: >-
     Fetch a specific course' evaluations, given its ID
   tags:
-    - public
+    - courses
   parameters:
     - in: path
       name: id
@@ -34,5 +34,5 @@ get:
           example:
             key: error.executioncourse.not.found
             message:
-              pt-PT: A unidade curricular com o ID 16467887136714 não foi encontrado
+              pt-PT: A unidade curricular com o ID 16467887136714 não foi encontrada
               en-GB: The execution course with ID 16467887136714 was not found

@@ -2,7 +2,7 @@ type: object
 required:
   - name
   - description
-  - enrollmentPeriod
+  - enrolmentPeriod
   - capacity
   - courses
   - groups
@@ -13,7 +13,7 @@ properties:
   description:
     type: string
     example: "Grupos para a realização do projeto 1 de FP"
-  enrollmentPeriod:
+  enrolmentPeriod:
     required:
       - start
       - end

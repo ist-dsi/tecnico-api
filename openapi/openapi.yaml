@@ -25,21 +25,32 @@ paths:
     $ref: "./paths/courses-evaluations.yaml"
   /courses/{id}/groups:
     $ref: "./paths/courses-groups.yaml"
-  # TODO: add schedule
-  # /courses/{id}/schedule:
-  #   $ref: "./paths/courses-schedule.yaml"
+  /courses/{id}/schedule:
+    $ref: "./paths/courses-schedule.yaml"
   /courses/{id}/students:
     $ref: "./paths/courses-students.yaml"
   /degrees:
     $ref: "./paths/degrees.yaml"
   /degrees/all:
     $ref: "./paths/degrees-all.yaml"
-  /degrees/{id}:
+  /degrees/{degree}:
     $ref: "./paths/degrees-one.yaml"
-  /degrees/{id}/courses:
+  /degrees/{degree}/courses:
     $ref: "./paths/degree-courses.yaml"
   /person:
     $ref: "./paths/person.yaml"
+  /spaces:
+    $ref: "./paths/spaces-all.yaml"
+  /spaces/buildings:
+    $ref: "./paths/spaces-buildings.yaml"
+  /spaces/campi:
+    $ref: "./paths/spaces-campi.yaml"
+  /spaces/{space}:
+    $ref: "./paths/spaces-one.yaml"
+  /spaces/{space}/day/{day}:
+    $ref: "./paths/spaces-day.yaml"
+  /spaces/{space}/interval/{startDay}/{endDay}:
+    $ref: "./paths/spaces-interval.yaml"
   /student/curriculum:
     $ref: "./paths/student-curriculum.yaml"
   /student/enrolments:
@@ -69,7 +80,13 @@ components:
             read:teacher: Read teachers's curricular information
 tags:
   - name: public
-    description: Endpoints that do not require authentication
+    description: Endpoints that do not require authentication and don't fit into other tags
+  - name: degrees
+    description: Endpoints related to degrees
+  - name: courses
+    description: Endpoints related to courses
+  - name: spaces
+    description: Endpoints related to spaces (campi, buildings, rooms, etc)
   - name: person
     description: Endpoints related to user information
   - name: curricular

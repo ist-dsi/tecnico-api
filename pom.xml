@@ -25,7 +25,7 @@
     <properties>
         <!-- Maximum version of the formatter that supports Java 8 is 2.16.0 -->
         <version.net.revelc.code.formatter>2.16.0</version.net.revelc.code.formatter>
-        <version.org.fenixedu.academic>31.0.2</version.org.fenixedu.academic>
+        <version.org.fenixedu.academic>32.3.0</version.org.fenixedu.academic>
         <version.org.jetbrains.annotations>16.0.2</version.org.jetbrains.annotations>
     </properties>
 

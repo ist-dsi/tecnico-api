@@ -70,12 +70,30 @@ ExtendedExecutionSemesterModel:
   $ref: "./academic/ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
 Grouping:
   $ref: "./academic/Grouping.yaml"
+Lesson:
+  $ref: "./academic/Lesson.yaml"
+GenericEventModel:
+  $ref: "./academic/Occupation.yaml#/GenericEventModel"
+LessonEventModel:
+  $ref: "./academic/Occupation.yaml#/LessonEventModel"
+WrittenEvaluationEventModel:
+  $ref: "./academic/Occupation.yaml#/WrittenEvaluationEventModel"
 Person:
   $ref: "./academic/Person.yaml"
 Professorship:
   $ref: "./academic/Professorship.yaml"
 Registration:
   $ref: "./academic/Registration.yaml"
+BasicShiftModel:
+  $ref: "./academic/Shift.yaml#/BasicShiftModel"
+ExtendedShiftModel:
+  $ref: "./academic/Shift.yaml#/ExtendedShiftModel"
+BasicSpaceModel:
+  $ref: "./academic/Space.yaml#/BasicSpaceModel"
+GenericSpaceModel:
+  $ref: "./academic/Space.yaml#/GenericSpaceModel"
+ExtendedSpaceModel:
+  $ref: "./academic/Space.yaml#/ExtendedSpaceModel"
 StudentCurricularPlan:
   $ref: "./academic/StudentCurricularPlan.yaml"
 StudentGroup:

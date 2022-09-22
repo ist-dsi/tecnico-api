@@ -1,0 +1,82 @@
+BasicSpaceModel:
+  type: object
+  required:
+    - id
+    - name
+    - fullName
+    - type
+    - classification
+  properties:
+    id:
+      $ref: "../DomainObjectId.yaml"
+    name:
+      type: string
+      example: "F4"
+    fullName:
+      type: string
+      example: "F4 - Sala de Aula"
+    type:
+      type: string
+      example: "ROOM_SUBDIVISION"
+      enum:
+        - CAMPUS
+        - BUILDING
+        - FLOOR
+        - ROOM
+        - ROOM_SUBDIVISION
+    classification:
+      allOf:
+        - $ref: "../LocalizedString.yaml"
+      example:
+        pt-PT: "Sala de Aula"
+        en-GB: "Classroom"
+GenericSpaceModel:
+  allOf:
+    - $ref: "#/BasicSpaceModel"
+    - type: object
+      required:
+        - capacity
+        - description
+        - campus
+        - containedIn
+        - contains
+      properties:
+        capacity:
+          type: object
+          required:
+            - regular
+            - exam
+          properties:
+            regular:
+              type: integer
+              example: 100
+            exam:
+              type: integer
+              example: 33
+        description:
+          type: string
+          example: "F4 (1, Pavilhão de Informática I, Alameda)"
+        building:
+          $ref: "#/BasicSpaceModel"
+        campus:
+          $ref: "#/BasicSpaceModel"
+        containedIn:
+          $ref: "#/BasicSpaceModel"
+        contains:
+          type: array
+          items:
+            $ref: "#/BasicSpaceModel"
+ExtendedSpaceModel:
+  allOf:
+    - $ref: "#/GenericSpaceModel"
+    - type: object
+      required:
+        - schedule
+      properties:
+        schedule:
+          type: array
+          items:
+            oneOf:
+              - $ref: "./Occupation.yaml#/GenericEventModel"
+              - $ref: "./Occupation.yaml#/LessonEventModel"
+              - $ref: "./Occupation.yaml#/WrittenEvaluationEventModel"
