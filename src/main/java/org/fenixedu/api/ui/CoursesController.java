@@ -36,8 +36,7 @@ public class CoursesController extends BaseController {
 
     @RequestMapping(value = "/courses/{executionCourse}/schedule", method = RequestMethod.GET)
     protected ResponseEntity<?> getCourseSchedule(@PathVariable final ExecutionCourse executionCourse) {
-        // TODO: this should probably only be done when the spaces endpoint is completed
-        return ok(new JsonObject());
+        return ok(toScheduleJson(executionCourse));
     }
 
     @RequestMapping(value = "/courses/{executionCourse}/students", method = RequestMethod.GET)

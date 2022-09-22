@@ -1,0 +1,61 @@
+GenericEventModel:
+  type: object
+  required:
+    - start
+    - end
+    - name
+    - type
+  properties:
+    start:
+      type: string
+      format: date-time
+    end:
+      type: string
+      format: date-time
+    name:
+      type: string
+      example: "Workshop DEI - NEIIST"
+    description:
+      type: string
+      example: "Linux Install Party"
+    extendedDescription:
+      type: string
+      example: "Linux Install Party promovida pelo NEIIST"
+    url:
+      type: string
+      example: "https://neiist.tecnico.ulisboa.pt/"
+    type:
+      type: string
+      enum:
+        - GENERIC
+LessonEventModel:
+  allOf:
+    - $ref: "#/GenericEventModel"
+    - type: object
+      required:
+        - shift
+        - course
+      # FIXME: is the type needed?
+      properties:
+        type:
+          type: string
+          enum:
+            - LESSON
+        shift:
+          $ref: "./Shift.yaml#/BasicShiftModel"
+        course:
+          # TODO: rename Generic models to Basic if there are only 2
+          $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
+WrittenEvaluationEventModel:
+  allOf:
+    - $ref: "#/GenericEventModel"
+    - type: object
+      required:
+        - evaluation
+      properties:
+        type:
+          type: string
+          enum:
+            - EVALUATION
+        evaluation:
+          $ref: "./evaluation/WrittenEvaluation.yaml"

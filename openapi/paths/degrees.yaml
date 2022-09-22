@@ -4,7 +4,7 @@ get:
   description: >-
     Fetch the degrees available in a given year
   tags:
-    - public
+    - degrees
   parameters:
     - in: query
       name: year

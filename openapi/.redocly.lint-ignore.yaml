@@ -6,3 +6,9 @@ paths/about.yaml:
 paths/degrees-all.yaml:
   operation-4xx-response:
     - "#/get/responses"
+paths/spaces-buildings.yaml:
+  operation-4xx-response:
+    - "#/get/responses"
+paths/spaces-campi.yaml:
+  operation-4xx-response:
+    - "#/get/responses"

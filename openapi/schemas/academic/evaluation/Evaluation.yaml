@@ -3,6 +3,7 @@ required:
   - id
   - name
   - type
+  - courses
 properties:
   id:
     type: string
@@ -20,6 +21,10 @@ properties:
       - PROJECT
       - AD_HOC
       - UNKNOWN # should never happen
+  courses:
+    type: array
+    items:
+      $ref: "../ExecutionCourse.yaml#/BasicExecutionCourseModel"
 oneOf:
   - $ref: "./GenericEvaluation.yaml"
   - $ref: "./AdHocEvaluation.yaml"

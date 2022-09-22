@@ -5,10 +5,10 @@ get:
     Fetch information about a specific degree's courses, given its ID.
     The degree's year can be specified, defaulting to the current execution year if it is not
   tags:
-    - public
+    - degrees
   parameters:
     - in: path
-      name: id
+      name: degree
       schema:
         type: string
       description: >-

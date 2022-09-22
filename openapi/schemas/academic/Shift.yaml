@@ -1,0 +1,50 @@
+BasicShiftModel:
+  type: object
+  required:
+    - name
+    - types
+  properties:
+    name:
+      type: string
+      description: >-
+        The shift's name
+      example: "FP4PB04"
+    types:
+      type: array
+      description: >-
+        The shift's types
+      items:
+        type: string
+        example: "PROBLEMS"
+ExtendedShiftModel:
+  allOf:
+    - $ref: "#/BasicShiftModel"
+    - type: object
+      required:
+        - enrolments
+        - lessons
+      properties:
+        enrolments:
+          type: object
+          description: >-
+            The shift's enrolments properties
+          required:
+            - maximum
+            - current
+          properties:
+            maximum:
+              type: integer
+              description: >-
+                The shift's maximum enrolments
+              example: 30
+            current:
+              type: integer
+              description: >-
+                The shift's current enrolments
+              example: 27
+        lessons:
+          type: array
+          description: >-
+            The shift's lessons
+          items:
+            $ref: "./Lesson.yaml"

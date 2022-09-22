@@ -7,15 +7,19 @@ import com.google.gson.JsonPrimitive;
 import org.fenixedu.academic.domain.AdHocEvaluation;
 import org.fenixedu.academic.domain.Attends;
 import org.fenixedu.academic.domain.CompetenceCourse;
+import org.fenixedu.academic.domain.CourseLoad;
 import org.fenixedu.academic.domain.CurricularCourse;
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.DegreeInfo;
 import org.fenixedu.academic.domain.Evaluation;
+import org.fenixedu.academic.domain.Exam;
 import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.academic.domain.ExecutionDegree;
 import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.Grouping;
+import org.fenixedu.academic.domain.Lesson;
+import org.fenixedu.academic.domain.LessonInstance;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Project;
@@ -27,34 +31,46 @@ import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences;
 import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences.BibliographicReference;
 import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences.BibliographicReferenceType;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
+import org.fenixedu.academic.domain.space.EventSpaceOccupation;
+import org.fenixedu.academic.domain.space.LessonInstanceSpaceOccupation;
+import org.fenixedu.academic.domain.space.LessonSpaceOccupation;
+import org.fenixedu.academic.domain.space.SpaceUtils;
+import org.fenixedu.academic.domain.space.WrittenEvaluationSpaceOccupation;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.util.EnrolmentGroupPolicyType;
 import org.fenixedu.academic.util.EvaluationType;
 import org.fenixedu.api.oauth.OAuthAuthorizationProvider;
 import org.fenixedu.api.util.APIError;
 import org.fenixedu.api.util.APIScope;
+import org.fenixedu.api.util.SpaceType;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.stream.StreamUtils;
 import org.fenixedu.spaces.domain.Space;
+import org.fenixedu.spaces.domain.occupation.Occupation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pt.ist.fenixframework.DomainObject;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BaseController extends org.fenixedu.bennu.spring.BaseController {
+
+    final static Integer MAX_INTERVAL_DAYS = 30;
 
     @ExceptionHandler({APIError.class})
     public ResponseEntity<?> handleApiError(final APIError error) {
@@ -95,6 +111,52 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
     }
 
     /**
+     * Parse a DateTime from a given date. Throws an APIError if it does not have correct format.
+     *
+     * @param date The given date
+     * @return The parsed DateTime
+     * @throws APIError if the day does not exist or has invalid formatting
+     */
+    protected DateTime parseDateTimeOrThrow(String date) {
+        try {
+            return DateTime.parse(date);
+        } catch (IllegalArgumentException e) {
+            throw new APIError(HttpStatus.BAD_REQUEST, "error.datetime.invalid", date);
+        }
+    }
+
+    /**
+     * Parse an Interval from given start and end dates. Throws an APIError if it's an invalid/too long Interval.
+     *
+     * @param startDate The start date for the interval
+     * @param endDate   The end date for the interval
+     * @return The parsed Interval
+     * @throws APIError if the interval is invalid/too long
+     */
+    protected Interval parseIntervalOrThrow(DateTime startDate, DateTime endDate) {
+        try {
+            final Interval interval = new Interval(startDate, endDate);
+            final long duration = interval.toDuration().getStandardDays();
+            if (duration > MAX_INTERVAL_DAYS) {
+                throw new APIError(
+                        HttpStatus.BAD_REQUEST,
+                        "error.interval.too.long",
+                        String.valueOf(duration),
+                        MAX_INTERVAL_DAYS.toString()
+                );
+            }
+            return new Interval(startDate, endDate);
+        } catch (IllegalArgumentException e) {
+            throw new APIError(
+                    HttpStatus.BAD_REQUEST,
+                    "error.interval.invalid",
+                    startDate.toString(),
+                    endDate.toString()
+            );
+        }
+    }
+
+    /**
      * Parse an execution year from its name. Throws an APIError if it does not exist.
      *
      * @param year The name of the execution year
@@ -120,7 +182,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
      * @throws APIError if either the year or the semester does not exist or has invalid formatting
      */
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    protected @NotNull Set<ExecutionSemester> parseExecutionSemestersOrThrow(@Nonnull Optional<String> year,
+    protected @NotNull Set<ExecutionSemester> parseExecutionSemestersOrThrow(@NotNull Optional<String> year,
                                                                              @NotNull Optional<Integer> semester) {
         ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow)
                 .orElseGet(ExecutionYear::readCurrentExecutionYear);
@@ -188,7 +250,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             data.addProperty("id", course.getExternalId());
             data.add("name", course.getNameI18N().json());
             data.addProperty("acronym", course.getAcronym());
-            data.addProperty("credits", course.getEctsCredits(null, executionYear));
+            data.addProperty("credits", course.getEctsCredits(executionYear));
             data.add(
                     "executionCourses",
                     course.getExecutionCoursesByExecutionYear(executionYear)
@@ -301,10 +363,17 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
     }
 
     protected @NotNull JsonObject toEvaluationJson(@NotNull Evaluation evaluation) {
-        return JsonUtils.toJson(eval -> {
-            eval.addProperty("id", evaluation.getExternalId());
-            eval.addProperty("name", evaluation.getPresentationName());
-            eval.add("type", toEvaluationTypeJson(evaluation.getEvaluationType()));
+        return JsonUtils.toJson(data -> {
+            data.addProperty("id", evaluation.getExternalId());
+            data.addProperty("name", evaluation.getPresentationName());
+            data.add("type", toEvaluationTypeJson(evaluation.getEvaluationType()));
+            data.add(
+                    "courses",
+                    evaluation.getAssociatedExecutionCoursesSet()
+                            .stream()
+                            .map(this::toExecutionCourseJson)
+                            .collect(StreamUtils.toJsonArray())
+            );
         });
     }
 
@@ -355,6 +424,9 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
 
     protected @NotNull JsonObject toExtendedEvaluationJson(@NotNull WrittenEvaluation evaluation) {
         JsonObject data = toEvaluationJson(evaluation);
+        if (evaluation.isExam()) {
+            data.addProperty("season", ((Exam) evaluation).getSeason().toString());
+        }
         if (evaluation.getEnrolmentPeriodStart() != null && evaluation.getEnrolmentPeriodEnd() != null) {
             data.add("enrolmentPeriod", JsonUtils.toJson(period -> {
                 period.addProperty("currentlyOpen", evaluation.isInEnrolmentPeriod());
@@ -366,8 +438,12 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             period.addProperty("start", evaluation.getBeginningDateTime().toString());
             period.addProperty("end", evaluation.getEndDateTime().toString());
         }));
-        // TODO: toSpaceJson will be done when the spaces endpoint is created
-        // addIfAndFormatElement(data, "rooms", evaluation.getAssociatedRooms(), this::toSpaceJson);
+        addIfAndFormatElement(
+                data,
+                "rooms",
+                evaluation.getAssociatedRooms(),
+                rooms -> rooms.stream().map(this::toSpaceJson).collect(StreamUtils.toJsonArray())
+        );
         return data;
     }
 
@@ -377,14 +453,12 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             data.addProperty("acronym", course.getSigla());
             data.add("name", course.getNameI18N().json());
             data.add("academicTerm", toExtendedExecutionSemesterJson(course.getExecutionPeriod()));
-            data.add("courseInformation", JsonUtils.toJson(info -> {
-                info.add("urls", JsonUtils.toJson(urls -> {
-                    final String url = course.getSiteUrl();
-                    urls.addProperty("courseUrl", url);
-                    urls.addProperty("rssAnnouncementsUrl", url.concat("/rss/announcement"));
-                    urls.addProperty("rssSummariesUrl", url.concat("/rss/summary"));
-                }));
-            }));
+            data.add("courseInformation", JsonUtils.toJson(info -> info.add("urls", JsonUtils.toJson(urls -> {
+                final String url = course.getSiteUrl();
+                urls.addProperty("courseUrl", url);
+                urls.addProperty("rssAnnouncementsUrl", url.concat("/rss/announcement"));
+                urls.addProperty("rssSummariesUrl", url.concat("/rss/summary"));
+            }))));
         });
     }
 
@@ -470,7 +544,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return JsonUtils.toJson(data -> {
             data.addProperty("name", grouping.getName());
             data.addProperty("description", grouping.getProjectDescription());
-            data.add("enrollmentPeriod", JsonUtils.toJson(period -> {
+            data.add("enrolmentPeriod", JsonUtils.toJson(period -> {
                 period.addProperty("start", grouping.getEnrolmentBeginDayDateDateTime().toString());
                 period.addProperty("end", grouping.getEnrolmentEndDayDateDateTime().toString());
                 addIfAndFormatElement(
@@ -501,6 +575,22 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
                             .map(this::toStudentGroupJson)
                             .collect(StreamUtils.toJsonArray())
             );
+        });
+    }
+
+    protected @NotNull JsonObject toLessonWithIntervalJson(@NotNull Lesson lesson, @NotNull Interval interval) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("start", interval.getStart().toString());
+            data.addProperty("end", interval.getEnd().toString());
+            data.add("room", toBasicSpaceJson(lesson.getSala()));
+        });
+    }
+
+    protected @NotNull JsonObject toLessonInstanceJson(@NotNull LessonInstance lessonInstance) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("start", lessonInstance.getBeginDateTime().toString());
+            data.addProperty("end", lessonInstance.getEndDateTime().toString());
+            data.add("room", toBasicSpaceJson(lessonInstance.getRoom()));
         });
     }
 
@@ -536,6 +626,224 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
+    protected @NotNull JsonObject toScheduleJson(@NotNull ExecutionCourse executionCourse) {
+        return JsonUtils.toJson(data -> {
+            // data.add(
+            //         "lessonPeriods",
+            //         executionCourse.getLessonPeriods()
+            //                 .stream()
+            //                 .map(OccupationPeriod::getIntervals)
+            //                 .flatMap(Collection::stream)
+            //                 .map(this::toIntervalJson)
+            //                 .collect(StreamUtils.toJsonArray())
+            // ); FIXME: This is not working - issue already found in V1
+            data.add(
+                    "courseLoads",
+                    executionCourse.getCourseLoadsSet()
+                            .stream()
+                            .map(this::toCourseLoadJson)
+                            .collect(StreamUtils.toJsonArray())
+            );
+            data.add(
+                    "shifts",
+                    executionCourse.getAssociatedShifts()
+                            .stream()
+                            .sorted(Shift.SHIFT_COMPARATOR_BY_NAME)
+                            .map(this::toExtendedShiftJson)
+                            .collect(StreamUtils.toJsonArray())
+            );
+        });
+    }
+
+    protected @NotNull JsonObject toCourseLoadJson(CourseLoad courseLoad) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("type", courseLoad.getType().name());
+            data.addProperty("weeklyHours", courseLoad.getWeeklyHours());
+            data.addProperty("totalHours", courseLoad.getTotalQuantity());
+        });
+    }
+
+    protected @NotNull JsonObject toShiftJson(Shift shift) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("name", shift.getNome());
+            data.add(
+                    "types",
+                    shift.getTypes()
+                            .stream()
+                            .map(type -> new JsonPrimitive(type.getName()))
+                            .collect(StreamUtils.toJsonArray())
+            );
+        });
+    }
+
+    protected @NotNull JsonObject toExtendedShiftJson(Shift shift) {
+        JsonObject data = toShiftJson(shift);
+        data.add("enrolments", JsonUtils.toJson(capacity -> {
+            capacity.addProperty("maximum", shift.getLotacao());
+            capacity.addProperty("current", shift.getStudentsSet().size());
+        }));
+        data.add(
+                "lessons",
+                shift.getAssociatedLessonsSet()
+                        .stream()
+                        .flatMap(
+                                lesson -> Stream.concat(
+                                        lesson.getLessonInstancesSet().stream().map(this::toLessonInstanceJson),
+                                        lesson.getAllLessonIntervalsWithoutInstanceDates()
+                                                .stream()
+                                                .map(interval -> toLessonWithIntervalJson(lesson, interval))
+                                )
+                        )
+                        .sorted(Comparator.comparing(lesson -> lesson.get("start").getAsString()))
+                        .collect(StreamUtils.toJsonArray())
+        );
+        return data;
+    }
+
+    private enum OccupationType {
+        GENERIC, LESSON, EVALUATION
+    }
+
+    protected @NotNull JsonObject toBasicSpaceJson(@NotNull Space space) {
+        final Optional<SpaceType> type = SpaceType.getSpaceType(space);
+        return JsonUtils.toJson(data -> {
+            data.addProperty("id", space.getExternalId());
+            data.addProperty("name", space.getName());
+            data.addProperty("fullName", space.getFullName());
+            data.addProperty("type", type.map(SpaceType::name).orElse("UNKNOWN"));
+            data.add("classification", space.getClassification().getName().json());
+        });
+    }
+
+    protected @NotNull JsonObject toSpaceJson(@NotNull Space space) {
+        JsonObject data = toBasicSpaceJson(space);
+        if (SpaceUtils.isRoom(space)) {
+            data.add("capacity", JsonUtils.toJson(capacity -> {
+                capacity.addProperty("regular", space.getAllocatableCapacity());
+                capacity.addProperty("exam", SpaceUtils.countAvailableSeatsForExams(space));
+            }));
+        }
+        data.addProperty("description", space.getPresentationName());
+        // possibly only add the building field if a building contains the space - with campi and buildings probably not needed
+        addIfAndFormatElement(data, "building", SpaceUtils.getSpaceBuilding(space), this::toBasicSpaceJson);
+        addIfAndFormatElement(data, "campus", SpaceUtils.getSpaceCampus(space), this::toBasicSpaceJson);
+        addIfAndFormatElement(data, "containedIn", space.getParent(), this::toBasicSpaceJson);
+        data.add(
+                "contains",
+                space.getChildren()
+                        .stream()
+                        .map(this::toBasicSpaceJson)
+                        .collect(StreamUtils.toJsonArray())
+        );
+        return data;
+    }
+
+    protected @NotNull JsonObject toExtendedSpaceJson(@NotNull Space space, @NotNull Interval interval) {
+        JsonObject data = toSpaceJson(space);
+        final Set<Occupation> occupations = space.getOccupationSet();
+        data.add(
+                "schedule",
+                occupations.stream()
+                        .flatMap(
+                                occupation -> toOccupationJson(occupation, interval)
+                        )
+                        .sorted(Comparator.comparing(obj -> obj.get("start").getAsString()))
+                        .collect(StreamUtils.toJsonArray())
+        );
+        return data;
+    }
+
+    /**
+     * @param occupation the occupation to serialize
+     * @param interval   the interval in which to get events;
+     *                   events that don't overlap with this interval should be discarded
+     * @return a stream of events, as {@link JsonObject JsonObjects}
+     */
+    private @NotNull Stream<@NotNull JsonObject> toOccupationJson(@NotNull Occupation occupation,
+                                                                  @NotNull Interval interval) {
+        if (occupation instanceof EventSpaceOccupation) {
+            return getEventSpaceOccupationEvents((EventSpaceOccupation) occupation, interval);
+        }
+        return getSpaceGenericEvents(occupation, interval);
+    }
+
+    /**
+     * @see BaseController#toOccupationJson(Occupation, Interval)
+     */
+    private @NotNull Stream<@NotNull JsonObject> getEventSpaceOccupationEvents(@NotNull EventSpaceOccupation occupation,
+                                                                               @NotNull Interval interval) {
+        return occupation.getEventSpaceOccupationIntervals(interval.getStart(), interval.getEnd())
+                .stream()
+                .map(eventInterval -> {
+                    if (occupation instanceof LessonSpaceOccupation) {
+                        return toLessonEventJson((LessonSpaceOccupation) occupation, interval);
+                    } else if (occupation instanceof LessonInstanceSpaceOccupation) {
+                        return toLessonInstanceEventJson((LessonInstanceSpaceOccupation) occupation, interval);
+                    } else if (occupation instanceof WrittenEvaluationSpaceOccupation) {
+                        return toWrittenEvaluationEventJson((WrittenEvaluationSpaceOccupation) occupation, interval);
+                    }
+                    return toGenericEventJson(occupation, eventInterval);
+                });
+    }
+
+    /**
+     * @see BaseController#toOccupationJson(Occupation, Interval)
+     */
+    private @NotNull Stream<@NotNull JsonObject> getSpaceGenericEvents(@NotNull Occupation occupation,
+                                                                       @NotNull Interval interval) {
+        return occupation.getIntervals()
+                .stream()
+                .filter(interval::overlaps)
+                .map(eventInterval -> toGenericEventJson(occupation, eventInterval));
+    }
+
+    protected @NotNull JsonObject toGenericEventJson(@NotNull Occupation occupation,
+                                                     @NotNull Interval occupationInterval) {
+        return JsonUtils.toJson(event -> {
+            event.addProperty("start", occupationInterval.getStart().toString());
+            event.addProperty("end", occupationInterval.getEnd().toString());
+            event.addProperty("name", occupation.getSubject());
+            if (occupation.getConfig() != null) {
+                event.addProperty("description", occupation.getSummary());
+                event.addProperty("extendedDescription", occupation.getExtendedSummary());
+            }
+            addIfAndFormat(event, "url", occupation.getUrl(), url -> url.isEmpty() ? null : url);
+            event.addProperty("type", OccupationType.GENERIC.name()); // this might be overwritten by other event types
+        });
+    }
+
+    protected @NotNull JsonObject toLessonEventJson(@NotNull LessonSpaceOccupation occupation,
+                                                    @NotNull Interval lessonInterval) {
+        JsonObject event = toGenericEventJson(occupation, lessonInterval);
+        final Lesson lesson = occupation.getLesson();
+        event.addProperty("type", OccupationType.LESSON.name());
+        event.add("shift", toShiftJson(lesson.getShift()));
+        event.add("course", toExecutionCourseJson(lesson.getExecutionCourse()));
+        return event;
+    }
+
+    protected @NotNull JsonObject toLessonInstanceEventJson(@NotNull LessonInstanceSpaceOccupation occupation,
+                                                            @NotNull Interval lessonInterval) {
+        JsonObject event = toGenericEventJson(occupation, lessonInterval);
+        // It seems like all lesson instances are of the same lesson, they're just different days
+        final Lesson lesson = occupation.getLessonInstancesSet().iterator().next().getLesson();
+        event.addProperty("type", OccupationType.LESSON.name());
+        event.add("shift", toShiftJson(lesson.getShift()));
+        event.add("course", toExecutionCourseJson(lesson.getExecutionCourse()));
+        return event;
+    }
+
+    protected @NotNull JsonObject toWrittenEvaluationEventJson(@NotNull WrittenEvaluationSpaceOccupation occupation,
+                                                               @NotNull Interval evaluationInterval) {
+        JsonObject event = toGenericEventJson(occupation, evaluationInterval);
+        // There is always at least an evaluation because of interval checking
+        // Apparently, there is almost always only one evaluation in the set, so we can ignore the other ones
+        final WrittenEvaluation evaluation = occupation.getWrittenEvaluationsSet().iterator().next();
+        event.addProperty("type", OccupationType.EVALUATION.name());
+        event.add("evaluation", toExtendedEvaluationJson(evaluation));
+        return event;
+    }
+
     protected @NotNull JsonObject toStudentGroupJson(@NotNull StudentGroup studentGroup) {
         return JsonUtils.toJson(data -> {
             data.addProperty("groupNumber", studentGroup.getGroupNumber());
@@ -566,6 +874,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
                 data.addProperty("webAddress", person.getDefaultWebAddressUrl());
             }
         });
+
     }
 
     protected <T> void addIfAndFormat(@NotNull JsonObject object,

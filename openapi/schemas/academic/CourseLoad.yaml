@@ -1,0 +1,21 @@
+type: object
+required:
+  - type
+  - weeklyHours
+  - totalHours
+properties:
+  type:
+    type: string
+    description: >-
+      The course load's type
+    example: "PROBLEMS"
+  weeklyHours:
+    type: number
+    description: >-
+      The course load's weekly hours
+    example: 2.50
+  totalHours:
+    type: number
+    description: >-
+      The course load's total hours
+    example: 42.0

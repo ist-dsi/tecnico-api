@@ -1,0 +1,36 @@
+get:
+  operationId: getSpace
+  summary: Fetch a specific space
+  description: >-
+    Fetch detailed information about a specific space.
+  tags:
+    - spaces
+  parameters:
+    - in: path
+      name: space
+      schema:
+        $ref: "../schemas/DomainObjectId.yaml"
+      description: >-
+        The space's unique ID.
+      required: true
+  security: []
+  responses:
+    "200":
+      description: >-
+        OK
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/academic/Space.yaml#/GenericSpaceModel"
+    "400":
+      description: >-
+        Invalid Space ID supplied
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.space.not.found
+            message:
+              pt-PT: O espaço com o ID 2448131363674411 não foi encontrado
+              en-GB: The space with ID 2448131363674411 was not found

@@ -3,6 +3,9 @@ description: Written Evaluation (type is EXAM or TEST)
 required:
   - evaluationPeriod
 properties:
+  season:
+    type: string
+    example: "2ª Época"
   enrolmentPeriod:
     required:
       - currentlyOpen
@@ -29,4 +32,7 @@ properties:
       end:
         type: string
         format: date-time
-      # TODO: whenever created, add rooms field
+  rooms:
+    type: array
+    items:
+      $ref: "../Space.yaml#/GenericSpaceModel"
