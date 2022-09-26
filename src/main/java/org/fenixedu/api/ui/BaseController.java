@@ -23,6 +23,7 @@ import org.fenixedu.academic.domain.LessonInstance;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.Project;
+import org.fenixedu.academic.domain.SchoolClass;
 import org.fenixedu.academic.domain.Shift;
 import org.fenixedu.academic.domain.StudentGroup;
 import org.fenixedu.academic.domain.Teacher;
@@ -683,6 +684,14 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             capacity.addProperty("current", shift.getStudentsSet().size());
         }));
         data.add(
+                "classes",
+                shift.getAssociatedClassesSet()
+                        .stream()
+                        .sorted(SchoolClass.COMPARATOR_BY_NAME)
+                        .map(this::toSchoolClassJson)
+                        .collect(StreamUtils.toJsonArray())
+        );
+        data.add(
                 "lessons",
                 shift.getAssociatedLessonsSet()
                         .stream()
@@ -698,6 +707,14 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
                         .collect(StreamUtils.toJsonArray())
         );
         return data;
+    }
+
+    protected @NotNull JsonObject toSchoolClassJson(SchoolClass schoolClass) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("name", schoolClass.getNome());
+            data.addProperty("curricularYear", schoolClass.getAnoCurricular());
+            data.add("degree", toDegreeJson(schoolClass.getExecutionDegree().getDegree()));
+        });
     }
 
     private enum OccupationType {
