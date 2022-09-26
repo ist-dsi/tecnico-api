@@ -1,0 +1,22 @@
+type: object
+required:
+  - name
+  - academicYear
+  - degree
+properties:
+  name:
+    type: string
+    description: |
+      The name of this class.
+
+      It is usually in the format `<acronym of degree><academic year><class number>`
+    example: LEIC-A0301
+  academicYear:
+    type: number
+    description: The academic year (1, 2, 3, etc.) of this class.
+    format: integer
+    example: 3
+  degree:
+    allOf:
+      - $ref: "./Degree.yaml#/BasicDegreeModel"
+      - description: The degree this class belongs to.

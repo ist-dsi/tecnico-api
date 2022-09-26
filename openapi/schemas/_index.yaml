@@ -84,6 +84,8 @@ Professorship:
   $ref: "./academic/Professorship.yaml"
 Registration:
   $ref: "./academic/Registration.yaml"
+SchoolClass:
+  $ref: "./academic/SchoolClass.yaml"
 BasicShiftModel:
   $ref: "./academic/Shift.yaml#/BasicShiftModel"
 ExtendedShiftModel:

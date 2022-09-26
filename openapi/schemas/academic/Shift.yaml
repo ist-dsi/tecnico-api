@@ -42,6 +42,11 @@ ExtendedShiftModel:
               description: >-
                 The shift's current enrolments
               example: 27
+        classes:
+          type: array
+          description: The classes that have this shift
+          items:
+            $ref: "./SchoolClass.yaml"
         lessons:
           type: array
           description: >-
