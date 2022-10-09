@@ -1,6 +1,5 @@
 package org.fenixedu.api.ui;
 
-import com.google.gson.JsonObject;
 import org.fenixedu.academic.domain.Attends;
 import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.bennu.core.json.JsonUtils;

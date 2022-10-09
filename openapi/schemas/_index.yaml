@@ -55,6 +55,12 @@ ExtendedDegreeModel:
   $ref: "./academic/Degree.yaml#/ExtendedDegreeModel"
 Enrolment:
   $ref: "./academic/Enrolment.yaml"
+GenericEventBeanModel:
+  $ref: "./academic/EventBean.yaml#/GenericEventBeanModel"
+ClassEventBeanModel:
+  $ref: "./academic/EventBean.yaml#/ClassEventBeanModel"
+EvaluationEventBeanModel:
+  $ref: "./academic/EventBean.yaml#/EvaluationEventBeanModel"
 
 BasicExecutionCourseModel:
   $ref: "./academic/ExecutionCourse.yaml#/BasicExecutionCourseModel"

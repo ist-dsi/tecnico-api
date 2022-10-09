@@ -1,0 +1,48 @@
+GenericEventBeanModel:
+  type: object
+  required:
+    - start
+    - end
+    - title
+  properties:
+    start:
+      type: string
+      format: date-time
+    end:
+      type: string
+      format: date-time
+    title:
+      allOf:
+        - $ref: "../LocalizedString.yaml"
+        - example:
+            pt-PT: "Redes de Computadores : Teórica"
+            en-GB: "Computer Networks : Theorical"
+    locations:
+      type: array
+      items:
+        $ref: "./Space.yaml#/BasicSpaceModel"
+ClassEventBeanModel:
+  allOf:
+    - $ref: "#/GenericEventBeanModel"
+    - type: object
+      required:
+        - shift
+        - course
+      properties:
+        shift:
+          $ref: "./Shift.yaml#/BasicShiftModel"
+        course:
+          $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
+EvaluationEventBeanModel:
+  allOf:
+    - $ref: "#/GenericEventBeanModel"
+    - type: object
+      required:
+        - courses
+      properties:
+        assignedRoom:
+          $ref: "./Space.yaml#/BasicSpaceModel"
+        courses:
+          type: array
+          items:
+            $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"

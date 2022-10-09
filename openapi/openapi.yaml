@@ -51,6 +51,10 @@ paths:
     $ref: "./paths/spaces-day.yaml"
   /spaces/{space}/interval/{startDay}/{endDay}:
     $ref: "./paths/spaces-interval.yaml"
+  /student/calendar/classes:
+    $ref: "./paths/student-calendar-classes.yaml"
+  /student/calendar/evaluations:
+    $ref: "./paths/student-calendar-evaluations.yaml"
   /student/curriculum:
     $ref: "./paths/student-curriculum.yaml"
   /student/enrolments:
@@ -59,6 +63,10 @@ paths:
     $ref: "./paths/student-evaluations.yaml"
   /student/evaluations/{evaluation}:
     $ref: "./paths/student-evaluations-enrol.yaml"
+  /teacher/calendar/classes:
+    $ref: "./paths/teacher-calendar-classes.yaml"
+  /teacher/calendar/evaluations:
+    $ref: "./paths/teacher-calendar-evaluations.yaml"
   /teacher/professorships:
     $ref: "./paths/teacher-professorships.yaml"
 components:
@@ -77,7 +85,7 @@ components:
             read:student: Read student's curricular information
             read:evaluations: Read student's evaluation information and state
             write:evaluations: Change student's evaluation state (i.e. enrol and unenrol)
-            read:teacher: Read teachers's curricular information
+            read:teacher: Read teacher's curricular information
 tags:
   - name: public
     description: Endpoints that do not require authentication and don't fit into other tags

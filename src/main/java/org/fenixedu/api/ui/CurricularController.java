@@ -3,6 +3,7 @@ package org.fenixedu.api.ui;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.fortuna.ical4j.model.Calendar;
 import org.fenixedu.academic.domain.Attends;
 import org.fenixedu.academic.domain.CurricularCourse;
 import org.fenixedu.academic.domain.Enrolment;
@@ -20,21 +21,30 @@ import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.domain.student.curriculum.ICurriculum;
 import org.fenixedu.academic.domain.student.curriculum.ICurriculumEntry;
 import org.fenixedu.academic.domain.studentCurriculum.Dismissal;
+import org.fenixedu.academic.domain.util.icalendar.CalendarFactory;
+import org.fenixedu.academic.domain.util.icalendar.ClassEventBean;
+import org.fenixedu.academic.domain.util.icalendar.EvaluationEventBean;
+import org.fenixedu.academic.domain.util.icalendar.EventBean;
 import org.fenixedu.academic.service.services.exceptions.FenixServiceException;
 import org.fenixedu.academic.service.services.exceptions.InvalidArgumentsServiceException;
 import org.fenixedu.academic.service.services.student.EnrolStudentInWrittenEvaluation;
 import org.fenixedu.academic.service.services.student.UnEnrollStudentInWrittenEvaluation;
+import org.fenixedu.academic.ui.struts.action.ICalendarSyncPoint;
 import org.fenixedu.api.util.APIError;
 import org.fenixedu.api.util.APIScope;
+import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.bennu.core.security.Authenticate;
 import org.fenixedu.bennu.core.security.SkipCSRF;
+import org.fenixedu.bennu.core.util.CoreConfiguration;
+import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.stream.StreamUtils;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.YearMonthDay;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -43,13 +53,66 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/fenixedu-api/v2")
 public class CurricularController extends BaseController {
+
+    @RequestMapping(value = "/student/calendar/{type:classes|evaluations}", method = RequestMethod.GET)
+    public ResponseEntity<?> getStudentCalendar(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
+                                                @PathVariable String type,
+                                                @RequestParam(defaultValue = "json") String format) {
+        requireOAuthScope(accessToken, APIScope.STUDENT_READ);
+
+        final User user = Authenticate.getUser();
+        ICalendarSyncPoint calendarSyncPoint = new ICalendarSyncPoint();
+
+        List<EventBean> events;
+        if ("classes".equalsIgnoreCase(type)) {
+            events = calendarSyncPoint.getClasses(user);
+        } else {
+            events = calendarSyncPoint.getExams(user);
+        }
+
+        return respondCalendar(events, format);
+    }
+
+    @RequestMapping(value = "/teacher/calendar/{type:classes|evaluations}", method = RequestMethod.GET)
+    public ResponseEntity<?> getTeacherCalendar(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
+                                                @PathVariable String type,
+                                                @RequestParam(defaultValue = "json") String format) {
+        requireOAuthScope(accessToken, APIScope.TEACHER_READ);
+
+        final User user = Authenticate.getUser();
+        ICalendarSyncPoint calendarSyncPoint = new ICalendarSyncPoint();
+
+        List<EventBean> events;
+        if ("classes".equalsIgnoreCase(type)) {
+            events = calendarSyncPoint.getTeachingClasses(user);
+        } else {
+            events = calendarSyncPoint.getTeachingExams(user);
+        }
+
+        return respondCalendar(events, format);
+    }
+
+    private ResponseEntity<?> respondCalendar(List<EventBean> events, String format) {
+        if ("json".equalsIgnoreCase(format)) {
+            return respond(events.stream().map(this::toEventBeanJson));
+        } else if ("ical".equalsIgnoreCase(format)) {
+            Calendar calendar = CalendarFactory.createCalendar(events);
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .contentType(new MediaType("text", "calendar", StandardCharsets.UTF_8))
+                    .body(calendar.toString());
+        }
+        throw new APIError(HttpStatus.BAD_REQUEST, "error.calendar.format.incorrect", format);
+    }
 
     @RequestMapping(value = "/student/enrolments", method = RequestMethod.GET)
     public ResponseEntity<?> getStudentEnrolments(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
@@ -325,6 +388,65 @@ public class CurricularController extends BaseController {
         }
 
         return data;
+    }
+
+    private @NotNull JsonObject toEventBeanJson(@NotNull EventBean event) {
+        if (event instanceof ClassEventBean) {
+            return toClassEventBeanJson((ClassEventBean) event);
+        } else if (event instanceof EvaluationEventBean) {
+            return toEvaluationEventBeanJson((EvaluationEventBean) event);
+        }
+        return toGenericEventBeanJson(event);
+    }
+
+    private @NotNull JsonObject toGenericEventBeanJson(@NotNull EventBean event) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("start", event.getBegin().toString());
+            data.addProperty("end", event.getBegin().toString());
+
+            data.add("title", fakeLocalizedString(event.getOriginalTitle()).json());
+
+            addIfAndFormatElement(
+                    data,
+                    "locations",
+                    event.getRooms(),
+                    rooms -> rooms.stream().map(this::toBasicSpaceJson).collect(StreamUtils.toJsonArray())
+            );
+        });
+    }
+
+    private @NotNull JsonObject toClassEventBeanJson(@NotNull ClassEventBean event) {
+        JsonObject data = toGenericEventBeanJson(event);
+        data.add("shift", toShiftJson(event.getClassShift()));
+        data.add("course", toExecutionCourseJson(event.getClassShift().getExecutionCourse()));
+
+        return data;
+    }
+
+    private @NotNull JsonObject toEvaluationEventBeanJson(@NotNull EvaluationEventBean event) {
+        JsonObject data = toGenericEventBeanJson(event);
+        addIfAndFormatElement(data, "assignedRoom", event.getAssignedRoom(), this::toBasicSpaceJson);
+        data.add(
+                "courses",
+                event.getCourses().stream().map(this::toExecutionCourseJson).collect(StreamUtils.toJsonArray())
+        );
+
+        return data;
+    }
+
+    /**
+     * EventBean title's is not a {@link LocalizedString}.
+     * While that is not fixed, this will create a localized string with the same text across all languages.
+     * This method SHOULD and WILL be removed in the future.
+     *
+     * @param string The string to replicate on all languages.
+     * @return A LocalizedString with the same text for all supported languages.
+     */
+    private @NotNull LocalizedString fakeLocalizedString(@NotNull String string) {
+        return CoreConfiguration.supportedLocales()
+                .stream()
+                .reduce(new LocalizedString.Builder(), (ls, locale) -> ls.with(locale, string), (ls1, ls2) -> ls1)
+                .build();
     }
 
 }

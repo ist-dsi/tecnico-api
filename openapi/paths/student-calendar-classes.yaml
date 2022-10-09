@@ -1,0 +1,58 @@
+get:
+  operationId: getStudentCalendarClasses
+  summary: Fetch classes calendar of the student
+  description: |
+    Fetch a calendar with all the lessons a student is enroled on.
+    Requires the `read:student` scope.
+    If the user is not a student, an empty list is returned.
+
+    Additionally, an optional `format` query parameter can be passed to get the
+    calendar in iCal format instead of the default JSON response.
+  tags:
+    - curricular
+  parameters:
+    - in: query
+      name: format
+      schema:
+        type: string
+        enum:
+          - json
+          - ical
+      description: >-
+        The format for the response. JSON is the default, but a calendar in the
+        iCal format can also be returned.
+      example: "json"
+      required: false
+  security:
+    - oauthApplication:
+        - read:student
+  responses:
+    "200":
+      description: >-
+        OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../schemas/academic/EventBean.yaml#/ClassEventBeanModel"
+        text/calendar:
+          schema:
+            type: string
+            example: iCal data here
+    "400":
+      description: >-
+        Invalid calendar format supplied
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.calendar.format.incorrect
+            message:
+              pt-PT: O formato (abc) é inválido. Deverá ser 'json' ou 'ical'
+              en-GB: The given format (abc) is invalid. It must be one of 'json' or 'ical'
+    "401":
+      $ref: "../responses/OAuthUnauthorizedResponse.yaml"
+    "403":
+      $ref: "../responses/OAuthForbiddenResponse.yaml"
