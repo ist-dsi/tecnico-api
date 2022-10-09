@@ -17,11 +17,13 @@ import java.util.Optional;
 @RequestMapping("/fenixedu-api/v2")
 public class FenixEduAPIController extends BaseController {
 
+    @CrossOrigin(allowCredentials = "false")
     @RequestMapping(value = "/health", method = RequestMethod.GET)
     public ResponseEntity<?> health() {
         return ok(new JsonObject());
     }
 
+    @CrossOrigin(allowCredentials = "false")
     @RequestMapping(value = "/about", method = RequestMethod.GET)
     public ResponseEntity<?> about() {
         final Bennu bennu = Bennu.getInstance();
@@ -47,6 +49,7 @@ public class FenixEduAPIController extends BaseController {
     }
 
     // gets all terms
+    @CrossOrigin(allowCredentials = "false")
     @RequestMapping(value = "/academicterms", method = RequestMethod.GET)
     public ResponseEntity<?> getAcademicTerms(@RequestParam(required = false) Optional<String> from) {
         final Bennu bennu = Bennu.getInstance();
@@ -64,6 +67,7 @@ public class FenixEduAPIController extends BaseController {
     }
 
     // gets a specific term
+    @CrossOrigin(allowCredentials = "false")
     @RequestMapping(value = "/academicterms/{beginYear}/{endYear}", method = RequestMethod.GET)
     public ResponseEntity<?> getAcademicTerm(@PathVariable String beginYear, @PathVariable String endYear) {
         final ExecutionYear executionYear = parseExecutionYearOrThrow(beginYear + "/" + endYear);
