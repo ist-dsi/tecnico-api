@@ -13,6 +13,7 @@ import java.util.Optional;
 @RequestMapping("/fenixedu-api/v2")
 public class DegreeController extends BaseController {
 
+    @CrossOrigin(allowCredentials = "false")
     @RequestMapping(value = "/degrees", method = RequestMethod.GET)
     public ResponseEntity<?> getDegreesOfYear(@RequestParam(required = false) Optional<String> year) {
         final ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow)
@@ -26,6 +27,7 @@ public class DegreeController extends BaseController {
         );
     }
 
+    @CrossOrigin(allowCredentials = "false")
     @RequestMapping(value = "/degrees/all", method = RequestMethod.GET)
     public ResponseEntity<?> getAllDegrees() {
         return respond(
@@ -35,11 +37,13 @@ public class DegreeController extends BaseController {
         );
     }
 
+    @CrossOrigin(allowCredentials = "false")
     @RequestMapping(value = "/degrees/{degree}", method = RequestMethod.GET)
     public ResponseEntity<?> getDegree(@PathVariable Degree degree) {
         return ok(toExtendedDegreeJson(degree));
     }
 
+    @CrossOrigin(allowCredentials = "false")
     @RequestMapping(value = "/degrees/{degree}/courses", method = RequestMethod.GET)
     public ResponseEntity<?> getDegreeCourses(@PathVariable Degree degree,
                                               @RequestParam(required = false) Optional<String> year) {
