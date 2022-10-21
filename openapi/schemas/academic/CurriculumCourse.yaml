@@ -48,7 +48,7 @@ EnrolmentCurriculumCourse:
     - type: object
       properties:
         course:
-          $ref: "./CurricularCourse.yaml"
+          $ref: "./CurricularCourse.yaml#/BasicCurricularCourseModel"
         url:
           type: string
           example: "https://example.com"
@@ -60,5 +60,5 @@ DismissalCurriculumCourse:
     - type: object
       properties:
         course:
-          $ref: "./CurricularCourse.yaml"
+          $ref: "./CurricularCourse.yaml#/BasicCurricularCourseModel"
   description: When `type` is `DISMISSAL`

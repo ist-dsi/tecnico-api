@@ -2,7 +2,7 @@ get:
   operationId: getDegreesOfYear
   summary: Fetch degrees in given year
   description: >-
-    Fetch the degrees available in a given year
+    Fetch all degrees available in a given year
   tags:
     - degrees
   parameters:
@@ -25,7 +25,7 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/Degree.yaml#/BasicDegreeModel"
+              $ref: "../schemas/academic/ExecutionDegree.yaml#/BasicExecutionDegreeModel"
     "400":
       description: >-
         Invalid year

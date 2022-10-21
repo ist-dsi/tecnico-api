@@ -39,8 +39,16 @@ Attends:
   $ref: "./academic/Attends.yaml"
 BibliographicReference:
   $ref: "./academic/BibliographicReference.yaml"
-CurricularCourse:
-  $ref: "./academic/CurricularCourse.yaml"
+CourseGroup:
+  $ref: "./academic/CourseGroup.yaml"
+CourseLoad:
+  $ref: "./academic/CourseLoad.yaml"
+BasicCurricularCourseModel:
+  $ref: "./academic/CurricularCourse.yaml#/BasicCurricularCourseModel"
+ExtendedCurricularCourseModel:
+  $ref: "./academic/CurricularCourse.yaml#/ExtendedCurricularCourseModel"
+CurricularPeriod:
+  $ref: "./academic/CurricularPeriod.yaml"
 CurriculumCourse:
   $ref: "./academic/CurriculumCourse.yaml#/CurriculumCourse"
 GenericCurriculumCourse:
@@ -53,6 +61,10 @@ BasicDegreeModel:
   $ref: "./academic/Degree.yaml#/BasicDegreeModel"
 ExtendedDegreeModel:
   $ref: "./academic/Degree.yaml#/ExtendedDegreeModel"
+BasicExecutionDegreeModel:
+  $ref: "./academic/ExecutionDegree.yaml#/BasicExecutionDegreeModel"
+ExtendedExecutionDegreeModel:
+  $ref: "./academic/ExecutionDegree.yaml#/ExtendedExecutionDegreeModel"
 Enrolment:
   $ref: "./academic/Enrolment.yaml"
 GenericEventBeanModel:

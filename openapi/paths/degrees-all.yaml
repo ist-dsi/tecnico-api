@@ -15,4 +15,4 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/Degree.yaml#/BasicDegreeModel"
+              $ref: "../schemas/academic/Degree.yaml#/ExtendedDegreeModel"

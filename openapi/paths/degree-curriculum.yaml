@@ -1,8 +1,9 @@
 get:
-  operationId: getDegreeCourses
-  summary: Fetch courses of a degree
+  operationId: getDegreeCurriculum
+  summary: Fetch curriculum of a degree
   description: >-
-    Fetch information about a specific degree's courses, given its ID.
+    Fetch information about a specific degree's courses, given its ID:
+    more specific information about a degree's courses and general structure
     The degree's year can be specified, defaulting to the current execution year if it is not
   tags:
     - degrees
@@ -33,7 +34,7 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/CurricularCourse.yaml#/BasicCurricularCourseModel"
+              $ref: "../schemas/academic/CurricularCourse.yaml#/ExtendedCurricularCourseModel"
     "400":
       description: >-
         Invalid degree ID supplied
@@ -46,3 +47,15 @@ get:
             message:
               pt-PT: O curso com o ID 16467887136714 não foi encontrado
               en-GB: The degree with ID 16467887136714 was not found
+    "404":
+      description: >-
+        The degree does not exist in the given execution year.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.degree.does.not.exist.in.year
+            message:
+              pt-PT: O curso com ID 123456789 não existe no ano letivo 2021/2022
+              en-GB: The degree with ID 123456789 does not exist in academic year 2021/2022

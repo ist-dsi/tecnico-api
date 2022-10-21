@@ -1,27 +1,72 @@
-type: object
-required:
-  - id
-  - name
-  - acronym
-  - credits
-properties:
-  id:
-    $ref: "../DomainObjectId.yaml"
-  name:
-    allOf:
-      - $ref: "../LocalizedString.yaml"
-    example:
-      pt-PT: "Redes de Computadores"
-      en-GB: "Computer Networks"
-  acronym:
-    type: string
-    example: "RC"
-  credits:
-    type: number
-    format: double
-    multipleOf: 0.1
-  executions:
-    type: array
-    items:
-      $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
-    description: The executions of this curricular course in the given year.
+BasicCurricularCourseModel:
+  type: object
+  required:
+    - id
+    - name
+    - acronym
+    - credits
+  properties:
+    id:
+      $ref: "../DomainObjectId.yaml"
+    name:
+      allOf:
+        - $ref: "../LocalizedString.yaml"
+      example:
+        pt-PT: "Redes de Computadores"
+        en-GB: "Computer Networks"
+    acronym:
+      type: string
+      example: "RC"
+    credits:
+      type: number
+      format: double
+      multipleOf: 0.1
+    executions:
+      type: array
+      items:
+        $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
+      description: The executions of this curricular course in the given year.
+ExtendedCurricularCourseModel:
+  allOf:
+    - $ref: "#/BasicCurricularCourseModel"
+    - type: object
+      required:
+        - workload
+        - curricularPeriod
+        - executionInterval
+        - optional
+        - courseGroups
+      properties:
+        workload:
+          type: object
+          required:
+            - autonomous
+            - contact
+            - total
+          properties:
+            autonomous:
+              type: number
+              format: double
+              multipleOf: 0.1
+            contact:
+              type: number
+              format: double
+              multipleOf: 0.1
+            total:
+              type: number
+              format: double
+              multipleOf: 0.1
+        curricularPeriod:
+          allOf:
+            - $ref: "./CurricularPeriod.yaml"
+            - description: >-
+                Represents at which point in the curriculum of the degrees this course should be attended.
+        executionInterval:
+          type: string
+          example: "Semestral"
+        optional:
+          type: boolean
+        courseGroups:
+          type: array
+          items:
+            $ref: "./CourseGroup.yaml"

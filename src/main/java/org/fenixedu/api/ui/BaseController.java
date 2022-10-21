@@ -7,6 +7,7 @@ import com.google.gson.JsonPrimitive;
 import org.fenixedu.academic.domain.AdHocEvaluation;
 import org.fenixedu.academic.domain.Attends;
 import org.fenixedu.academic.domain.CompetenceCourse;
+import org.fenixedu.academic.domain.Coordinator;
 import org.fenixedu.academic.domain.CourseLoad;
 import org.fenixedu.academic.domain.CurricularCourse;
 import org.fenixedu.academic.domain.Degree;
@@ -28,9 +29,12 @@ import org.fenixedu.academic.domain.Shift;
 import org.fenixedu.academic.domain.StudentGroup;
 import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.WrittenEvaluation;
+import org.fenixedu.academic.domain.curricularPeriod.CurricularPeriod;
 import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences;
 import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences.BibliographicReference;
 import org.fenixedu.academic.domain.degreeStructure.BibliographicReferences.BibliographicReferenceType;
+import org.fenixedu.academic.domain.degreeStructure.Context;
+import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.space.EventSpaceOccupation;
 import org.fenixedu.academic.domain.space.LessonInstanceSpaceOccupation;
@@ -61,6 +65,7 @@ import pt.ist.fenixframework.DomainObject;
 
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
@@ -253,7 +258,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             data.addProperty("acronym", course.getAcronym());
             data.addProperty("credits", course.getEctsCredits(executionYear));
             data.add(
-                    "executionCourses",
+                    "executions",
                     course.getExecutionCoursesByExecutionYear(executionYear)
                             .stream()
                             .map(this::toExecutionCourseJson)
@@ -262,9 +267,73 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         });
     }
 
+    // TODO add javadocs saying context must contain a curricular course
+
+    /**
+     * Serialize a {@link Context} that wraps a {@link CurricularCourse}.
+     *
+     * @param context       A {@link Context} that wraps a {@link CurricularCourse}. If it does not wrap a course, it
+     *                      will throw an error!
+     * @param executionYear The year to fetch course data from.
+     * @param pathTaken     The path that has been taken until the current course group (inclusive).
+     * @return Serialized data
+     */
+    protected @NotNull JsonObject toCurricularCourseWithCurricularInformationJson(@NotNull Context context,
+                                                                                  @NotNull ExecutionYear executionYear,
+                                                                                  @NotNull List<CourseGroup> pathTaken) {
+        final CurricularCourse course = (CurricularCourse) context.getChildDegreeModule();
+        final CurricularPeriod period = context.getCurricularPeriod();
+        // "term" is the half of the semester when the course occurs, or null if it's the whole semester
+        final Integer term = context.getTerm();
+
+        final JsonObject data = toCurricularCourseJson(course, executionYear);
+        data.add("workload", JsonUtils.toJson(workload -> {
+            workload.addProperty("autonomous", course.getAutonomousWorkHours());
+            workload.addProperty("contact", course.getContactLoad());
+            workload.addProperty("total", course.getTotalLoad());
+        }));
+        addIfAndFormatElement(data, "curricularPeriod", period, p -> toCurricularPeriodJson(p, term));
+        data.addProperty("executionInterval", course.getRegime().getLocalizedName());
+        data.addProperty("optional", course.isOptional());
+        data.add(
+                "courseGroups",
+                pathTaken
+                        .stream()
+                        .map(this::toCourseGroupJson)
+                        .collect(StreamUtils.toJsonArray())
+        );
+        return data;
+    }
+
+    protected @NotNull JsonObject toCurricularPeriodJson(@NotNull final CurricularPeriod curricularPeriod,
+                                                         @Nullable final Integer term) {
+        return JsonUtils.toJson(data -> {
+            // "term" is the half of the semester when the course occurs, or null if it's the whole semester
+            addIfAndFormatElement(data, "quarter", term, JsonPrimitive::new);
+
+            CurricularPeriod currentPeriod = curricularPeriod;
+            do {
+                addIfAndFormatElement(
+                        data,
+                        currentPeriod.getAcademicPeriod().getName().toLowerCase(Locale.ROOT),
+                        currentPeriod.getChildOrder(),
+                        JsonPrimitive::new
+                );
+                currentPeriod = currentPeriod.getParent();
+            } while (currentPeriod != null);
+        });
+    }
+
+    protected @NotNull JsonObject toCourseGroupJson(@NotNull CourseGroup courseGroup) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("id", courseGroup.getExternalId());
+            data.add("name", courseGroup.getNameI18N().json());
+        });
+    }
+
     protected @NotNull JsonObject toDegreeJson(@NotNull Degree degree) {
         return JsonUtils.toJson(data -> {
-            data.addProperty("id", degree.getExternalId());
+            data.addProperty("id", degree.getExternalId()); // avoid exposing executionDegree complexity
             data.add("name", degree.getNameI18N().json());
             data.addProperty("acronym", degree.getSigla());
             JsonUtils.addIf(data, "url", degree.getSiteUrl());
@@ -299,11 +368,18 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
                         .map(this::toExecutionYearJson)
                         .collect(StreamUtils.toJsonArray())
         );
+        return data;
+    }
 
-        // below are the fields used in each degree's homepage
-        // e.g https://fenix.tecnico.ulisboa.pt/cursos/leic-a/descricao
-        final DegreeInfo degreeInfo = degree.getMostRecentDegreeInfo();
-        final ExecutionYear executionYear = degreeInfo.getExecutionYear();
+    protected @NotNull JsonObject toExecutionDegreeJson(@NotNull ExecutionDegree executionDegree) {
+        return toExtendedDegreeJson(executionDegree.getDegree());
+    }
+
+    protected @NotNull JsonObject toExtendedExecutionDegreeJson(@NotNull ExecutionDegree executionDegree) {
+        final Degree degree = executionDegree.getDegree();
+        final ExecutionYear executionYear = executionDegree.getExecutionYear();
+        final DegreeInfo degreeInfo = degree.getMostRecentDegreeInfo(executionYear.getAcademicInterval());
+        final JsonObject data = toExtendedDegreeJson(degree);
         addIfAndFormatElement(
                 data,
                 "accessRequisites",
@@ -355,8 +431,9 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         addIfAndFormatElement(
                 data,
                 "coordinators",
-                degree.getResponsibleCoordinatorsTeachers(executionYear),
+                executionDegree.getResponsibleCoordinators(),
                 teachers -> teachers.stream()
+                        .map(Coordinator::getTeacher)
                         .map(this::toTeacherJson)
                         .collect(StreamUtils.toJsonArray())
         );
@@ -478,8 +555,10 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         );
         courseInformation.add(
                 "degrees",
-                course.getDegreesSortedByDegreeName()
+                course.getExecutionDegrees()
                         .stream()
+                        .sorted(ExecutionDegree.COMPARATOR_BY_DEGREE_NAME)
+                        .map(ExecutionDegree::getDegree)
                         .map(this::toDegreeJson)
                         .collect(StreamUtils.toJsonArray())
         );
@@ -713,7 +792,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return JsonUtils.toJson(data -> {
             data.addProperty("name", schoolClass.getNome());
             data.addProperty("curricularYear", schoolClass.getAnoCurricular());
-            data.add("degree", toDegreeJson(schoolClass.getExecutionDegree().getDegree()));
+            data.add("degree", toExtendedDegreeJson(schoolClass.getExecutionDegree().getDegree()));
         });
     }
 

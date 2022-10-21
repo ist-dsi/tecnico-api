@@ -37,6 +37,8 @@ paths:
     $ref: "./paths/degrees-one.yaml"
   /degrees/{degree}/courses:
     $ref: "./paths/degree-courses.yaml"
+  /degrees/{degree}/curriculum:
+    $ref: "./paths/degree-curriculum.yaml"
   /person:
     $ref: "./paths/person.yaml"
   /spaces:
