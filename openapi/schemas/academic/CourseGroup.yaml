@@ -1,0 +1,13 @@
+type: object
+required:
+  - id
+  - name
+properties:
+  id:
+    $ref: "../DomainObjectId.yaml"
+  name:
+    allOf:
+      - $ref: "../LocalizedString.yaml"
+    example:
+      pt-PT: "Área Principal"
+      en-GB: "Main Area"

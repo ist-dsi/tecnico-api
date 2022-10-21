@@ -2,7 +2,9 @@ get:
   operationId: getDegree
   summary: Fetch a single degree
   description: >-
-    Fetch information about a specific degree, given its ID
+    Fetch information about a specific degree in a specific execution year, given its ID.
+    If the degree does not exist in the given year (even if it's the default execution year),
+    a not found error will be thrown.
   tags:
     - degrees
   parameters:
@@ -13,6 +15,14 @@ get:
       description: >-
         The degree's unique ID.
       required: true
+    - in: query
+      name: year
+      schema:
+        type: string
+      description: >-
+        The specific year to fetch degree information from. Defaults to the current execution year.
+      example: "2021/2022"
+      required: false
   security: []
   responses:
     "200":
@@ -21,16 +31,40 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../schemas/academic/Degree.yaml#/ExtendedDegreeModel"
+            $ref: "../schemas/academic/ExecutionDegree.yaml#/ExtendedExecutionDegreeModel"
     "400":
       description: >-
-        Invalid degree ID supplied
+        Invalid degree ID/year supplied
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          examples:
+            invalid-degree-id:
+              description: >-
+                Bad Request
+              value:
+                key: error.degree.not.found
+                message:
+                  pt-PT: O curso com o ID 16467887136714 não foi encontrado
+                  en-GB: The degree with ID 16467887136714 was not found
+            invalid-year:
+              description: >-
+                Invalid year supplied
+              value:
+                key: error.academicterm.year.incorrect
+                message:
+                  pt-PT: O ano inserido (2020/2022) é inválido ou não existe
+                  en-GB: The inserted year (2020/2022) is invalid or does not exist
+    "404":
+      description: >-
+        The degree does not exist in the given execution year.
       content:
         application/json:
           schema:
             $ref: "../schemas/Error.yaml"
           example:
-            key: error.degree.not.found
+            key: error.degree.does.not.exist.in.year
             message:
-              pt-PT: O curso com o ID 16467887136714 não foi encontrado
-              en-GB: The degree with ID 16467887136714 was not found
+              pt-PT: O curso com ID 123456789 não existe no ano letivo 2021/2022
+              en-GB: The degree with ID 123456789 does not exist in academic year 2021/2022

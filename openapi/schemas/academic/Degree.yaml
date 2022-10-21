@@ -20,7 +20,7 @@ BasicDegreeModel:
       example: "LEIC-A"
     url:
       type: string
-      example: "https://www.tecnico.ulisboa.pt"
+      example: "https://fenix.tecnico.ulisboa.pt/cursos/leic-a"
     campi:
       type: array
       items:
@@ -43,55 +43,3 @@ ExtendedDegreeModel:
           type: array
           items:
             $ref: "./ExecutionYear.yaml#/BasicExecutionYearModel"
-        description:
-          allOf:
-            - $ref: "../LocalizedString.yaml"
-          example:
-            pt-PT: Descrição do curso
-            en-GB: Degree's description
-        designedFor:
-          allOf:
-            - $ref: "../LocalizedString.yaml"
-          example:
-            pt-PT: Este curso é direcionado a estas pessoas
-            en-GB: This degree is designed for these people
-        history:
-          allOf:
-            - $ref: "../LocalizedString.yaml"
-          example:
-            pt-PT: História do curso
-            en-GB: Degree's history
-        objectives:
-          allOf:
-            - $ref: "../LocalizedString.yaml"
-          example:
-            pt-PT: Objetivos do curso
-            en-GB: Degree's objectives
-        operationalRegime:
-          allOf:
-            - $ref: "../LocalizedString.yaml"
-          example:
-            pt-PT: Regime operacional do curso
-            en-GB: Degree's operational regime
-        professionalExits:
-          allOf:
-            - $ref: "../LocalizedString.yaml"
-          example:
-            pt-PT: Saídas profissionais do curso
-            en-GB: Degree's professional exits
-        tuitionFees:
-          allOf:
-            - $ref: "../LocalizedString.yaml"
-          example:
-            pt-PT: Custo das propinas do curso
-            en-GB: Degree's tuition fees
-        coordinators:
-          type: array
-          items:
-            allOf:
-              - $ref: "./Teacher.yaml"
-            example:
-              username: "ist135791"
-              name: "André Celes Mateus"
-              emailAddress: "example@tecnico.ulisboa.pt"
-              webAddress: "https://www.tecnico.ulisboa.pt"
