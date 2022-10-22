@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.fenixedu</groupId>
         <artifactId>fenix-framework-project</artifactId>
         <version>2.5.2</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <artifactId>fenixedu-api</artifactId>
@@ -17,7 +18,8 @@
 
     <scm>
         <connection>scm:git:git@repo.dsi.tecnico.ulisboa.pt:FenixEdu/application/fenixedu-api.git</connection>
-        <developerConnection>scm:git:git@repo.dsi.tecnico.ulisboa.pt:FenixEdu/application/fenixedu-api</developerConnection>
+        <developerConnection>scm:git:git@repo.dsi.tecnico.ulisboa.pt:FenixEdu/application/fenixedu-api
+        </developerConnection>
         <url>https://repo.dsi.tecnico.ulisboa.pt/FenixEdu/application/fenixedu-api</url>
         <tag>HEAD</tag>
     </scm>
@@ -26,7 +28,8 @@
         <!-- Maximum version of the formatter that supports Java 8 is 2.16.0 -->
         <version.net.revelc.code.formatter>2.16.0</version.net.revelc.code.formatter>
         <version.org.fenixedu.academic>32.3.0</version.org.fenixedu.academic>
-        <version.org.jetbrains.annotations>16.0.2</version.org.jetbrains.annotations>
+        <version.org.jetbrains.annotations>23.0.0</version.org.jetbrains.annotations>
+        <version.org.projectlombok.lombok>1.18.24</version.org.projectlombok.lombok>
     </properties>
 
     <build>
@@ -118,6 +121,12 @@
             <artifactId>annotations</artifactId>
             <version>${version.org.jetbrains.annotations}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${version.org.projectlombok.lombok}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
