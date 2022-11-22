@@ -5,11 +5,9 @@ import org.fenixedu.academic.domain.ExecutionDegree;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.commons.i18n.LocalizedString;
 import org.fenixedu.commons.stream.StreamUtils;
-import org.fenixedu.spaces.domain.Space;
 import org.jetbrains.annotations.NotNull;
 
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 public class DegreeSerializer extends DomainObjectSerializer {
 
@@ -28,8 +26,7 @@ public class DegreeSerializer extends DomainObjectSerializer {
                     "campi",
                     degree.getCurrentCampus(),
                     campus -> campus.stream()
-                            .map(Space::getName)
-                            .map(JsonPrimitive::new)
+                            .map(this.getAPISerializer().getSpaceSerializer()::serializeBasic)
                             .collect(StreamUtils.toJsonArray())
             );
             addIfAndFormatElement(

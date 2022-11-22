@@ -24,8 +24,7 @@ BasicDegreeModel:
     campi:
       type: array
       items:
-        type: string
-        example: "Alameda"
+        $ref: "./Space.yaml#/BasicSpaceModel"
     degreeType:
       allOf:
         - $ref: "../LocalizedString.yaml"
