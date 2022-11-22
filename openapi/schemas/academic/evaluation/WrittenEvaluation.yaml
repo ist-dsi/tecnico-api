@@ -5,7 +5,12 @@ required:
 properties:
   season:
     type: string
-    example: "2ª Época"
+    enum:
+      - "FIRST_SEASON"
+      - "SECOND_SEASON"
+      - "SPECIAL_SEASON"
+      - "EXTRAORDINARY_SEASON"
+      - "UNKNOWN"
   enrolmentPeriod:
     required:
       - currentlyOpen
