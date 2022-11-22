@@ -24,6 +24,7 @@ public class FenixEduAPISerializer {
             this
     );
     private final @NotNull EvaluationTypeSerializer evaluationTypeSerializer = new EvaluationTypeSerializer(this);
+    private final @NotNull EvaluationSeasonSerializer evaluationSeasonSerializer = new EvaluationSeasonSerializer(this);
     private final @NotNull EvaluationSerializer evaluationSerializer = new EvaluationSerializer(this);
     private final @NotNull EventSerializer eventSerializer = new EventSerializer(this);
     private final @NotNull EventBeanSerializer eventBeanSerializer = new EventBeanSerializer(this);

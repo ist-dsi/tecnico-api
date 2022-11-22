@@ -66,7 +66,10 @@ public class EvaluationSerializer extends DomainObjectSerializer {
     public @NotNull JsonObject serializeExtended(@NotNull WrittenEvaluation evaluation) {
         JsonObject data = serialize(evaluation);
         if (evaluation.isExam()) {
-            data.addProperty("season", ((Exam) evaluation).getSeason().toString());
+            data.add(
+                    "season",
+                    getAPISerializer().getEvaluationSeasonSerializer().serialize(((Exam) evaluation).getSeason())
+            );
         }
         if (evaluation.getEnrolmentPeriodStart() != null && evaluation.getEnrolmentPeriodEnd() != null) {
             data.add("enrolmentPeriod", JsonUtils.toJson(period -> {
