@@ -29,9 +29,17 @@ get:
               attendingCount:
                 type: integer
                 example: 223
+                description: >-
+                  The number of students attending the execution course (i.e. the
+                  number of students that can attend shifts)
               enrolledCount:
                 type: integer
                 example: 208
+                description: >-
+                  The number of students enrolled in the execution course (i.e.
+                  the number of students that can get a grade) - sometimes, students
+                  can be enrolled but not attending, if the central services enroll
+                  students directly before they're able to do it manually
               attendingStudents:
                 type: array
                 items:
