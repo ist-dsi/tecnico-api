@@ -1,3 +1,6 @@
 type: string
-description: A numeric string, representing the unique ID of this object
+description: >-
+  A numeric string, representing the unique ID of this object.
+  As a (very) important note, this ID is not necessarily immutable: DSI reserves
+  its right to change this ID at any time, without notice.
 example: "123456789"

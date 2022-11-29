@@ -5,6 +5,9 @@ info:
     Allows data to be fetched from FenixEdu servers.
     There are various public endpoints, but there is also support for OAuth,
     allowing to get and change data related to a specific user.
+    
+    As a (very) important note, the Object IDs in the endpoints below are not
+    necessarily immutable: DSI reserves its right to change these IDs at any time, without notice.
   version: "2.0.0"
   license:
     name: LGPL 3.0
