@@ -26,26 +26,26 @@ get:
               $ref: "../schemas/academic/Space.yaml#/GenericSpaceModel"
     "400":
       description: >-
-        Bad Request
+        The supplied Space is not a valid campus
       content:
         application/json:
           schema:
             $ref: "../schemas/Error.yaml"
-          examples:
-            invalid-space-id:
-              description: >-
-                  Invalid Space ID supplied
-              value:
-                key: error.space.not.found
-                message:
-                  pt-PT: O espaço com o ID 2448131363674411 não foi encontrado
-                  en-GB: The space with ID 2448131363674411 was not found
-            invalid-campus:
-              description: >-
-                  Space does not match a campus
-              value:
-                key: error.space.campus.invalid
-                message:
-                  pt-PT: O ID inserido (1972772968333341) não corresponde a um campus existente
-                  en-GB: The inserted ID (1972772968333341) does not match an existing campus
+          example:
+            key: error.space.campus.invalid
+            message:
+              pt-PT: O ID inserido (2448131363674411) não corresponde a um campus existente
+              en-GB: The inserted ID (2448131363674411) does not match an existing campus
+    "404":
+      description: >-
+        Invalid Space ID supplied
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.space.not.found
+            message:
+              pt-PT: O espaço com o ID 2448131363674411 não foi encontrado
+              en-GB: The space with ID 2448131363674411 was not found
       

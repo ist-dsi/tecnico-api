@@ -49,14 +49,6 @@ get:
           schema:
             $ref: "../schemas/Error.yaml"
           examples:
-            invalid-space-id:
-              description: >-
-                Invalid Space ID supplied
-              value:
-                key: error.space.not.found
-                message:
-                  pt-PT: O espaço com o ID 2448131363674411 não foi encontrado
-                  en-GB: The space with ID 2448131363674411 was not found
             invalid-day:
               description: >-
                 Invalid day supplied
@@ -81,3 +73,15 @@ get:
                 message:
                   pt-PT: O intervalo inserido tem duração (47 dias) superior ao máximo permitido (30 dias)
                   en-GB: The inserted interval lasts longer (47 days) than the maximum allowed (30 days)
+    "404":
+      description: >-
+        Invalid Space ID supplied
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.space.not.found
+            message:
+              pt-PT: O espaço com o ID 2448131363674411 não foi encontrado
+              en-GB: The space with ID 2448131363674411 was not found

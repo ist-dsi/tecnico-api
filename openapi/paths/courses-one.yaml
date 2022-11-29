@@ -22,7 +22,7 @@ get:
         application/json:
           schema:
             $ref: "../schemas/academic/ExecutionCourse.yaml#/ExtendedExecutionCourseModel"
-    "400":
+    "404":
       description: >-
         Invalid course ID supplied
       content:

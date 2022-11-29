@@ -26,18 +26,6 @@ put:
     "204":
       description: >-
         Enroled successfully (returns no content)
-    "400":
-      description: >-
-        Invalid evaluation supplied. Must be of type EXAME or TEST.
-      content:
-        application/json:
-          schema:
-            $ref: "../schemas/Error.yaml"
-          example:
-            key: error.writtenevaluation.year.incorrect
-            message:
-              pt-PT: A avaliação com o ID 123456789 não foi encontrada ou não é do tipo "teste" ou "exame"
-              en-GB: The evaluation with ID 123456789 was not found or is not of type "test" or "exam"
     "401":
       $ref: "../responses/OAuthUnauthorizedResponse.yaml"
     "403":
@@ -74,6 +62,18 @@ put:
               $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/app-banned"
             insufficient-scopes:
               $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/insufficient-scopes"
+    "404":
+      description: >-
+        Invalid evaluation supplied. Must be of type EXAM or TEST.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.writtenevaluation.not.found
+            message:
+              pt-PT: A avaliação com o ID 123456789 não foi encontrada ou não é do tipo "teste" ou "exame"
+              en-GB: The evaluation with ID 123456789 was not found or is not of type "test" or "exam"
     "409":
       description: >-
         The user is already enroled in this evaluation
@@ -127,18 +127,6 @@ delete:
     "204":
       description: >-
         Unenroled successfully (returns no content)
-    "400":
-      description: >-
-        Invalid evaluation supplied. Must be of type EXAME or TEST.
-      content:
-        application/json:
-          schema:
-            $ref: "../schemas/Error.yaml"
-          example:
-            key: error.writtenevaluation.year.incorrect
-            message:
-              pt-PT: A avaliação com o ID 123456789 não foi encontrada ou não é do tipo "teste" ou "exame"
-              en-GB: The evaluation with ID 123456789 was not found or is not of type "test" or "exam"
     "401":
       $ref: "../responses/OAuthUnauthorizedResponse.yaml"
     "403":
@@ -175,6 +163,18 @@ delete:
               $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/app-banned"
             insufficient-scopes:
               $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/insufficient-scopes"
+    "404":
+      description: >-
+        Invalid evaluation supplied. Must be of type EXAM or TEST.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.writtenevaluation.not.found
+            message:
+              pt-PT: A avaliação com o ID 123456789 não foi encontrada ou não é do tipo "teste" ou "exame"
+              en-GB: The evaluation with ID 123456789 was not found or is not of type "test" or "exam"
     "409":
       description: >-
         The user is not enroled in this evaluation

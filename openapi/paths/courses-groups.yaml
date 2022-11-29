@@ -24,7 +24,7 @@ get:
             type: array
             items:
               $ref: "../schemas/academic/Grouping.yaml"
-    "400":
+    "404":
       description: >-
         Invalid course ID supplied
       content:
