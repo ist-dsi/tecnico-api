@@ -62,7 +62,7 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
             final String value = Objects.toString(exception.getValue());
             return handleApiError(
                     new APIError(
-                            HttpStatus.BAD_REQUEST,
+                            HttpStatus.NOT_FOUND,
                             "error." + targetType.getSimpleName().toLowerCase() + ".not.found",
                             value
                     )

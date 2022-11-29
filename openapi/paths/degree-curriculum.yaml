@@ -35,27 +35,27 @@ get:
             type: array
             items:
               $ref: "../schemas/academic/CurricularCourse.yaml#/ExtendedCurricularCourseModel"
-    "400":
-      description: >-
-        Invalid degree ID supplied
-      content:
-        application/json:
-          schema:
-            $ref: "../schemas/Error.yaml"
-          example:
-            key: error.degree.not.found
-            message:
-              pt-PT: O curso com o ID 16467887136714 não foi encontrado
-              en-GB: The degree with ID 16467887136714 was not found
     "404":
       description: >-
-        The degree does not exist in the given execution year.
+        Not Found
       content:
         application/json:
           schema:
             $ref: "../schemas/Error.yaml"
-          example:
-            key: error.degree.does.not.exist.in.year
-            message:
-              pt-PT: O curso com ID 123456789 não existe no ano letivo 2021/2022
-              en-GB: The degree with ID 123456789 does not exist in academic year 2021/2022
+          examples:
+            invalid-degree-id:
+              description: >-
+                Invalid degree ID supplied
+              value:
+                key: error.degree.not.found
+                message:
+                  pt-PT: O curso com o ID 16467887136714 não foi encontrado
+                  en-GB: The degree with ID 16467887136714 was not found
+            invalid-year:
+              description: >-
+                The degree does not exist in the given execution year.
+              value:
+                key: error.degree.does.not.exist.in.year
+                message:
+                  pt-PT: O curso com ID 123456789 não existe no ano letivo 2021/2022
+                  en-GB: The degree with ID 123456789 does not exist in academic year 2021/2022

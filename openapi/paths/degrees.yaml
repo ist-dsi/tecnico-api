@@ -28,7 +28,7 @@ get:
               $ref: "../schemas/academic/ExecutionDegree.yaml#/BasicExecutionDegreeModel"
     "400":
       description: >-
-        Invalid year
+        Invalid year supplied
       content:
         application/json:
           schema:
