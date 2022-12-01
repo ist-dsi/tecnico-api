@@ -5,7 +5,7 @@ get:
     Fetch evaluations of all the courses the logged in student is enroled in.
     Requires the `read:evaluations` scope.
     If the user is not a student, an empty list is returned.
-    Optionally, a year and semester can be passed to get the enrolments in that sepecific year (and semester).
+    Optionally, a year and semester can be passed to get the enrolments in that specific year (and semester).
     If left empty, the current semester will be used.
 
     The following logic will be used to decide which semesters to include in the response:

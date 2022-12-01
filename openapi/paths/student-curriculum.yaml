@@ -19,7 +19,7 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/StudentCurricularPlan.yaml"
+              $ref: "../schemas/academic/Registration.yaml#/RegistrationWithCurriculumInformation"
     "401":
       $ref: "../responses/OAuthUnauthorizedResponse.yaml"
     "403":

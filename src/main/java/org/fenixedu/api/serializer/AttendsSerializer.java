@@ -1,9 +1,8 @@
 package org.fenixedu.api.serializer;
 
+import com.google.gson.JsonPrimitive;
 import org.fenixedu.academic.domain.Attends;
-import org.fenixedu.academic.domain.Degree;
-import org.fenixedu.academic.domain.Person;
-import org.fenixedu.academic.domain.student.Registration;
+import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,13 +15,29 @@ public class AttendsSerializer extends DomainObjectSerializer {
     }
 
     public @NotNull JsonObject serialize(@NotNull Attends attends) {
-        final Registration registration = attends.getRegistration();
-        final Person person = registration.getPerson();
-        final Degree degree = registration.getDegree();
+        final ExecutionCourse course = attends.getExecutionCourse();
         return JsonUtils.toJson(data -> {
-            data.addProperty("username", person.getUsername());
-            data.add("degree", this.getAPISerializer().getDegreeSerializer().serialize(degree));
+            data.add("state", serializeAttendsState(attends.getAttendsStateType()));
+            data.addProperty("isEnroled", attends.getEnrolment() != null);
+            data.add("course", this.getAPISerializer().getExecutionCourseSerializer().serialize(course));
         });
+    }
+
+    public @NotNull JsonPrimitive serializeAttendsState(@NotNull Attends.StudentAttendsStateType attendsState) {
+        switch (attendsState) {
+            case ENROLED:
+                return new JsonPrimitive("ENROLED");
+            case NOT_ENROLED:
+                return new JsonPrimitive("NOT_ENROLED");
+            case IMPROVEMENT:
+                return new JsonPrimitive("IMPROVEMENT");
+            case SPECIAL_SEASON:
+                return new JsonPrimitive("SPECIAL_SEASON");
+            case EXTRAORDINARY_SEASON:
+                return new JsonPrimitive("EXTRAORDINARY_SEASON");
+            default:
+                return new JsonPrimitive("EXAM");
+        }
     }
 
 }

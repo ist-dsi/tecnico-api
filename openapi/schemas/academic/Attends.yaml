@@ -1,10 +1,16 @@
 type: object
 required:
-  - username
-  - degree
+  - state
+  - course
 properties:
-  username:
+  state:
     type: string
-    example: "ist135791"
-  degree:
-    $ref: "./Degree.yaml#/BasicDegreeModel"
+    enum:
+      - ENROLED
+      - NOT_ENROLED
+      - IMPROVEMENT
+      - SPECIAL_SEASON
+      - EXTRAORDINARY_SEASON
+      - EXAM
+  course:
+    $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"

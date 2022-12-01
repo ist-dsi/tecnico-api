@@ -101,7 +101,11 @@ Person:
 Professorship:
   $ref: "./academic/Professorship.yaml"
 Registration:
-  $ref: "./academic/Registration.yaml"
+  $ref: "./academic/Registration.yaml#/Registration"
+RegistrationWithCurricularInformation:
+  $ref: "./academic/Registration.yaml#/RegistrationWithCurriculumInformation"
+RegistrationForOthers:
+  $ref: "./academic/Registration.yaml#/RegistrationForOthers"
 SchoolClass:
   $ref: "./academic/SchoolClass.yaml"
 BasicShiftModel:
@@ -114,8 +118,6 @@ GenericSpaceModel:
   $ref: "./academic/Space.yaml#/GenericSpaceModel"
 ExtendedSpaceModel:
   $ref: "./academic/Space.yaml#/ExtendedSpaceModel"
-StudentCurricularPlan:
-  $ref: "./academic/StudentCurricularPlan.yaml"
 StudentGroup:
   $ref: "./academic/StudentGroup.yaml"
 Teacher:
