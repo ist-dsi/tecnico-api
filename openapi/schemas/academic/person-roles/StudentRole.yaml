@@ -5,4 +5,4 @@ properties:
   registrations:
     type: array
     items:
-      $ref: "../Registration.yaml"
+      $ref: "../Registration.yaml#/Registration"

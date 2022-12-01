@@ -197,6 +197,10 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return getSerializer().getAttendsSerializer().serialize(attends);
     }
 
+    protected @NotNull JsonObject toRegistrationForOthersJson(@NotNull Registration registration) {
+        return getSerializer().getRegistrationSerializer().serializeForOthers(registration);
+    }
+
     protected @NotNull JsonObject toCurricularCourseJson(@NotNull CurricularCourse course,
                                                          @NotNull ExecutionYear executionYear) {
         return getSerializer().getCurricularCourseSerializer().serialize(course, executionYear);

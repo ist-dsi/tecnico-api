@@ -1,17 +1,73 @@
-type: object
-required:
-  - degreeName
-properties:
-  degreeName:
-    $ref: "../LocalizedString.yaml"
-  degreeAcronym:
-    type: string
-    example: MEIC-A
-  degreeType:
-    $ref: "../LocalizedString.yaml"
-  degreeId:
-    $ref: "../DomainObjectId.yaml"
-  academicTerms:
-    type: array
-    items:
-      $ref: "./ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
+Registration:
+  type: object
+  required:
+    - degreeName
+    - degreeAcronym
+    - degreeType
+    - degreeId
+    - academicTerms
+  properties:
+    degreeName:
+      $ref: "../LocalizedString.yaml"
+    degreeAcronym:
+      type: string
+      example: MEIC-A
+    degreeType:
+      $ref: "../LocalizedString.yaml"
+    degreeId:
+      $ref: "../DomainObjectId.yaml"
+    academicTerms:
+      type: array
+      items:
+        $ref: "./ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
+
+RegistrationWithCurriculumInformation:
+  allOf:
+    - $ref: "#/Registration"
+    - type: object
+      required:
+        - startDate
+        - curricularYear
+        - credits
+        - average
+        - roundedAverage
+        - isConcluded
+        - approvedCourses
+      properties:
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        curricularYear:
+          type: integer
+          description: The curricular year the student is currently in.
+        credits:
+          type: number
+          format: double
+        gradeAverage:
+          type: number
+          format: double
+          description: The weighted average of the grades of approved courses.
+        roundedGradeAverage:
+          type: integer
+          description: The weighted average of the grades of approved courses, rounded to the nearest integer.
+        isConcluded:
+          type: boolean
+        approvedCourses:
+          type: array
+          items:
+            $ref: "./CurriculumCourse.yaml#/CurriculumCourse"
+
+RegistrationForOthers:
+  type: object
+  required:
+    - username
+    - degree
+  properties:
+    username:
+      type: string
+      example: "ist135791"
+    degree:
+      $ref: "./Degree.yaml#/BasicDegreeModel"

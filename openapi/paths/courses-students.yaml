@@ -23,7 +23,7 @@ get:
           schema:
             required:
               - attendingCount
-              - enrolledCount
+              - enroledCount
               - attendingStudents
             properties:
               attendingCount:
@@ -32,7 +32,7 @@ get:
                 description: >-
                   The number of students attending the execution course (i.e. the
                   number of students that can attend shifts)
-              enrolledCount:
+              enroledCount:
                 type: integer
                 example: 208
                 description: >-

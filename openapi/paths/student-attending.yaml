@@ -1,9 +1,9 @@
 get:
-  operationId: getStudentEnrolments
-  summary: Fetch enroled courses
+  operationId: getStudentCoursesAttending
+  summary: Fetch attending courses
   description: |
-    Fetch enroled courses of the logged in student, including the student's grade and course's ECTS count.
-    Note that "enroled courses" are the ones where the student is able to get a grade.
+    Fetch attending courses of the logged in student, including the student's grade and course's ECTS count.
+    Note that "attending courses" are the ones where the student is able to enrol in shifts.
     Requires the `read:student` scope.
     If the user is not a student, an empty list is returned.
     Optionally, a year and semester can be passed to get the enrolments in that specific year (and semester).
@@ -25,7 +25,7 @@ get:
       schema:
         type: string
       description: >-
-        Use this year to get enrolments from.
+        Use this year to get attending courses from.
       example: 2021/2022
       required: false
     - in: query
@@ -33,8 +33,8 @@ get:
       schema:
         type: integer
       description: >-
-        Use this semester (either with the given year or the current year) to get enrolments from.
-        If `year` above is set without setting this, the endpoint will return enrolments for the entire year.
+        Use this semester (either with the given year or the current year) to get attending courses from.
+        If `year` above is set without setting this, the endpoint will return attending courses for the entire year.
       example: 1
       required: false
   responses:
@@ -46,7 +46,7 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/Enrolment.yaml"
+              $ref: "../schemas/academic/Attends.yaml"
     "400":
       description: >-
         Invalid year or semester supplied

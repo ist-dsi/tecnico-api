@@ -101,6 +101,9 @@ public class CurricularController extends BaseController {
         throw new APIError(HttpStatus.BAD_REQUEST, "error.calendar.format.incorrect", format);
     }
 
+    // Just like stated in the OpenAPI documentation, "attending"-related fields are related to execution
+    // courses where the student is able to attend shifts, while "enrolled"-related fields are related to
+    // courses where the student is able to be graded
     @RequestMapping(value = "/student/enrolments", method = RequestMethod.GET)
     public ResponseEntity<?> getStudentEnrolments(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
                                                   @RequestParam(required = false) Optional<String> year,
@@ -116,13 +119,44 @@ public class CurricularController extends BaseController {
             return ok(new JsonArray());
         }
 
-        // TODO The APIv1 has an "attending" field that we don't know what's for
         return respond(
                 semesters.stream()
                         .flatMap(
                                 executionSemester -> student.getRegistrationStream()
                                         .flatMap(registration -> registration.getEnrolments(executionSemester).stream())
                                         .map(enrolment -> toEnrolmentJson(enrolment, executionSemester))
+                        )
+        );
+    }
+
+    // Just like stated in the OpenAPI documentation, "attending"-related fields are related to execution
+    // courses where the student is able to attend shifts, while "enrolled"-related fields are related to
+    // courses where the student is able to be graded
+    @RequestMapping(value = "/student/attending", method = RequestMethod.GET)
+    public ResponseEntity<?> getStudentCoursesAttending(@RequestHeader(name = HttpHeaders.AUTHORIZATION, required = false) final String accessToken,
+                                                        @RequestParam(required = false) Optional<String> year,
+                                                        @RequestParam(required = false) Optional<Integer> semester) {
+        requireOAuthScope(accessToken, APIScope.STUDENT_READ);
+
+        final Collection<ExecutionSemester> semesters = parseExecutionSemestersOrThrow(year, semester);
+
+        final Person person = Authenticate.getUser().getPerson();
+        final Student student = person.getStudent();
+
+        if (student == null) {
+            return ok(new JsonArray());
+        }
+
+        return respond(
+                semesters.stream()
+                        .flatMap(
+                                executionSemester -> student.getRegistrationStream()
+                                        .flatMap(
+                                                registration -> registration.getAttendsForExecutionPeriod(
+                                                        executionSemester
+                                                ).stream()
+                                        )
+                                        .map(this::toAttendsJson)
                         )
         );
     }

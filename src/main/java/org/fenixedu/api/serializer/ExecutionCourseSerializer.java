@@ -59,7 +59,8 @@ public class ExecutionCourseSerializer extends DomainObjectSerializer {
                         .collect(StreamUtils.toJsonArray())
         );
         // a non-public version of this could probably return the actual list of enrolled students?
-        courseInformation.addProperty("enrolledStudents", executionCourse.getTotalEnrolmentStudentNumber());
+        courseInformation.addProperty("enroledCount", executionCourse.getTotalEnrolmentStudentNumber());
+        courseInformation.addProperty("attendingCount", executionCourse.getAttendsSet().size());
         courseInformation.addProperty("evaluationMethods", executionCourse.getLocalizedEvaluationMethodText());
         courseInformation.add(
                 "teachers",

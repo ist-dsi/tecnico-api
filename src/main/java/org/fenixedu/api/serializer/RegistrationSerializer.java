@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.ExecutionSemester;
+import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.StudentCurricularPlan;
 import org.fenixedu.academic.domain.degreeStructure.ProgramConclusion;
 import org.fenixedu.academic.domain.student.Registration;
@@ -55,8 +56,8 @@ public class RegistrationSerializer extends DomainObjectSerializer {
 
         data.addProperty("curricularYear", curriculum.getCurricularYear());
         data.addProperty("credits", curriculum.getSumEctsCredits());
-        data.addProperty("average", curriculum.getRawGrade().getNumericValue());
-        data.addProperty("roundedAverage", curriculum.getFinalGrade().getIntegerValue());
+        data.addProperty("gradeAverage", curriculum.getRawGrade().getNumericValue());
+        data.addProperty("roundedGradeAverage", curriculum.getFinalGrade().getIntegerValue());
         data.addProperty("isConcluded", registration.isConcluded());
 
         data.add(
@@ -75,6 +76,15 @@ public class RegistrationSerializer extends DomainObjectSerializer {
         );
 
         return data;
+    }
+
+    public @NotNull JsonObject serializeForOthers(@NotNull Registration registration) {
+        final Person person = registration.getPerson();
+        final Degree degree = registration.getDegree();
+        return JsonUtils.toJson(data -> {
+            data.addProperty("username", person.getUsername());
+            data.add("degree", this.getAPISerializer().getDegreeSerializer().serialize(degree));
+        });
     }
 
     private @NotNull JsonObject toSemesterJson(@NotNull ExecutionSemester semester) {
