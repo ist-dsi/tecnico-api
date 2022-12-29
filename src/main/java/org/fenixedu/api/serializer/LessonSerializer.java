@@ -17,7 +17,12 @@ public class LessonSerializer extends DomainObjectSerializer {
         return JsonUtils.toJson(data -> {
             data.addProperty("start", interval.getStart().toString());
             data.addProperty("end", interval.getEnd().toString());
-            data.add("room", getAPISerializer().getSpaceSerializer().serializeBasic(lesson.getSala()));
+            addIfAndFormatElement(
+                    data,
+                    "room",
+                    lesson.getSala(),
+                    getAPISerializer().getSpaceSerializer()::serializeBasic
+            );
         });
     }
 
