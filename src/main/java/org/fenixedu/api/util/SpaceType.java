@@ -2,6 +2,7 @@ package org.fenixedu.api.util;
 
 import org.fenixedu.academic.domain.space.SpaceUtils;
 import org.fenixedu.spaces.domain.Space;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -21,7 +22,7 @@ public enum SpaceType {
         this.isOfType = isOfType;
     }
 
-    public static Optional<SpaceType> getSpaceType(Space space) {
+    public static @NotNull Optional<SpaceType> getSpaceType(@NotNull Space space) {
         return Arrays.stream(values())
                 .filter(type -> type.isOfType.test(space))
                 .findAny();
