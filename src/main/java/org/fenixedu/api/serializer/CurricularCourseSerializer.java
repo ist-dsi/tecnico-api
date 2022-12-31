@@ -1,6 +1,7 @@
 package org.fenixedu.api.serializer;
 
 import org.fenixedu.academic.domain.CurricularCourse;
+import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.academic.domain.curricularPeriod.CurricularPeriod;
 import org.fenixedu.academic.domain.degreeStructure.Context;
@@ -33,6 +34,16 @@ public class CurricularCourseSerializer extends DomainObjectSerializer {
                             .map(this.getAPISerializer().getExecutionCourseSerializer()::serialize)
                             .collect(StreamUtils.toJsonArray())
             );
+        });
+    }
+
+    public @NotNull JsonObject serializeWithoutExecutions(@NotNull CurricularCourse curricularCourse,
+                                                          @NotNull ExecutionSemester executionSemester) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("id", curricularCourse.getExternalId());
+            data.add("name", curricularCourse.getNameI18N().json());
+            data.addProperty("acronym", curricularCourse.getAcronym());
+            data.addProperty("credits", curricularCourse.getEctsCredits(executionSemester));
         });
     }
 

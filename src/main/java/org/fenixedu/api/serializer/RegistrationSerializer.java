@@ -1,21 +1,22 @@
 package org.fenixedu.api.serializer;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import org.fenixedu.academic.domain.Degree;
 import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.StudentCurricularPlan;
-import org.fenixedu.academic.domain.degreeStructure.ProgramConclusion;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.curriculum.ICurriculum;
+import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateType;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.commons.stream.StreamUtils;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.YearMonthDay;
-
-import java.util.Optional;
 
 public class RegistrationSerializer extends DomainObjectSerializer {
 
@@ -27,10 +28,10 @@ public class RegistrationSerializer extends DomainObjectSerializer {
         final Degree degree = registration.getDegree();
 
         return JsonUtils.toJson(data -> {
-            data.add("degreeName", degree.getNameI18N().json());
-            data.addProperty("degreeAcronym", degree.getSigla());
-            data.add("degreeType", degree.getDegreeType().getName().json());
-            data.addProperty("degreeId", degree.getExternalId());
+            data.add("degree", this.getAPISerializer().getDegreeSerializer().serialize(degree));
+
+            data.addProperty("studentNumber", registration.getNumber());
+            data.add("state", this.serializeRegistrationStateType(registration.getActiveStateType()));
 
             final JsonArray academicTerms = registration.getEnrolmentsExecutionPeriods()
                     .stream()
@@ -61,21 +62,27 @@ public class RegistrationSerializer extends DomainObjectSerializer {
         data.addProperty("isConcluded", registration.isConcluded());
 
         data.add(
-                "approvedCourses",
+                "curricularPlans",
                 registration.getStudentCurricularPlanStream()
-                        // Get all groups for conclusion
-                        .flatMap(
-                                curricularPlan -> ProgramConclusion.conclusionsFor(curricularPlan)
-                                        .map(programConclusion -> programConclusion.groupFor(curricularPlan))
-                                        .filter(Optional::isPresent)
-                                        .map(Optional::get)
-                        )
-                        .flatMap(curriculumGroup -> curriculumGroup.getCurriculum().getCurriculumEntries().stream())
-                        .map(getAPISerializer().getICurriculumEntrySerializer()::serialize)
+                        .map(this::serializeStudentCurricularPlan)
                         .collect(StreamUtils.toJsonArray())
         );
 
         return data;
+    }
+
+    public @NotNull JsonObject serializeStudentCurricularPlan(@NotNull StudentCurricularPlan curricularPlan) {
+        return JsonUtils.toJson(data -> {
+            data.addProperty("name", curricularPlan.getName());
+            data.addProperty("startDate", curricularPlan.getStartDateYearMonthDay().toString());
+            addIfAndFormat(data, "endDate", curricularPlan.getEndStageDate(), LocalDate::toString);
+            data.add(
+                    "entries",
+                    curricularPlan.getCurriculumLineStream()
+                            .map(getAPISerializer().getCurriculumLineSerializer()::serialize)
+                            .collect(StreamUtils.toJsonArray())
+            );
+        });
     }
 
     public @NotNull JsonObject serializeForOthers(@NotNull Registration registration) {
@@ -85,6 +92,39 @@ public class RegistrationSerializer extends DomainObjectSerializer {
             data.addProperty("username", person.getUsername());
             data.add("degree", this.getAPISerializer().getDegreeSerializer().serialize(degree));
         });
+    }
+
+    public @NotNull JsonElement serializeRegistrationStateType(@NotNull RegistrationStateType stateType) {
+        switch (stateType) {
+            case REGISTERED:
+                return new JsonPrimitive("REGISTERED");
+            case MOBILITY:
+                return new JsonPrimitive("MOBILITY");
+            case CANCELED:
+                return new JsonPrimitive("CANCELED");
+            case CONCLUDED:
+                return new JsonPrimitive("CONCLUDED");
+            case FLUNKED:
+                return new JsonPrimitive("FLUNKED");
+            case INTERRUPTED:
+                return new JsonPrimitive("INTERRUPTED");
+            case SCHOOLPARTCONCLUDED:
+                return new JsonPrimitive("SCHOOL_PART_CONCLUDED");
+            case INTERNAL_ABANDON:
+                return new JsonPrimitive("INTERNAL_ABANDON");
+            case EXTERNAL_ABANDON:
+                return new JsonPrimitive("EXTERNAL_ABANDON");
+            case TRANSITION:
+                return new JsonPrimitive("TRANSITION");
+            case TRANSITED:
+                return new JsonPrimitive("TRANSITED");
+            case STUDYPLANCONCLUDED:
+                return new JsonPrimitive("STUDY_PLAN_CONCLUDED");
+            case INACTIVE:
+                return new JsonPrimitive("INACTIVE");
+            default:
+                return new JsonPrimitive("UNKNOWN"); // unreachable
+        }
     }
 
     private @NotNull JsonObject toSemesterJson(@NotNull ExecutionSemester semester) {

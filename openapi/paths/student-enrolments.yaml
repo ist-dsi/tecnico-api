@@ -46,7 +46,7 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/Enrolment.yaml"
+              $ref: "../schemas/academic/Enrolment.yaml#/EnrolmentModel"
     "400":
       description: >-
         Invalid year or semester supplied
