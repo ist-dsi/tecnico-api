@@ -2,7 +2,7 @@ get:
   operationId: getStudentCurriculum
   summary: Fetch curriculum information of student
   description: |
-    Fetch enroled degrees and approved courses of the logged in student, including the student's grade and course's ECTS count.
+    Fetch enroled degrees and courses of the logged in student, including the student's grade and course's ECTS count.
     Requires the `read:student` scope.
     If the user is not a student, an empty list is returned.
   tags:

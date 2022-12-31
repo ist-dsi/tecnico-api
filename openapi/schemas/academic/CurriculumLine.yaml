@@ -1,0 +1,114 @@
+CurriculumLine:
+  oneOf:
+    - $ref: "#/GenericCurriculumLine"
+    - $ref: "#/EnrolmentCurriculumLine"
+    - $ref: "#/DismissalCurriculumLine"
+  discriminator:
+    propertyName: type
+    mapping:
+      ENROLMENT: "#/EnrolmentCurriculumLine"
+      DISMISSAL: "#/DismissalCurriculumLine"
+      OTHER: "#/GenericCurriculumLine"
+
+GenericCurriculumLine:
+  type: object
+  description: When `type` is `OTHER`
+  required:
+    - name
+    - ects
+    - semester
+    - type
+  properties:
+    name:
+      allOf:
+        - $ref: "../LocalizedString.yaml"
+      example:
+        pt-PT: "Cálculo Diferencial e Integral I"
+        en-GB: "Differential and Integral Calculus I"
+    ects:
+      type: number
+      format: double
+    semester:
+      $ref: "./ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
+    type:
+      type: string
+      enum:
+        - ENROLMENT
+        - DISMISSAL
+        - OTHER
+
+EnrolmentCurriculumLine:
+  allOf:
+    - $ref: "#/GenericCurriculumLine"
+    - type: object
+      required:
+        - grade
+        - state
+        - evaluationSeason
+      properties:
+        grade:
+          type: string
+          example: "15"
+          description: Grade can be null, a number, "NA" or "RE".
+        curricularCourse:
+          $ref: "./CurricularCourse.yaml#/BasicCurricularCourseModelWithoutExecutions"
+        executionCourse:
+          $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
+        state:
+          $ref: "./Enrolment.yaml#/EnrolmentState"
+        evaluationSeason:
+          type: string
+          enum:
+            - NORMAL
+            - IMPROVEMENT
+            - SPECIAL_AUTHORIZATION
+            - SPECIAL
+            - EXTRAORDINARY
+  description: When `type` is `ENROLMENT`
+
+DismissalCurriculumLine:
+  allOf:
+    - $ref: "#/GenericCurriculumLine"
+    - type: object
+      required:
+        - grade
+        - dismissalType
+        - sourceEnrolments
+      properties:
+        grade:
+          type: string
+          example: "15"
+          description: Grade can be null, a number, "NA" or "RE".
+        dismissalType:
+          type: string
+          enum:
+            - CREDITS
+            - EQUIVALENCE
+            - SUBSTITUTION
+            - INTERNAL_SUBSTITUTION
+            - TEMPORARY_SUBSTITUTION
+        curricularCourse:
+          $ref: "./CurricularCourse.yaml#/BasicCurricularCourseModelWithoutExecutions"
+        executionCourse:
+          $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
+        sourceEnrolments:
+          allOf:
+            - type: object
+              required:
+                - type
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - ENROLMENT
+                    - EXTERNAL_ENROLMENT
+            - oneOf:
+                - $ref: "./Enrolment.yaml#/EnrolmentModel"
+                - $ref: "./Enrolment.yaml#/ExternalEnrolmentModel"
+              discriminator:
+                propertyName: type
+                mapping:
+                  ENROLMENT: "./Enrolment.yaml#/EnrolmentModel"
+                  EXTERNAL_ENROLMENT: "./Enrolment.yaml#/ExternalEnrolmentModel"
+
+  description: When `type` is `DISMISSAL`

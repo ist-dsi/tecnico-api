@@ -18,6 +18,9 @@ public class FenixEduAPISerializer {
     private final @NotNull CurricularPeriodSerializer curricularPeriodSerializer = new CurricularPeriodSerializer(
             this
     );
+    private final @NotNull CurriculumLineSerializer curriculumLineSerializer = new CurriculumLineSerializer(
+            this
+    );
     private final @NotNull DegreeSerializer degreeSerializer = new DegreeSerializer(this);
     private final @NotNull EnrolmentSerializer enrolmentSerializer = new EnrolmentSerializer(this);
     private final @NotNull EnrolmentPolicySerializer enrolmentPolicySerializer = new EnrolmentPolicySerializer(
@@ -39,9 +42,6 @@ public class FenixEduAPISerializer {
     );
     private final @NotNull ExecutionYearSerializer executionYearSerializer = new ExecutionYearSerializer(this);
     private final @NotNull GroupingSerializer groupingSerializer = new GroupingSerializer(this);
-    private final @NotNull ICurriculumEntrySerializer iCurriculumEntrySerializer = new ICurriculumEntrySerializer(
-            this
-    );
     private final @NotNull LessonSerializer lessonSerializer = new LessonSerializer(this);
     private final @NotNull LessonInstanceSerializer lessonInstanceSerializer = new LessonInstanceSerializer(this);
     private final @NotNull LocaleSerializer localeSerializer = new LocaleSerializer(this);

@@ -1,4 +1,4 @@
-BasicCurricularCourseModel:
+BasicCurricularCourseModelWithoutExecutions:
   type: object
   required:
     - id
@@ -21,11 +21,18 @@ BasicCurricularCourseModel:
       type: number
       format: double
       multipleOf: 0.1
-    executions:
-      type: array
-      items:
-        $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
-      description: The executions of this curricular course in the given year.
+BasicCurricularCourseModel:
+  allOf:
+    - $ref: "#/BasicCurricularCourseModelWithoutExecutions"
+    - type: object
+      required:
+        - executions
+      properties:
+        executions:
+          type: array
+          items:
+            $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
+          description: The executions of this curricular course in the given year.
 ExtendedCurricularCourseModel:
   allOf:
     - $ref: "#/BasicCurricularCourseModel"

@@ -1,14 +1,50 @@
-type: object
-required:
-  - ects
-  - course
-properties:
-  grade:
-    type: string
-    example: "15"
-    description: Grade can be null, a number, "NA" or "RE".
-  ects:
-    type: number
-    format: double
-  course:
-    $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
+EnrolmentModel:
+  type: object
+  required:
+    - ects
+    - state
+  properties:
+    grade:
+      type: string
+      example: "15"
+      description: Grade can be null, a number, "NA" or "RE".
+    ects:
+      type: number
+      format: double
+    curricularCourse:
+      $ref: "./CurricularCourse.yaml#/BasicCurricularCourseModelWithoutExecutions"
+    executionCourse:
+      $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
+    state:
+      $ref: "#/EnrolmentState"
+
+EnrolmentState:
+  type: string
+  enum:
+    - "APPROVED"
+    - "NOT_APPROVED"
+    - "ENROLLED"
+    - "TEMPORARILY_ENROLLED"
+    - "ANNULED"
+    - "NOT_EVALUATED"
+
+ExternalEnrolmentModel:
+  type: object
+  required:
+    - ects
+    - course
+    - state
+  properties:
+    grade:
+      type: string
+      example: "15"
+      description: Grade can be null, a number, "NA" or "RE".
+    ects:
+      type: number
+      format: double
+    course:
+      type: string
+      description: "A textual representation of the external course"
+      example: "Portugal > Universidade Nova de Lisboa > Nova School of Business & Economics > Álgebra Linear"
+    semester:
+      $ref: "./ExecutionSemester.yaml#/BasicExecutionSemesterModel"

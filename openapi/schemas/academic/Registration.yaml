@@ -1,21 +1,48 @@
 Registration:
   type: object
   required:
-    - degreeName
-    - degreeAcronym
-    - degreeType
-    - degreeId
+    - degree
+    - studentNumber
+    - state
     - academicTerms
   properties:
-    degreeName:
-      $ref: "../LocalizedString.yaml"
-    degreeAcronym:
+    degree:
+      $ref: "./Degree.yaml#/BasicDegreeModel"
+    studentNumber:
+      type: integer
+      example: 123456
+    state:
       type: string
-      example: MEIC-A
-    degreeType:
-      $ref: "../LocalizedString.yaml"
-    degreeId:
-      $ref: "../DomainObjectId.yaml"
+      description: |-
+        Meaning of each possible value, as per the UI:
+
+        - `REGISTERED`: Registered
+        - `MOBILITY`: Mobility
+        - `CANCELED`: Canceled
+        - `CONCLUDED`: Concluded
+        - `FLUNKED`: Prescribed
+        - `INTERRUPTED`: Temporary Interruption of Studies
+        - `SCHOOL_PART_CONCLUDED`: Curricular Part Concluded
+        - `INTERNAL_ABANDON`: Internal Abandon
+        - `EXTERNAL_ABANDON`: Abandon
+        - `TRANSITION`: In Transition
+        - `TRANSITED`: Transited
+        - `STUDY_PLAN_CONCLUDED`: Study Plan Concluded
+        - `INACTIVE`: Inactive
+      enum:
+        - REGISTERED
+        - MOBILITY
+        - CANCELED
+        - CONCLUDED
+        - FLUNKED
+        - INTERRUPTED
+        - SCHOOL_PART_CONCLUDED
+        - INTERNAL_ABANDON
+        - EXTERNAL_ABANDON
+        - TRANSITION
+        - TRANSITED
+        - STUDY_PLAN_CONCLUDED
+        - INACTIVE
     academicTerms:
       type: array
       items:
@@ -55,10 +82,27 @@ RegistrationWithCurriculumInformation:
           description: The weighted average of the grades of approved courses, rounded to the nearest integer.
         isConcluded:
           type: boolean
-        approvedCourses:
-          type: array
-          items:
-            $ref: "./CurriculumCourse.yaml#/CurriculumCourse"
+        curricularPlans:
+          type: object
+          required:
+            - name
+            - startDate
+            - entries
+          properties:
+            name:
+              type: string
+              description: The name of the curricular plan
+              example: LEIC-A 2021
+            startDate:
+              type: string
+              format: date
+            endDate:
+              type: string
+              format: date
+            entries:
+              type: array
+              items:
+                $ref: "./CurriculumLine.yaml#/CurriculumLine"
 
 RegistrationForOthers:
   type: object

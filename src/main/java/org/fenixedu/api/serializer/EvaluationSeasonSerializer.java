@@ -27,4 +27,23 @@ public class EvaluationSeasonSerializer extends DomainObjectSerializer {
         }
     }
 
+    public @NotNull JsonPrimitive serialize(@NotNull EvaluationSeason evaluationSeason) {
+        if (evaluationSeason.isNormal()) {
+            return new JsonPrimitive("NORMAL");
+        }
+        if (evaluationSeason.isImprovement()) {
+            return new JsonPrimitive("IMPROVEMENT");
+        }
+        if (evaluationSeason.isSpecialAuthorization()) {
+            return new JsonPrimitive("SPECIAL_AUTHORIZATION");
+        }
+        if (evaluationSeason.isSpecial()) {
+            return new JsonPrimitive("SPECIAL");
+        }
+        if (evaluationSeason.isExtraordinary()) {
+            return new JsonPrimitive("EXTRAORDINARY");
+        }
+        return new JsonPrimitive("UNKNOWN");
+    }
+
 }

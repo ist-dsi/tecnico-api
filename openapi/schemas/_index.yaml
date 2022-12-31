@@ -43,20 +43,22 @@ CourseGroup:
   $ref: "./academic/CourseGroup.yaml"
 CourseLoad:
   $ref: "./academic/CourseLoad.yaml"
+BasicCurricularCourseModelWithoutExecutions:
+  $ref: "./academic/CurricularCourse.yaml#/BasicCurricularCourseModelWithoutExecutions"
 BasicCurricularCourseModel:
   $ref: "./academic/CurricularCourse.yaml#/BasicCurricularCourseModel"
 ExtendedCurricularCourseModel:
   $ref: "./academic/CurricularCourse.yaml#/ExtendedCurricularCourseModel"
 CurricularPeriod:
   $ref: "./academic/CurricularPeriod.yaml"
-CurriculumCourse:
-  $ref: "./academic/CurriculumCourse.yaml#/CurriculumCourse"
-GenericCurriculumCourse:
-  $ref: "./academic/CurriculumCourse.yaml#/GenericCurriculumCourse"
-EnrolmentCurriculumCourse:
-  $ref: "./academic/CurriculumCourse.yaml#/EnrolmentCurriculumCourse"
-DismissalCurriculumCourse:
-  $ref: "./academic/CurriculumCourse.yaml#/DismissalCurriculumCourse"
+CurriculumLine:
+  $ref: "./academic/CurriculumLine.yaml#/CurriculumLine"
+GenericCurriculumLine:
+  $ref: "./academic/CurriculumLine.yaml#/GenericCurriculumLine"
+EnrolmentCurriculumLine:
+  $ref: "./academic/CurriculumLine.yaml#/EnrolmentCurriculumLine"
+DismissalCurriculumLine:
+  $ref: "./academic/CurriculumLine.yaml#/DismissalCurriculumLine"
 BasicDegreeModel:
   $ref: "./academic/Degree.yaml#/BasicDegreeModel"
 ExtendedDegreeModel:
@@ -66,7 +68,11 @@ BasicExecutionDegreeModel:
 ExtendedExecutionDegreeModel:
   $ref: "./academic/ExecutionDegree.yaml#/ExtendedExecutionDegreeModel"
 Enrolment:
-  $ref: "./academic/Enrolment.yaml"
+  $ref: "./academic/Enrolment.yaml#/EnrolmentModel"
+EnrolmentState:
+  $ref: "./academic/Enrolment.yaml#/EnrolmentState"
+ExternalEnrolment:
+  $ref: "./academic/Enrolment.yaml#/ExternalEnrolmentModel"
 GenericEventBeanModel:
   $ref: "./academic/EventBean.yaml#/GenericEventBeanModel"
 ClassEventBeanModel:
