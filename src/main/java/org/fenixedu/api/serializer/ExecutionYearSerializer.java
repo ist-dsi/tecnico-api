@@ -1,9 +1,9 @@
 package org.fenixedu.api.serializer;
 
 import com.google.gson.JsonObject;
-import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.academic.domain.ExecutionYear;
 import org.fenixedu.bennu.core.json.JsonUtils;
+import org.fenixedu.commons.stream.StreamUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class ExecutionYearSerializer extends DomainObjectSerializer {
@@ -25,16 +25,11 @@ public class ExecutionYearSerializer extends DomainObjectSerializer {
     public @NotNull JsonObject serializeExtended(@NotNull ExecutionYear executionYear) {
         JsonObject data = serialize(executionYear);
         data.add(
-                "firstSemester",
-                this.getAPISerializer()
-                        .getExecutionSemesterSerializer()
-                        .serialize(executionYear.getFirstExecutionPeriod())
-        );
-        data.add(
-                "secondSemester",
-                this.getAPISerializer()
-                        .getExecutionSemesterSerializer()
-                        .serialize(executionYear.getLastExecutionPeriod())
+                "semesters",
+                executionYear.getExecutionPeriodsSet()
+                        .stream()
+                        .map(this.getAPISerializer().getExecutionSemesterSerializer()::serialize)
+                        .collect(StreamUtils.toJsonArray())
         );
         return data;
     }
