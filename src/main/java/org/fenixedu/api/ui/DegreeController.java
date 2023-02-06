@@ -34,7 +34,6 @@ public class DegreeController extends BaseController {
     @CrossOrigin(allowCredentials = "false")
     @RequestMapping(value = "/degrees", method = RequestMethod.GET)
     public ResponseEntity<?> getDegreesOfYear(@RequestParam(required = false) final Optional<String> year) {
-        // defaults to the current year if not specified
         final ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow)
                 .orElseGet(ExecutionYear::readCurrentExecutionYear);
         final AcademicInterval academicInterval = executionYear.getAcademicInterval();
@@ -58,8 +57,9 @@ public class DegreeController extends BaseController {
     @CrossOrigin(allowCredentials = "false")
     @RequestMapping(value = "/degrees/{degree}", method = RequestMethod.GET)
     public ResponseEntity<?> getDegree(@PathVariable final Degree degree,
-                                       @RequestParam(required = false) final String year) {
-        final ExecutionYear executionYear = parseExecutionYearOrThrow(year);
+                                       @RequestParam(required = false) final Optional<String> year) {
+        final ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow)
+                .orElseGet(ExecutionYear::readCurrentExecutionYear);
         final ExecutionDegree executionDegree = degree.getExecutionDegreesForExecutionYear(executionYear)
                 .stream()
                 .findFirst()
@@ -78,7 +78,6 @@ public class DegreeController extends BaseController {
     @RequestMapping(value = "/degrees/{degree}/courses", method = RequestMethod.GET)
     public ResponseEntity<?> getDegreeCourses(@PathVariable final Degree degree,
                                               @RequestParam(required = false) final Optional<String> year) {
-        // defaults to the current year if not specified
         final ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow)
                 .orElseGet(ExecutionYear::readCurrentExecutionYear);
         return respond(
@@ -95,7 +94,6 @@ public class DegreeController extends BaseController {
     @RequestMapping(value = "/degrees/{degree}/curriculum", method = RequestMethod.GET)
     public ResponseEntity<?> getDegreeCurriculum(@PathVariable final Degree degree,
                                                  @RequestParam(required = false) final Optional<String> year) {
-        // defaults to the current year if not specified
         final ExecutionYear executionYear = year.map(this::parseExecutionYearOrThrow)
                 .orElseGet(ExecutionYear::readCurrentExecutionYear);
         final Collection<DegreeCurricularPlan> curricularPlans = degree.getDegreeCurricularPlansForYear(executionYear);
