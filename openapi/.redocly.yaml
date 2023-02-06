@@ -3,5 +3,5 @@
 extends:
   - recommended
 apis:
-  fenixedu-api@v2:
+  tecnico-api@v2:
     root: "./openapi.yaml"

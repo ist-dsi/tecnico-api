@@ -1,15 +1,15 @@
-package org.fenixedu.api.domain;
+package pt.ist.tecnicoapi.domain;
 
-class FenixEduAPISystem {
+class TecnicoAPISystem {
 
 }
 
-relation BennuFenixEduAPISystem {
+relation BennuTecnicoAPISystem {
     .org.fenixedu.bennu.core.domain.Bennu playsRole bennu {
         multiplicity 1..1;
     }
 
-    FenixEduAPISystem playsRole fenixEduAPISystem {
+    TecnicoAPISystem playsRole TecnicoAPISystem {
         multiplicity 0..1;
     }
 }

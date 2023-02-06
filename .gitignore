@@ -10,7 +10,7 @@ openapi/openapi.bundled.yaml
 # Maven #
 target/
 bin/
-**/src/main/webapp/fenixedu-api
+**/src/main/webapp/tecnico-api
 .DS_Store
 node_modules/
 dist/

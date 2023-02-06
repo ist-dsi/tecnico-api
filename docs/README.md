@@ -1,4 +1,4 @@
-# FenixEdu API
+# Técnico API
 
 ## Development Environment
 

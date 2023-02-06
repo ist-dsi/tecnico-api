@@ -2,27 +2,27 @@
   "apps": [
     {
       "title": {
-        "en-GB": "FenixEdu API Frontend",
-        "pt-PT": "FenixEdu API Frontend"
+        "en-GB": "Técnico API Frontend",
+        "pt-PT": "Técnico API Frontend"
       },
       "description": {
-        "en-GB": "FenixEdu API Frontend",
-        "pt-PT": "FenixEdu API Frontend"
+        "en-GB": "Técnico API Frontend",
+        "pt-PT": "Técnico API Frontend"
       },
       "fullLayout": true,
       "accessExpression": "anyone",
-      "path": "fenixedu-api/docs",
+      "path": "tecnico-api/docs",
       "functionalities": [
         {
           "title": {
-            "en-GB": "FenixEdu API Frontend",
-            "pt-PT": "FenixEdu API Frontend"
+            "en-GB": "Técnico API Frontend",
+            "pt-PT": "Técnico API Frontend"
           },
           "description": {
-            "en-GB": "FenixEdu API Frontend",
-            "pt-PT": "FenixEdu API Frontend"
+            "en-GB": "Técnico API Frontend",
+            "pt-PT": "Técnico API Frontend"
           },
-          "path": "fenixedu-api/docs",
+          "path": "tecnico-api/docs",
           "accessExpression": "anyone"
         }
       ]

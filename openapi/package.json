@@ -1,16 +1,16 @@
 {
-  "name": "fenixedu-api-openapi",
+  "name": "tecnico-api-openapi",
   "version": "2.0.0",
-  "description": "OpenAPI's schema for fenixedu-api",
+  "description": "OpenAPI's schema for tecnico-api",
   "scripts": {
     "serve": "serve .",
     "start": "npm run serve",
     "build": "npm run bundle",
     "validate": "redocly lint",
-    "bundle": "redocly bundle -o ./openapi.bundled.yaml --ext yaml fenixedu-api@v2",
-    "copy": "cp ./openapi.bundled.yaml ../src/main/webapp/fenixedu-api/docs/openapi.yaml; cp ./index.html ../src/main/webapp/fenixedu-api/docs/",
+    "bundle": "redocly bundle -o ./openapi.bundled.yaml --ext yaml tecnico-api@v2",
+    "copy": "cp ./openapi.bundled.yaml ../src/main/webapp/tecnico-api/docs/openapi.yaml; cp ./index.html ../src/main/webapp/tecnico-api/docs/",
     "clean:packages": "rm -rf node_modules",
-    "clean:dist": "mkdir -p ../src/main/webapp/fenixedu-api/docs; rm -rf ../src/main/webapp/fenixedu-api/docs/*; rm openapi.bundled.yaml",
+    "clean:dist": "mkdir -p ../src/main/webapp/tecnico-api/docs; rm -rf ../src/main/webapp/tecnico-api/docs/*; rm openapi.bundled.yaml",
     "package:production": "npm run clean:dist; npm run bundle; npm run copy"
   },
   "devDependencies": {

@@ -1,11 +1,11 @@
 openapi: "3.1.0"
 info:
-  title: FenixEdu API
+  title: Técnico API
   description: |-
-    Allows data to be fetched from FenixEdu servers.
+    Allows data to be fetched from Técnico Lisboa's FenixEdu servers.
     There are various public endpoints, but there is also support for OAuth,
     allowing to get and change data related to a specific user.
-    
+
     As a (very) important note, the Object IDs in the endpoints below are not
     necessarily immutable: DSI reserves its right to change these IDs at any time, without notice.
   version: "2.0.0"
@@ -14,7 +14,7 @@ info:
     identifier: LGPL-3.0
     url: https://spdx.org/licenses/LGPL-3.0-or-later.html
 servers:
-  - url: https://fenix.tecnico.ulisboa.pt/fenixedu-api/v2
+  - url: https://fenix.tecnico.ulisboa.pt/tecnico-api/v2
 paths:
   /about:
     $ref: "./paths/about.yaml"
