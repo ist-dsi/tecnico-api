@@ -7,7 +7,7 @@ To add a new scope, two changes must be made:
 - adding it to the `APIScope` enum, in order to allow it to be used for an endpoint
 - adding it to the scopes list under _Personal > External Applications > Application Management_ (on Fénix)
 
-To add it to the `org.fenixedu.api.util.APIScope` enum, simply add a new value to the enum.
+To add it to the `pt.ist.tecnicoapi.util.APIScope` enum, simply add a new value to the enum.
 The scope key should follow the format `read:<scope>` or `write:<scope>`, where `<scope>` uses
 [snake_case](https://en.wikipedia.org/wiki/Snake_case).
 

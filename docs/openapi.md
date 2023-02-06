@@ -7,7 +7,8 @@ This specification is frontend-independent and may also be used to [generate SDK
 For this project, we've opted for the [Rapidoc frontend](https://rapidocweb.com/),
 due to its simplicity and compatibility with OpenAPI v3.1.0.
 
-A version of this frontend with this project's specification is available in production at `/fenixedu-api/docs`.
+A version of this frontend with this project's specification can be made available
+in production at `/tecnico-api/docs` by the site administrator.
 
 All branches merged into the default branch (i.e. `master`) must update
 the OpenAPI documentation with the respective changes, in order to avoid
@@ -34,7 +35,7 @@ in the `openapi` folder.
 
 To add the menu entry for the OpenAPI documentation, that is, for the static files
 to be served, you must go to _System Management > Portal Configuration > Manage Menu_.
-Then, click _Install_, search for _FenixEdu API Frontend_ and click _Install Application_.
+Then, click _Install_, search for _Técnico API Frontend_ and click _Install Application_.
 
 ## Project Good-Practices
 

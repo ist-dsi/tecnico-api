@@ -8,7 +8,7 @@ the **controllers** and the **serializers**.
 
 ## Controllers
 
-The controllers are located in the `org.fenixedu.api.ui` package, and extend
+The controllers are located in the `pt.ist.tecnicoapi.ui` package, and extend
 the `BaseController` class.  
 Their job is to register and handle routes.
 
@@ -24,11 +24,11 @@ values, as well as calling the respective serializers.
 
 ## Serializers
 
-The serializers are located in the `org.fenixedu.api.serializer` package, and
+The serializers are located in the `pt.ist.tecnicoapi.serializer` package, and
 extend the `DomainObjectSerializer` class.  
 Their job is to convert a domain object into a `JsonElement` (usually `JsonObject`).
 
-When a new serializer is created, an field in `FenixEduAPISerializer` (in the same package)
+When a new serializer is created, an field in `TecnicoAPISerializer` (in the same package)
 must be created.
 The [`@Getter` annotation from lombok](https://projectlombok.org/features/GetterSetter)
 will automatically create a getter for it (keeping the code clean!).
