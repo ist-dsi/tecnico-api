@@ -2,8 +2,8 @@ allOf:
   - $ref: "./WrittenEvaluation.yaml"
   - type: object
     required:
-      - isEnroled
+      - isEnrolled
     properties:
-      isEnroled:
+      isEnrolled:
         type: boolean
-        description: Whether the student is enroled in this evaluation or not.
+        description: Whether the student is enrolled in this evaluation or not.

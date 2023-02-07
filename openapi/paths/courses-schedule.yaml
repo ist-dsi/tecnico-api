@@ -1,8 +1,8 @@
 get:
   operationId: getCourseSchedule
   summary: Fetch a single course's schedule
-  description: >-
-    Fetch a single course's schedule, given its ID
+  description: |
+    Fetch a single course's schedule, given its ID.
   tags:
     - courses
   parameters:
@@ -10,13 +10,13 @@ get:
       name: id
       schema:
         $ref: "../schemas/DomainObjectId.yaml"
-      description: >-
+      description: |
         The course's unique ID.
       required: true
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
@@ -36,8 +36,8 @@ get:
                 items:
                   $ref: "../schemas/academic/Shift.yaml#/ExtendedShiftModel"
     "404":
-      description: >-
-        Invalid course ID supplied
+      description: |
+        Invalid course ID supplied.
       content:
         application/json:
           schema:

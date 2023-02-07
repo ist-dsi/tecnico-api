@@ -1,14 +1,14 @@
 get:
   operationId: getCampi
   summary: Fetch all campi
-  description: >-
+  description: |
     Fetch all currently active campi.
   tags:
     - spaces
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:

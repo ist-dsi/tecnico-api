@@ -66,7 +66,7 @@ ExtendedCurricularCourseModel:
         curricularPeriod:
           allOf:
             - $ref: "./CurricularPeriod.yaml"
-            - description: >-
+            - description: |
                 Represents at which point in the curriculum of the degrees this course should be attended.
         executionInterval:
           type: string

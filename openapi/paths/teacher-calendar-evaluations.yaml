@@ -18,7 +18,7 @@ get:
         enum:
           - json
           - ical
-      description: >-
+      description: |
         The format for the response. JSON is the default, but a calendar in the
         iCal format can also be returned.
       example: "json"
@@ -28,7 +28,7 @@ get:
         - read:teacher
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
@@ -41,8 +41,8 @@ get:
             type: string
             example: iCal data here
     "400":
-      description: >-
-        Invalid calendar format supplied
+      description: |
+        Invalid calendar format supplied.
       content:
         application/json:
           schema:

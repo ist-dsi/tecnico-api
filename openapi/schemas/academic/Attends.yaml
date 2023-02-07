@@ -6,8 +6,8 @@ properties:
   state:
     type: string
     enum:
-      - ENROLED
-      - NOT_ENROLED
+      - ENROLLED
+      - NOT_ENROLLED
       - IMPROVEMENT
       - SPECIAL_SEASON
       - EXTRAORDINARY_SEASON

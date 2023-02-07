@@ -38,6 +38,6 @@ ExtendedExecutionYearModel:
           type: array
           items:
             $ref: "./ExecutionSemester.yaml#/BasicExecutionSemesterModel"
-          description: >-
+          description: |
             **Beware that this array might not always have length 2.**
             It might have no elements, or any number of elements.

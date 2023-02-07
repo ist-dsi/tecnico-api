@@ -1,14 +1,15 @@
 put:
   operationId: enrolStudentInEvaluation
-  summary: Enrol evaluations of courses
+  summary: Enrol in evaluations of courses
   description: |
     Enrol in an evaluation of a course.
     The evaluation must be of type EXAM or TEST, otherwise a bad request response will be sent.
-    Requires the `write:evaluations` scope.
-    If the user is not a student or is not enroled in the course, a forbidden response will be sent.
+    If the user is not a student or is not enrolled in the course, a forbidden response will be sent.
     If the enrolment period is closed or not defined, a forbidden response will also be sent.
 
-    If the user is already enroled, a conflict response will be sent.
+    If the user is already enrolled, a conflict response will be sent.
+
+    Requires the `write:evaluations` scope.
   tags:
     - curricular
   parameters:
@@ -16,7 +17,7 @@ put:
       name: evaluation
       schema:
         $ref: "../schemas/DomainObjectId.yaml"
-      description: >-
+      description: |
         The evaluation's unique ID.
       required: true
   security:
@@ -24,14 +25,14 @@ put:
         - write:evaluations
   responses:
     "204":
-      description: >-
-        Enroled successfully (returns no content)
+      description: |
+        Enrolled successfully (returns no content).
     "401":
       $ref: "../responses/OAuthUnauthorizedResponse.yaml"
     "403":
-      description: |-
+      description: |
         One of:
-        - The user is not a student or it is not enroled in the evaluation's course.
+        - The user is not a student or it is not enrolled in the evaluation's course.
         - The evaluation does not have an enrolment period or it is closed.
 
         ---
@@ -45,12 +46,12 @@ put:
             $ref: "../schemas/Error.yaml"
           examples:
             no-registration:
-              summary: Not enroled in the evaluation's course
+              summary: Not enrolled in the evaluation's course
               value:
                 key: error.evaluation.enrolment.no.registration
                 message:
-                  pt-PT: Não estás inscrito numa das unidades curriculares a que esta avaliação pertence
-                  en-GB: You are not enroled in a course that this evaluation belongs to
+                  pt-PT: O aluno não se encontra inscrito numa das unidades curriculares a que esta avaliação pertence
+                  en-GB: The student is not enrolled in a course that this evaluation belongs to
             enrolment-period-closed:
               summary: Enrolment period closed
               value:
@@ -63,7 +64,7 @@ put:
             insufficient-scopes:
               $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/insufficient-scopes"
     "404":
-      description: >-
+      description: |
         Invalid evaluation supplied. Must be of type EXAM or TEST.
       content:
         application/json:
@@ -75,20 +76,20 @@ put:
               pt-PT: A avaliação com o ID 123456789 não foi encontrada ou não é do tipo "teste" ou "exame"
               en-GB: The evaluation with ID 123456789 was not found or is not of type "test" or "exam"
     "409":
-      description: >-
-        The user is already enroled in this evaluation
+      description: |
+        The student is already enrolled in this evaluation.
       content:
         application/json:
           schema:
             $ref: "../schemas/Error.yaml"
           example:
-            key: error.evaluation.enrolment.already.enroled
+            key: error.evaluation.enrolment.already.enrolled
             message:
-              pt-PT: Já estás inscrito nesta avaliação
-              en-GB: You're already enroled in this evaluation
+              pt-PT: O aluno já se encontra inscrito nesta avaliação
+              en-GB: The student is already enrolled in this evaluation
     "500":
-      description: >-
-        An unknown error occurred
+      description: |
+        An unknown error occurred.
       content:
         application/json:
           schema:
@@ -101,15 +102,15 @@ put:
 
 delete:
   operationId: unEnrolStudentFromEvaluation
-  summary: Unenrol evaluations of courses
+  summary: Unenrol from evaluations of courses
   description: |
     Unenrol from an evaluation of a course.
     The evaluation must be of type EXAM or TEST, otherwise a bad request response will be sent.
     Requires the `write:evaluations` scope.
-    If the user is not a student or is not enroled in the course, a forbidden response will be sent.
+    If the user is not a student or is not enrolled in the course, a forbidden response will be sent.
     If the enrolment period is closed or not defined, a forbidden response will also be sent.
 
-    If the user is not enroled in the evaluation, a conflict response will be sent.
+    If the user is not enrolled in the evaluation, a conflict response will be sent.
   tags:
     - curricular
   parameters:
@@ -117,7 +118,7 @@ delete:
       name: evaluation
       schema:
         $ref: "../schemas/DomainObjectId.yaml"
-      description: >-
+      description: |
         The evaluation's unique ID.
       required: true
   security:
@@ -125,14 +126,14 @@ delete:
         - write:evaluations
   responses:
     "204":
-      description: >-
-        Unenroled successfully (returns no content)
+      description: |
+        Unenrolled successfully (returns no content).
     "401":
       $ref: "../responses/OAuthUnauthorizedResponse.yaml"
     "403":
-      description: |-
+      description: |
         One of:
-        - The user is not a student or it is not enroled in the evaluation's course.
+        - The user is not a student or it is not enrolled in the evaluation's course.
         - The evaluation does not have an enrolment period or it is closed.
 
         ---
@@ -146,12 +147,12 @@ delete:
             $ref: "../schemas/Error.yaml"
           examples:
             no-registration:
-              summary: Not enroled in the evaluation's course
+              summary: Not enrolled in the evaluation's course
               value:
                 key: error.evaluation.enrolment.no.registration
                 message:
-                  pt-PT: Não estás inscrito numa das unidades curriculares a que esta avaliação pertence
-                  en-GB: You are not enroled in a course that this evaluation belongs to
+                  pt-PT: O aluno não se encontra inscrito numa das unidades curriculares a que esta avaliação pertence
+                  en-GB: The student is not enrolled in a course that this evaluation belongs to
             enrolment-period-closed:
               summary: Enrolment period closed
               value:
@@ -164,7 +165,7 @@ delete:
             insufficient-scopes:
               $ref: "../responses/OAuthForbiddenResponse.yaml#/content/application%2Fjson/examples/insufficient-scopes"
     "404":
-      description: >-
+      description: |
         Invalid evaluation supplied. Must be of type EXAM or TEST.
       content:
         application/json:
@@ -176,20 +177,20 @@ delete:
               pt-PT: A avaliação com o ID 123456789 não foi encontrada ou não é do tipo "teste" ou "exame"
               en-GB: The evaluation with ID 123456789 was not found or is not of type "test" or "exam"
     "409":
-      description: >-
-        The user is not enroled in this evaluation
+      description: |
+        The student is not enrolled in this evaluation.
       content:
         application/json:
           schema:
             $ref: "../schemas/Error.yaml"
           example:
-            key: error.evaluation.enrolment.not.enroled
+            key: error.evaluation.enrolment.not.enrolled
             message:
-              pt-PT: Não estás atualmente inscrito nesta avaliação
-              en-GB: You're not currently enroled in this evaluation
+              pt-PT: O aluno não está atualmente inscrito nesta avaliação
+              en-GB: The student is not currently enrolled in this evaluation
     "500":
-      description: >-
-        An unknown error occurred
+      description: |
+        An unknown error occurred.
       content:
         application/json:
           schema:

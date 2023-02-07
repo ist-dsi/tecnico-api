@@ -6,16 +6,28 @@ BasicShiftModel:
   properties:
     name:
       type: string
-      description: >-
-        The shift's name
+      description: |
+        The shift's name.
       example: "FP4PB04"
     types:
       type: array
-      description: >-
-        The shift's types
+      description: |
+        The shift's types.
       items:
         type: string
         example: "PROBLEMS"
+        enum:
+          - TEORICA
+          - PRATICA
+          - TEORICO_PRATICA
+          - LABORATORIAL
+          - DUVIDAS
+          - RESERVA
+          - SEMINARY
+          - PROBLEMS
+          - FIELD_WORK
+          - TRAINING_PERIOD
+          - TUTORIAL_ORIENTATION
 ExtendedShiftModel:
   allOf:
     - $ref: "#/BasicShiftModel"
@@ -26,21 +38,21 @@ ExtendedShiftModel:
       properties:
         enrolments:
           type: object
-          description: >-
-            The shift's enrolments properties
+          description: |
+            The shift's enrolments properties.
           required:
             - maximum
             - current
           properties:
             maximum:
               type: integer
-              description: >-
-                The shift's maximum enrolments
+              description: |
+                The shift's maximum enrolments.
               example: 30
             current:
               type: integer
-              description: >-
-                The shift's current enrolments
+              description: |
+                The shift's current enrolments.
               example: 27
         classes:
           type: array
@@ -49,7 +61,7 @@ ExtendedShiftModel:
             $ref: "./SchoolClass.yaml"
         lessons:
           type: array
-          description: >-
-            The shift's lessons
+          description: |
+            The shift's lessons.
           items:
             $ref: "./Lesson.yaml"

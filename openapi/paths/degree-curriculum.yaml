@@ -1,10 +1,12 @@
 get:
   operationId: getDegreeCurriculum
   summary: Fetch curriculum of a degree
-  description: >-
+  description: |
     Fetch information about a specific degree's courses, given its ID:
-    more specific information about a degree's courses and general structure
-    The degree's year can be specified, defaulting to the current execution year if it is not
+    more specific information about a degree's courses and general structure.
+
+    The year of the degree's curricular plan to fetch from can be specified,
+    defaulting to the current execution year if it is not.
   tags:
     - degrees
   parameters:
@@ -12,7 +14,7 @@ get:
       name: degree
       schema:
         type: string
-      description: >-
+      description: |
         The degree's unique ID.
       example: 21743746736
       required: true
@@ -20,14 +22,14 @@ get:
       name: year
       schema:
         type: string
-      description: >-
+      description: |
         The specific year to fetch courses from.
       example: "2021/2022"
       required: false
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
@@ -36,7 +38,7 @@ get:
             items:
               $ref: "../schemas/academic/CurricularCourse.yaml#/ExtendedCurricularCourseModel"
     "404":
-      description: >-
+      description: |
         Not Found
       content:
         application/json:
@@ -44,15 +46,15 @@ get:
             $ref: "../schemas/Error.yaml"
           examples:
             invalid-degree-id:
-              description: >-
-                Invalid degree ID supplied
+              description: |
+                Invalid degree ID supplied.
               value:
                 key: error.degree.not.found
                 message:
                   pt-PT: O curso com o ID 16467887136714 não foi encontrado
                   en-GB: The degree with ID 16467887136714 was not found
             invalid-year:
-              description: >-
+              description: |
                 The degree does not exist in the given execution year.
               value:
                 key: error.degree.does.not.exist.in.year

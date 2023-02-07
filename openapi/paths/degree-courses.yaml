@@ -1,9 +1,11 @@
 get:
   operationId: getDegreeCourses
   summary: Fetch courses of a degree
-  description: >-
-    Fetch information about a specific degree's courses, given its ID.
-    The degree's year can be specified, defaulting to the current execution year if it is not
+  description: |
+    Fetch information about a specific degree's courses, given its ID.  
+
+    The year of the degree's curricular plan to fetch from can be specified,
+    defaulting to the current execution year if it is not.
   tags:
     - degrees
   parameters:
@@ -11,7 +13,7 @@ get:
       name: degree
       schema:
         type: string
-      description: >-
+      description: |
         The degree's unique ID.
       example: 21743746736
       required: true
@@ -19,14 +21,14 @@ get:
       name: year
       schema:
         type: string
-      description: >-
+      description: |
         The specific year to fetch courses from.
       example: "2021/2022"
       required: false
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
@@ -35,8 +37,8 @@ get:
             items:
               $ref: "../schemas/academic/CurricularCourse.yaml#/BasicCurricularCourseModel"
     "404":
-      description: >-
-        Invalid degree ID supplied
+      description: |
+        Invalid degree ID supplied.
       content:
         application/json:
           schema:

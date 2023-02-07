@@ -1,9 +1,11 @@
 get:
   operationId: getAcademicTerms
   summary: Fetch academic terms
-  description: >-
-    Fetch all (or starting in a given year) the academic terms available to be used in other endpoints.
-    Sorted by newest to oldest
+  description: |
+    Fetch all (or starting in a given year) the academic terms available to be used in other endpoints.  
+    Academic terms (commonly refered to as semesters) are grouped by execution year.
+
+    Sorted by newest to oldest.
   tags:
     - public
   parameters:
@@ -11,14 +13,14 @@ get:
       name: from
       schema:
         type: string
-      description: >-
-        Only fetch academic terms after this year (inclusive)
+      description: |
+        Only fetch academic terms after this execution year (inclusive).
       example: 2021/2022
       required: false
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
@@ -27,8 +29,8 @@ get:
             items:
               $ref: "../schemas/academic/ExecutionYear.yaml#/ExtendedExecutionYearModel"
     "400":
-      description: >-
-        Invalid year supplied
+      description: |
+        Invalid year supplied.
       content:
         application/json:
           schema:

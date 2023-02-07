@@ -2,12 +2,13 @@ get:
   operationId: getStudentCalendarClasses
   summary: Fetch classes calendar of the student
   description: |
-    Fetch a calendar with all the lessons a student is enroled on.
-    Requires the `read:student` scope.
+    Fetch a calendar with all the lessons a student is enrolled on.
     If the user is not a student, an empty list is returned.
 
     Additionally, an optional `format` query parameter can be passed to get the
     calendar in iCal format instead of the default JSON response.
+
+    Requires the `read:student` scope.
   tags:
     - curricular
   parameters:
@@ -18,7 +19,7 @@ get:
         enum:
           - json
           - ical
-      description: >-
+      description: |
         The format for the response. JSON is the default, but a calendar in the
         iCal format can also be returned.
       example: "json"
@@ -28,7 +29,7 @@ get:
         - read:student
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
@@ -41,8 +42,8 @@ get:
             type: string
             example: iCal data here
     "400":
-      description: >-
-        Invalid calendar format supplied
+      description: |
+        Invalid calendar format supplied.
       content:
         application/json:
           schema:

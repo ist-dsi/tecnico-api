@@ -1,7 +1,7 @@
 get:
   operationId: getSpace
   summary: Fetch a specific space
-  description: >-
+  description: |
     Fetch detailed information about a specific space.
   tags:
     - spaces
@@ -10,21 +10,21 @@ get:
       name: space
       schema:
         $ref: "../schemas/DomainObjectId.yaml"
-      description: >-
+      description: |
         The space's unique ID.
       required: true
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
           schema:
             $ref: "../schemas/academic/Space.yaml#/GenericSpaceModel"
     "404":
-      description: >-
-        Invalid Space ID supplied
+      description: |
+        Invalid Space ID supplied.
       content:
         application/json:
           schema:

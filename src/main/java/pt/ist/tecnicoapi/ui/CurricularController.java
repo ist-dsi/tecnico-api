@@ -287,14 +287,14 @@ public class CurricularController extends BaseController {
         } catch (DomainException e) {
             final String key = e.getKey();
             if (Objects.equals(key, "error.alreadyEnrolledError")) {
-                throw new APIError(HttpStatus.CONFLICT, "error.evaluation.enrolment.already.enroled");
+                throw new APIError(HttpStatus.CONFLICT, "error.evaluation.enrolment.already.enrolled");
             } else if (Objects.equals(key, "error.notAuthorizedUnEnrollment") || Objects.equals(
                     key,
                     "error.enrolmentPeriodNotDefined"
             )) {
                 throw new APIError(HttpStatus.FORBIDDEN, "error.evaluation.enrolment.period.closed");
-            } else if (Objects.equals(key, "error.studentNotEnroled")) {
-                throw new APIError(HttpStatus.CONFLICT, "error.evaluation.enrolment.not.enroled");
+            } else if (Objects.equals(key, "error.studentNotEnrolled")) {
+                throw new APIError(HttpStatus.CONFLICT, "error.evaluation.enrolment.not.enrolled");
             }
             throw new APIError(HttpStatus.INTERNAL_SERVER_ERROR, "error.evaluation.enrolment.unknown.error");
         }

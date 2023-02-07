@@ -1,7 +1,7 @@
 get:
   operationId: getSpaceInDay
   summary: Fetch information about a space in a specific day
-  description: >-
+  description: |
     Fetch information about a space in a specific day, including its events for that day.
   tags:
     - spaces
@@ -10,7 +10,7 @@ get:
       name: space
       schema:
         $ref: "../schemas/DomainObjectId.yaml"
-      description: >-
+      description: |
         The space's unique ID.
       required: true
     - in: path
@@ -18,22 +18,22 @@ get:
       schema:
         type: string
         format: date-time
-      description: >-
+      description: |
         The day to fetch information for.
       required: true
       example: "2022-12-31T00:00:00.000Z"
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
           schema:
             $ref: "../schemas/academic/Space.yaml#/ExtendedSpaceModel"
     "400":
-      description: >-
-        Invalid day supplied
+      description: |
+        Invalid day supplied.
       content:
         application/json:
           schema:
@@ -44,8 +44,8 @@ get:
               pt-PT: A data inserida (2023-01-01T00:00:00.000Z) é inválida
               en-GB: The inserted date (2023-01-01T00:00:00.000Z) is invalid
     "404":
-      description: >-
-        Invalid Space ID supplied
+      description: |
+        Invalid Space ID supplied.
       content:
         application/json:
           schema:

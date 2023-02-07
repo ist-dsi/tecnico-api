@@ -100,8 +100,9 @@ public class EvaluationSerializer extends DomainObjectSerializer {
         data.add("course", getAPISerializer().getExecutionCourseSerializer().serialize(executionCourse));
 
         if (evaluation instanceof WrittenEvaluation) {
-            boolean isEnroled = ((WrittenEvaluation) evaluation).getWrittenEvaluationEnrolmentFor(registration) != null;
-            data.addProperty("isEnroled", isEnroled);
+            WrittenEvaluation writtenEvaluation = (WrittenEvaluation) evaluation;
+            boolean isEnrolled = writtenEvaluation.getWrittenEvaluationEnrolmentFor(registration) != null;
+            data.addProperty("isEnrolled", isEnrolled);
         }
 
         return data;

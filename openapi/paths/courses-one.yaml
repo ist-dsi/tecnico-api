@@ -1,8 +1,8 @@
 get:
   operationId: getCourse
   summary: Fetch a single course
-  description: >-
-    Fetch information about a specific course, given its ID
+  description: |
+    Fetch information about a specific course, given its ID.
   tags:
     - courses
   parameters:
@@ -10,21 +10,21 @@ get:
       name: id
       schema:
         $ref: "../schemas/DomainObjectId.yaml"
-      description: >-
+      description: |
         The course's unique ID.
       required: true
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
           schema:
             $ref: "../schemas/academic/ExecutionCourse.yaml#/ExtendedExecutionCourseModel"
     "404":
-      description: >-
-        Invalid course ID supplied
+      description: |
+        Invalid course ID supplied.
       content:
         application/json:
           schema:

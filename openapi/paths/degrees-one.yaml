@@ -1,10 +1,10 @@
 get:
   operationId: getDegree
   summary: Fetch a single degree
-  description: >-
-    Fetch information about a specific degree in a specific execution year, given its ID.
-    If the degree does not exist in the given year (even if it's the default execution year),
-    a not found error will be thrown.
+  description: |
+    Fetch information about a specific degree in a specific execution year, given its ID.  
+    If the degree does not have an active curricular plan in the given year
+    (even if it's the default execution year), a not found error will be returned.
   tags:
     - degrees
   parameters:
@@ -12,29 +12,29 @@ get:
       name: degree
       schema:
         $ref: "../schemas/DomainObjectId.yaml"
-      description: >-
+      description: |
         The degree's unique ID.
       required: true
     - in: query
       name: year
       schema:
         type: string
-      description: >-
+      description: |
         The specific year to fetch degree information from. Defaults to the current execution year.
       example: "2021/2022"
       required: false
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
           schema:
             $ref: "../schemas/academic/ExecutionDegree.yaml#/ExtendedExecutionDegreeModel"
     "400":
-      description: >-
-        Invalid year supplied
+      description: |
+        Invalid year supplied.
       content:
         application/json:
           schema:
@@ -45,7 +45,7 @@ get:
               pt-PT: O ano inserido (2020/2022) é inválido ou não existe
               en-GB: The inserted year (2020/2022) is invalid or does not exist
     "404":
-      description: >-
+      description: |
         Not Found
       content:
         application/json:
@@ -53,15 +53,15 @@ get:
             $ref: "../schemas/Error.yaml"
           examples:
             invalid-degree-id:
-              description: >-
-                Invalid degree ID supplied
+              description: |
+                Invalid degree ID supplied.
               value:
                 key: error.degree.not.found
                 message:
                   pt-PT: O curso com o ID 16467887136714 não foi encontrado
                   en-GB: The degree with ID 16467887136714 was not found
             invalid-year:
-              description: >-
+              description: |
                 The degree does not exist in the given execution year.
               value:
                 key: error.degree.does.not.exist.in.year
