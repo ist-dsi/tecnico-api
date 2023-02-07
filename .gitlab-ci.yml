@@ -9,9 +9,17 @@ cache:
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
 
+# Avoid duplicate pipelines on merge requests
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - when: always
+
 stages:
   - Install and Lint
   # - Test
+  - Deploy Pages
   - Release
   - Notify
 
@@ -85,3 +93,31 @@ Notify:
     - node release-army-knife/notify-mattermost.js $CI_PROJECT_ID $CI_COMMIT_TAG $REPO_API_ACCESS_TOKEN $CHAT_HOOK
   only:
     - tags
+
+pages:
+  stage: Deploy Pages
+  cache:
+    paths:
+      - website/node_modules/
+  script:
+    - cd website
+    - npm ci
+    - npm run build
+    - cd ..
+    - cp -r website/public public/
+    # Optional: this gzips all files, so GitLab can serve compressed assets.
+    - gzip -k -6 $(find public -type f)
+  artifacts:
+    paths:
+      - public/
+  rules:
+    # Only publish to pages automatically when a tag is created.
+    # Changing the website between tags requires manual action, to avoid
+    # publishing documentation that is not yet in production.
+    - if: $CI_COMMIT_TAG
+      when: on_success
+    - changes:
+        - website/**/*
+      when: manual
+      allow_failure: true # allow pipeline to success even if this isn't triggered
+    - when: never

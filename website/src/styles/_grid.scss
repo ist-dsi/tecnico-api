@@ -1,0 +1,19 @@
+// Grid
+@mixin container-structure {
+  width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.container {
+  @include container-structure;
+
+  max-width: 71.25rem;
+
+  @media screen and (min-width: 75rem) {
+    max-width: 73.125rem;
+    padding: 0;
+  }
+}

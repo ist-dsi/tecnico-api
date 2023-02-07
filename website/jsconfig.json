@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["project/.vuepress/theme/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist"]
+}

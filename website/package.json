@@ -1,0 +1,56 @@
+{
+  "name": "tecnico-api-website",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "gridsome develop",
+    "explore": "gridsome explore",
+    "build": "npm run build:openapi && npm run build:gridsome",
+    "build:openapi": "cd ../openapi && npm install && npm run bundle && mkdir -p ../website/static/openapi/v2 && cp openapi.bundled.yaml ../website/static/openapi/v2/openapi.yaml",
+    "build:gridsome": "gridsome build",
+    "format": "eslint --fix \"src/**/*.{vue,js}\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ist-dsi/fenixedu-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vue/eslint-config-standard": "^6.1.0",
+    "axios": "^0.21.1",
+    "babel-eslint": "^10.1.0",
+    "cache-loader": "^4.1.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-vue": "^7.16.0",
+    "fibers": "^5.0.0",
+    "postcss-html": "^0.36.0",
+    "postcss-import": "^14.0.2",
+    "postcss-url": "^10.1.3",
+    "prettier": "^2.3.2",
+    "prettier-eslint": "^13.0.0",
+    "prettier-eslint-cli": "^5.0.1",
+    "prettier-stylelint": "^0.4.2",
+    "sass": "^1.32.8",
+    "sass-loader": "7.3.1",
+    "stylelint": "^13.13.1",
+    "stylelint-config-recommended-scss": "^4.3.0",
+    "stylelint-config-standard": "^22.0.0",
+    "stylelint-scss": "^3.20.1"
+  },
+  "dependencies": {
+    "@gridsome/remark-prismjs": "^0.5.0",
+    "@gridsome/source-filesystem": "^0.6.2",
+    "@gridsome/transformer-remark": "^0.6.4",
+    "@noxify/gridsome-source-git": "^2.0.1",
+    "focus-trap": "^6.6.1",
+    "gridsome": "^0.7.23",
+    "gridsome-plugin-git-history": "^2.0.0",
+    "gridsome-plugin-remark-mermaid": "^1.0.1"
+  }
+}

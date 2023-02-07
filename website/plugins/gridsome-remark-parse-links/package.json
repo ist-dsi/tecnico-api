@@ -1,0 +1,6 @@
+{
+  "name": "gridsome-remark-parse-links",
+  "version": "1.0.0",
+  "description": "Parse markdown links to work both on GitLab and on Gridsome.",
+  "main": "index.js"
+}

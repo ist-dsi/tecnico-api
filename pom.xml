@@ -15,7 +15,7 @@
     <version>DEV-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Tecnico API</name>
-    <url>https://fenixedu.org</url>
+    <url>https://api.si.tecnico.ulisboa.pt</url>
     <inceptionYear>2022</inceptionYear>
 
     <scm>

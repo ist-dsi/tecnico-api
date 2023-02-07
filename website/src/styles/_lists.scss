@@ -1,0 +1,67 @@
+// Lists, in general
+main {
+  ol,
+  ul {
+    padding-left: 1.125rem;
+
+    & + * {
+      margin-top: 2rem;
+    }
+  }
+
+  li > ul,
+  li > ol {
+    margin-top: 0.5rem;
+  }
+
+  li {
+    a {
+      color: $slate;
+      transition: color 0.2s ease-in-out;
+
+      &:hover {
+        border-bottom: unset;
+      }
+    }
+  }
+}
+
+// Ordered lists
+main ol {
+  li ~ li {
+    margin-top: 0.8rem;
+  }
+
+  li {
+    list-style-type: decimal;
+
+    &::marker {
+      font-weight: 600;
+      color: $blue;
+    }
+  }
+}
+
+// Unordered lists
+main ul {
+  li ~ li {
+    margin-top: 0.5rem;
+  }
+
+  li {
+    list-style-type: disc;
+
+    &::marker {
+      color: $blue;
+    }
+  }
+}
+
+// Resetting colors in list markers for blockquotes
+blockquote {
+  li {
+    &::marker {
+      color: $gray-400 !important;
+    }
+  }
+}

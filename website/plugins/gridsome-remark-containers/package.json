@@ -1,0 +1,6 @@
+{
+  "name": "gridsome-remark-containers",
+  "version": "1.0.0",
+  "description": "Adds custom containers such as tip, warning, danger and details",
+  "main": "index.js"
+}
