@@ -8,7 +8,7 @@ In order to guarantee code style consistency across the project, we're using
 To run the formatter, execute:
 
 ```bash
-mvn formatter:run
+mvn formatter:format
 ```
 
 If you just want to validate that the files adhere to the formatting config, execute:
