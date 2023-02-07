@@ -1,0 +1,128 @@
+//navigation
+.main-menu {
+  height: 100vh;
+  overflow-x: hidden;
+  list-style-type: none;
+  background-color: $nav-background-color-mobile;
+  ul.children > li:not(.parent):not(.back) > a::before {
+    content: "— ";
+    color: $nav-dash-color;
+  }
+  a {
+    color: $nav-link-color-mobile;
+    &:hover {
+      color: $nav-link-hover-color;
+    }
+    &:focus {
+      color: $nav-link-focus-color;
+    }
+  }
+  // this class exist so that
+  // php adds it but if js is not on
+  // the back li will be hidden
+  // parent li assumes its behaviour
+  li.hidden-back {
+    display: none;
+  }
+  li.current > a {
+    color: $nav-link-current-color-mobile;
+    font-weight: 700;
+  }
+  li.parent > a {
+    color: $nav-link-parent-color-mobile;
+    font-weight: 700;
+  }
+  .has-children > a::after {
+    border-color: $nav-arrow-color-mobile;
+  }
+  li:not(:last-child) > a {
+    border-color: $nav-separator-border-color-mobile;
+  }
+  .user {
+    a {
+      position: relative;
+    }
+    img {
+      position: absolute;
+    }
+    p {
+      padding: 0 0 0 ($user-avatar-width-height-mobile + 0.5rem);
+      margin: 0;
+    }
+    .istid {
+      font-size: 0.8rem;
+      color: #ddd;
+    }
+  }
+  ul {
+    height: 100vh;
+  }
+  li.align-bottom {
+    margin-top: auto;
+    .align-bottom {
+      margin-top: 0;
+    }
+  }
+  li.language-menu-mobile a {
+    color: $gray-400;
+  }
+  .menu {
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+}
+.main-navigation::-webkit-scrollbar,
+.main-navigation ul::-webkit-scrollbar {
+  display: none;
+}
+
+@media screen and (min-width: 75rem) {
+  .main-menu {
+    padding-right: 2.5rem;
+    height: auto;
+    overflow-x: hidden;
+    z-index: 10000;
+    background-color: transparent;
+    .menu {
+      max-height: unset;
+      overflow-y: unset;
+    }
+    ul {
+      height: auto;
+    }
+    a {
+      color: $nav-link-color-tablet;
+    }
+    li.current > a {
+      color: $nav-link-current-color-tablet;
+      font-weight: 700;
+    }
+    li.parent > a {
+      color: $nav-link-parent-color-tablet;
+      font-weight: 700;
+      &:hover {
+        color: $nav-link-hover-color;
+      }
+    }
+    .has-children > a::after {
+      border-color: $nav-arrow-color-tablet;
+    }
+    li:not(:last-child) > a {
+      border-color: $nav-separator-border-color-tablet;
+    }
+    li.language-menu-mobile {
+      display: none;
+    }
+    ul li:first-of-type > a {
+      padding-top: 0;
+    }
+  }
+  .main-navigation ul.children > li:nth-child(1) > a,
+  .main-navigation .menu > ul > li:nth-child(1) > a,
+  .main-navigation .user + li > a {
+    padding-top: 0;
+  }
+  .main-navigation.js-nav-open {
+    right: unset;
+  }
+}

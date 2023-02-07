@@ -1,0 +1,154 @@
+//  Variables
+
+// ==================== Primary Palette
+
+$dark: #2e3242;
+$slate: #45555f;
+$blue: #009de0;
+$light-blue: #eef2f5;
+
+// ==================== Secondary Palette
+
+$purple: #574a68;
+$violet: #5856d6;
+$teal: #01bfc2;
+$green: #199d5b;
+$lime: #62d321;
+$red: #e9374f;
+$orange: #f9690e;
+$pink: #ff4981;
+$yellow: #f6c501;
+$pale-gold: #d4ccbe;
+
+// ==================== Extended Palette
+
+// Darks
+$dark-600: #242b3d;
+$dark-400: #383d4c;
+
+// Slate
+$slate-700: #2e3a42;
+$slate-600: #3a4952;
+
+// Blues
+$blue-700: #005ec6;
+$blue-600: #0076dc;
+
+// Light Blues
+$light-blue-700: #d3dae0;
+$light-blue-600: #dde4e9;
+
+// Grays
+$gray: #717782; // main silver
+$gray-400: #8f95a1;
+$gray-300: #c9cdd4;
+
+// Light Grays
+
+$light-gray: #ddd; // main light-gray
+$light-gray-400: #f1f1f1;
+$light-gray-300: #f8f8f8;
+
+// Red
+$red-600: #cc2840;
+$red-700: #ad253a;
+
+// Green
+$green-600: #0f8a4d;
+$green-700: #157545;
+
+// Orange
+$orange-600: #e05700;
+$orange-700: #c9550d;
+
+// ==================== Social Network Colors
+
+$facebook: #3b5998;
+$twitter: #55acee;
+$linkedin: #0077b5;
+$youtube: #cd201f;
+$instagram: #3f729b;
+
+// ==================== Fonts
+
+$primary-font: 'Source Sans Pro', 'Helvetica Neue', helvetica, arial, sans-serif;
+$title-font: 'Klavika', 'Source Sans Pro', 'Helvetica Neue', helvetica, arial, sans-serif;
+
+// fixed sizes
+$header-height: 3.5rem;
+$footer-height: 6.25rem;
+$main-height: calc(100vh - #{$footer-height});
+$menu-mobile--width: 16.5rem;
+
+@mixin mdTransition {
+  transition-duration: 0.2s;
+  transition-timing-function: ease-in-out;
+}
+
+@mixin fastTransition {
+  transition-duration: 600ms;
+  transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+@mixin carded {
+  border-radius: 0.25rem;
+  background: white;
+  box-shadow: 0 0.1875rem 0.4375rem 0 rgba(black, 0.1);
+}
+
+// VUEPRESS VARIABLES WE NEED TO EDIT LATER
+// colors
+$accentColor: #3eaf7c;
+$textColor: #2c3e50;
+$borderColor: #eaecef;
+$codeBgColor: #282c34;
+$arrowBgColor: #ccc;
+$badgeTipColor: #42b983;
+$badgeWarningColor: darken(#ffe564, 35%);
+$badgeErrorColor: #da5961;
+
+// layout
+$navbarHeight: 3.6rem;
+$sidebarWidth: 20rem;
+$contentWidth: 740px;
+$homePageWidth: 960px;
+
+// responsive breakpoints
+$MQNarrow: 959px;
+$MQMobile: 719px;
+$MQMobileNarrow: 419px;
+
+// code
+$lineNumbersWrapperWidth: 3.5rem;
+$codeLang: js, ts, html, md, vue, css, sass, scss, less, stylus, go, java, c, sh,
+  yaml, py, docker, dockerfile, makefile;
+
+$contentClass: ".theme-default-content";
+
+// menus
+$menu-list-separator-border-color: #ddd;
+$menu-list-item-link-color: #2e323e;
+$menu-arrow-color: #969696;
+
+// navigation
+//this color overwrites the $menu-arrow-color;
+// navigation colors mobile
+$nav-background-color-mobile: #2e323e;
+$nav-link-color-mobile: white;
+$nav-link-current-color-mobile: $blue;
+$nav-arrow-color-mobile: #596179;
+$nav-link-parent-color-mobile: white;
+$nav-separator-border-color-mobile: #373b4a;
+// navigation colors tablet
+$nav-link-color-tablet: #2e323e;
+$nav-link-current-color-tablet: $blue;
+$nav-arrow-color-tablet: #969696;
+$nav-link-parent-color-tablet: $slate;
+$nav-separator-border-color-tablet: #ddd;
+
+//same for the two breakpoints
+$nav-link-hover-color: $blue-600;
+$nav-link-focus-color: $blue-700;
+$nav-dash-color: #969696;
+
+// user
+$user-avatar-width-height-mobile: 3.125rem;

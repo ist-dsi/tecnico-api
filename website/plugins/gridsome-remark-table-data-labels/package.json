@@ -1,0 +1,6 @@
+{
+  "name": "gridsome-remark-table-data-labels",
+  "version": "1.0.0",
+  "description": "Add the `data-label` attribute to `td` elements for responsive layouts",
+  "main": "index.js"
+}

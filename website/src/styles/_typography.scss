@@ -1,0 +1,167 @@
+// Typography
+// ============================== Font Loading and Smoothing
+/* stylelint-disable no-duplicate-selectors */
+body,
+form,
+fieldset,
+label,
+button,
+label,
+li,
+p {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-display: auto;
+}
+
+// ============================== Common Title Styles
+
+h1,
+.h1,
+.title-1,
+h2,
+.h2,
+.title-2,
+h3,
+.h3,
+.title-3,
+h4,
+.h4,
+.title-4,
+h5,
+.h5,
+.title-5,
+h6,
+.h6,
+.title-6,
+.title-hero {
+  color: $dark;
+  font-family: $title-font;
+  font-weight: 500;
+  line-height: 120%;
+  margin: 0;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+// ============================== Source Sans Pro Titles
+.h1--ssp,
+.title-1--ssp,
+.h2--ssp,
+.title-2--ssp,
+.h3--ssp,
+.title-3--ssp,
+.h4--ssp,
+.title-4--ssp,
+.h5--ssp,
+.title-5--ssp,
+.h6--ssp,
+.title-6--ssp,
+.title-hero--ssp {
+  @extend .h1;
+
+  font-family: $primary-font;
+  font-weight: 600;
+}
+
+h1,
+.h1,
+.title-1,
+.h1--ssp,
+.title-1--ssp {
+  font-size: 2rem;
+  margin: 3.5rem 0 1.4375rem;
+}
+
+h2,
+.h2,
+.title-2,
+.h2--ssp,
+.title-2--ssp {
+  font-size: 1.6875rem;
+  margin: 3.1875rem 0 1rem;
+}
+
+h3,
+.h3,
+.title-3,
+.h3--ssp,
+.title-3--ssp {
+  font-size: 1.4375rem;
+  margin: 2.9375rem 0 1rem;
+}
+
+h4,
+.h4,
+.title-4,
+.h4--ssp,
+.title-4--ssp {
+  font-size: 1.1875rem;
+  margin: 2.6875rem 0 1rem;
+}
+
+h5,
+.h5,
+.title-5,
+.h5--ssp,
+.title-5--ssp {
+  font-size: 1rem;
+  margin: 0 0 1rem;
+}
+
+h6,
+.h6,
+.title-6,
+.h6--ssp,
+.title-6--ssp {
+  font-size: 0.8125rem;
+  margin: 2.3125rem 0;
+  text-transform: uppercase;
+}
+
+p,
+.p-default,
+.p-augmented,
+.small {
+  margin: 0;
+}
+
+p,
+.p--default,
+.theme-default-content li {
+  color: $slate;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.p--augmented {
+  font-size: 1.125rem;
+}
+
+p + p {
+  margin-top: 6px;
+
+  @media (min-width: 75rem) {
+    margin-top: 8px;
+  }
+}
+
+// ============================== Blockquotes
+
+blockquote {
+  font-size: 1rem;
+  border-left: 0.2rem solid $blue;
+  margin: 1rem 0;
+  padding: 0.25rem 0 0.25rem 1rem;
+
+  & > * {
+    color: $gray-400;
+  }
+}
+
+// ============================== Typography helpers
+.is-semibold {
+  font-weight: 600;
+}

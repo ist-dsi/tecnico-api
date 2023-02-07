@@ -1,0 +1,234 @@
+.search-form {
+  backface-visibility: hidden;
+  position: relative;
+  label {
+    display: block;
+    position: relative;
+  }
+}
+[type='search'] {
+  -webkit-appearance: textfield;
+  outline-offset: -2px;
+  font-family: $primary-font;
+}
+.search-field::placeholder {
+  color: lightgray;
+}
+
+.search-field,
+.search-submit,
+.search-reset {
+  border: 0;
+}
+.search-field {
+  box-sizing: border-box !important;
+  background: #f1f5f8;
+  width: 100%;
+  color: #2e323e;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.6;
+  padding: 1rem 1.5rem 1rem 3.75rem;
+  &:focus,
+  &:hover {
+    outline: none;
+  }
+}
+
+.search-submit {
+  width: 30px;
+  height: 60px;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 1.25rem;
+  text-transform: capitalize;
+  appearance: none;
+  background: transparent;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  &::before {
+    top: 21px;
+    left: 1px;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    border: 2px solid #2e323e;
+  }
+  &::after {
+    height: 2px;
+    width: 9px;
+    background: #2e323e;
+    top: 36px;
+    left: 14px;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+  }
+}
+.search-reset {
+  width: 30px;
+  height: 60px;
+  position: absolute;
+  top: 0;
+  right: 1.25rem;
+  background: transparent;
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0.5;
+  font-size: 0;
+  &:hover {
+    opacity: 1;
+  }
+  &::before,
+  &::after {
+    position: absolute;
+    content: '';
+    background: #2e323e;
+    width: 20px;
+    height: 2px;
+    top: 30px;
+    right: 0;
+  }
+  &::before {
+    transform: rotate(45deg);
+  }
+  &::after {
+    transform: rotate(-45deg);
+  }
+}
+
+.modal-search {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #009de0;
+  z-index: 100000;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(0.95);
+  opacity: 0;
+  transition: all 0.2s ease;
+  &.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+    transform: scale(1);
+  }
+  .modal-close {
+    position: fixed;
+    right: 42px;
+    top: 30px;
+    padding: 17px;
+    z-index: 99999;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transition: all 0.2s ease-in-out;
+    &:focus,
+    &:hover {
+      border-color: white;
+    }
+    &::before,
+    &::after {
+      position: absolute;
+      content: '';
+      background: #fff;
+      width: 20px;
+      height: 2px;
+      top: 16px;
+      left: 7px;
+    }
+    &::before {
+      transform: rotate(45deg);
+    }
+    &::after {
+      transform: rotate(-45deg);
+    }
+  }
+  .search-form {
+    position: fixed;
+    width: 70vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000000;
+    margin-bottom: 0;
+  }
+  .search-reset {
+    right: 0;
+    &::before,
+    &::after {
+      background: white;
+    }
+  }
+  .search-field {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    color: white;
+    line-height: 1.6;
+    padding: 1rem 1rem 1rem 2.5rem;
+    font-family: $primary-font;
+
+    &:focus {
+      outline: none;
+    }
+  }
+  .serch-field,
+  ::placeholder {
+    color: white;
+    opacity: 0.5;
+  }
+  .search-submit {
+    left: 0;
+    &::before {
+      border-color: white;
+    }
+    &::after {
+      background: white;
+    }
+  }
+}
+@media (min-width: 48.75rem) {
+  .modal-search {
+    .search-form {
+      width: 50vw;
+      max-width: 61.25rem;
+    }
+    .search-submit {
+      left: 1.25rem;
+    }
+    .search-reset {
+      right: 1.25rem;
+    }
+  }
+}
+// Note: The user agent style sheets of many browsers
+// use !important in their :-webkit-autofill style declarations,
+// making them non-overrideable by webpages without resorting to JavaScript hacks.
+// https://developer.mozilla.org/en-US/docs/Web/CSS/:-webkit-autofill
+
+input.search-field:-webkit-autofill,
+input.search-field:-webkit-autofill:focus,
+input.search-field:-webkit-autofill:hover,
+input.search-field:-webkit-autofill:active {
+  box-shadow: 0 0 0 2.5rem $blue inset !important;
+  -webkit-text-fill-color: white !important;
+}
