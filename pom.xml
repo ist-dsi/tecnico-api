@@ -11,7 +11,7 @@
 
     <groupId>pt.ist</groupId>
     <artifactId>tecnico-api</artifactId>
-    <version>2.0.0-beta.1</version>
+    <version>DEV-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Tecnico API</name>
     <url>https://api.si.tecnico.ulisboa.pt</url>
@@ -22,7 +22,7 @@
         <developerConnection>scm:git:git@repo.dsi.tecnico.ulisboa.pt:FenixEdu/application/tecnico-api
         </developerConnection>
         <url>https://repo.dsi.tecnico.ulisboa.pt/FenixEdu/application/tecnico-api</url>
-        <tag>v2.0.0-beta.1</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
