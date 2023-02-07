@@ -1,10 +1,9 @@
 get:
   operationId: getStudentEvaluations
-  summary: Fetch evaluations of enroled courses
+  summary: Fetch evaluations of enrolled courses
   description: |
-    Fetch evaluations of all the courses the logged in student is enroled in.
-    Requires the `read:evaluations` scope.
-    If the user is not a student, an empty list is returned.
+    Fetch evaluations of all the courses the logged in student is enrolled in.
+    If the user is not a student, an empty list is returned.  
     Optionally, a year and semester can be passed to get the enrolments in that specific year (and semester).
     If left empty, the current semester will be used.
 
@@ -13,14 +12,34 @@ get:
       - if only the year is given, it includes both semesters of that year
       - if only the semester is given, it includes that semester of the current year
       - if neither the year nor semester are given, it includes the current semester of the current year
+
+    Requires the `read:evaluations` scope.
   tags:
     - curricular
   security:
     - oauthApplication:
         - read:evaluations
+  parameters:
+    - in: query
+      name: year
+      schema:
+        type: string
+      description: |
+        Use this year to get enrolments from.
+      example: 2021/2022
+      required: false
+    - in: query
+      name: semester
+      schema:
+        type: integer
+      description: |
+        Use this semester (either with the given year or the current year) to get enrolments from.
+        If `year` above is set without setting this, the endpoint will return enrolments for the entire year.
+      example: 1
+      required: false
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
@@ -29,8 +48,8 @@ get:
             items:
               $ref: "../schemas/academic/evaluation/EvaluationWithEnrolmentState.yaml"
     "400":
-      description: >-
-        Invalid year or semester supplied
+      description: |
+        Invalid year or semester supplied.
       content:
         application/json:
           schema:

@@ -3,8 +3,7 @@ get:
   summary: Fetch courses of logged in teacher
   description: |
     Fetch courses of the logged in teacher.
-    Requires the `read:teacher` scope.
-    If the user is not a teacher, an empty list is returned.
+    If the user is not a teacher, an empty list is returned.  
     Optionally, a year and semester can be passed to get the professorships in that specific year (and semester).
     If left empty, the current semester will be used.
 
@@ -13,6 +12,8 @@ get:
       - if only the year is given, it includes both semesters of that year
       - if only the semester is given, it includes that semester of the current year
       - if neither the year nor semester are given, it includes the current semester of the current year
+
+    Requires the `read:teacher` scope.
   tags:
     - curricular
   security:
@@ -23,7 +24,7 @@ get:
       name: year
       schema:
         type: string
-      description: >-
+      description: |
         Use this year to get professorships from.
       example: 2021/2022
       required: false
@@ -31,14 +32,14 @@ get:
       name: semester
       schema:
         type: integer
-      description: >-
+      description: |
         Use this semester (either with the given year or the current year) to get professorships from.
         If `year` above is set without setting this, the endpoint will return professorships for the entire year.
       example: 1
       required: false
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
@@ -47,8 +48,8 @@ get:
             items:
               $ref: "../schemas/academic/Professorship.yaml"
     "400":
-      description: >-
-        Invalid year or semester supplied
+      description: |
+        Invalid year or semester supplied.
       content:
         application/json:
           schema:

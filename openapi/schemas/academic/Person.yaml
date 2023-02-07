@@ -57,13 +57,13 @@ properties:
       example: "https://example.com"
   email:
     type: string
-    description: >-
+    description: |
       Primary email of the user.
       Might not be the institutional email.
     format: email
   roles:
     type: object
-    description: >-
+    description: |
       All properties are optional and are only present if
       the user has the respective role.
     properties:

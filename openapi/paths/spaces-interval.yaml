@@ -1,8 +1,8 @@
 get:
   operationId: getSpaceInInterval
   summary: Fetch information about a space in a specific interval
-  description: >-
-    Fetch information about a space in a specific interval, including its events for that interval.
+  description: |
+    Fetch information about a space in a specific interval, including its events for that interval.  
     The interval's time length is limited to a 30 day span.
   tags:
     - spaces
@@ -11,7 +11,7 @@ get:
       name: space
       schema:
         $ref: "../schemas/DomainObjectId.yaml"
-      description: >-
+      description: |
         The space's unique ID.
       required: true
     - in: path
@@ -19,7 +19,7 @@ get:
       schema:
         type: string
         format: date-time
-      description: >-
+      description: |
         The first day of the interval.
       required: true
       example: "2022-12-31T00:00:00.000Z"
@@ -28,21 +28,21 @@ get:
       schema:
         type: string
         format: date-time
-      description: >-
+      description: |
         The last day of the interval.
       required: true
       example: "2022-12-31T00:00:00.000Z"
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
           schema:
             $ref: "../schemas/academic/Space.yaml#/ExtendedSpaceModel"
     "400":
-      description: >-
+      description: |
         Bad Request
       content:
         application/json:
@@ -50,32 +50,32 @@ get:
             $ref: "../schemas/Error.yaml"
           examples:
             invalid-day:
-              description: >-
-                Invalid day supplied
+              description: |
+                Invalid day supplied.
               value:
                 key: error.datetime.invalid
                 message:
                   pt-PT: A data inserida (2023-01-01T00:00:00.000Z) é inválida
                   en-GB: The inserted date (2023-01-01T00:00:00.000Z) is invalid
             invalid-interval:
-              description: >-
-                Invalid interval supplied - last day comes after first day
+              description: |
+                Invalid interval supplied - last day comes after first day.
               value:
                 key: error.interval.invalid
                 message:
                   pt-PT: O intervalo inserido, com dia inicial 2023-01-01T00:00:00.000Z e dia final 2022-12-31T00:00:00.000Z, é inválido
                   en-GB: The inserted interval, starting on 2023-01-01T00:00:00.000Z and ending on 2022-12-31T00:00:00.000Z, is invalid
             interval-too-long:
-              description: >-
-                Interval too long - maximum length is 30 days
+              description: |
+                Interval too long - maximum length is 30 days.
               value:
                 key: error.interval.too.long
                 message:
                   pt-PT: O intervalo inserido tem duração (47 dias) superior ao máximo permitido (30 dias)
                   en-GB: The inserted interval lasts longer (47 days) than the maximum allowed (30 days)
     "404":
-      description: >-
-        Invalid Space ID supplied
+      description: |
+        Invalid Space ID supplied.
       content:
         application/json:
           schema:

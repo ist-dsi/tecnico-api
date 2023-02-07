@@ -1,8 +1,10 @@
 get:
   operationId: getPerson
   summary: Fetch user information
-  description: >-
-    Fetch information about the logged in user. Requires the `read:personal` scope
+  description: |
+    Fetch information about the logged in user.
+
+    Requires the `read:personal` scope.
   tags:
     - person
   security:

@@ -1,8 +1,8 @@
 get:
   operationId: getAcademicTerm
-  summary: Fetch a single academic term
-  description: >-
-    Fetch a single academic term
+  summary: Fetch academic terms of a single year
+  description: |
+    Fetch the academic terms of a specific year.
   tags:
     - public
   parameters:
@@ -10,30 +10,30 @@ get:
       name: beginYear
       schema:
         type: integer
-      description: >-
-        The first year of the execution year
+      description: |
+        The first civil year of the execution year.
       example: 2021
       required: true
     - in: path
       name: endYear
       schema:
         type: integer
-      description: >-
-        The last year of the execution year
+      description: |
+        The last civil year of the execution year.
       example: 2022
       required: true
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
           schema:
             $ref: "../schemas/academic/ExecutionYear.yaml#/ExtendedExecutionYearModel"
     "400":
-      description: >-
-        Invalid year supplied
+      description: |
+        Invalid year supplied.
       content:
         application/json:
           schema:

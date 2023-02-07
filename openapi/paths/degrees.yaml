@@ -1,8 +1,10 @@
 get:
   operationId: getDegreesOfYear
   summary: Fetch degrees in given year
-  description: >-
-    Fetch all degrees available in a given year
+  description: |
+    Fetch all active degrees in a given year.
+
+    By default, fetches degrees that have an active curricular plan in the current year.
   tags:
     - degrees
   parameters:
@@ -10,15 +12,15 @@ get:
       name: year
       schema:
         type: string
-      description: >-
-        The specific year to fetch degrees from.
-        If not provided, the current execution year will be used.
+      description: |
+        The specific year to fetch degrees from.  
+        If not provided, the current execution year will be used
       example: "2021/2022"
       required: false
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
@@ -27,8 +29,8 @@ get:
             items:
               $ref: "../schemas/academic/ExecutionDegree.yaml#/BasicExecutionDegreeModel"
     "400":
-      description: >-
-        Invalid year supplied
+      description: |
+        Invalid year supplied.
       content:
         application/json:
           schema:

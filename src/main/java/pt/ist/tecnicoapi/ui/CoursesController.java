@@ -46,7 +46,7 @@ public class CoursesController extends BaseController {
     protected ResponseEntity<?> getCourseStudents(@PathVariable final ExecutionCourse executionCourse) {
         return ok(JsonUtils.toJson(data -> {
             data.addProperty("attendingCount", executionCourse.getAttendsSet().size());
-            data.addProperty("enroledCount", executionCourse.getEnrolmentCount());
+            data.addProperty("enrolledCount", executionCourse.getEnrolmentCount());
             data.add(
                     "attendingStudents",
                     executionCourse.getAttendsSet()

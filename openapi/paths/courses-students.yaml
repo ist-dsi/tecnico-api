@@ -1,8 +1,8 @@
 get:
   operationId: getCourseStudents
   summary: Fetch a single course's attending students
-  description: >-
-    Fetch a single course's attending students', given its ID
+  description: |
+    Fetch a single course's attending students', given its ID.
   tags:
     - courses
   parameters:
@@ -10,43 +10,43 @@ get:
       name: id
       schema:
         $ref: "../schemas/DomainObjectId.yaml"
-      description: >-
+      description: |
         The course's unique ID.
       required: true
   security: []
   responses:
     "200":
-      description: >-
+      description: |
         OK
       content:
         application/json:
           schema:
             required:
               - attendingCount
-              - enroledCount
+              - enrolledCount
               - attendingStudents
             properties:
               attendingCount:
                 type: integer
                 example: 223
-                description: >-
+                description: |
                   The number of students attending the execution course (i.e. the
-                  number of students that can attend shifts)
-              enroledCount:
+                  number of students that can attend shifts).
+              enrolledCount:
                 type: integer
                 example: 208
-                description: >-
+                description: |
                   The number of students enrolled in the execution course (i.e.
                   the number of students that can get a grade) - sometimes, students
                   can be enrolled but not attending, if the central services enroll
-                  students directly before they're able to do it manually
+                  students directly before they're able to do it manually.
               attendingStudents:
                 type: array
                 items:
                   $ref: "../schemas/academic/Attends.yaml"
     "404":
-      description: >-
-        Invalid course ID supplied
+      description: |
+        Invalid course ID supplied.
       content:
         application/json:
           schema:

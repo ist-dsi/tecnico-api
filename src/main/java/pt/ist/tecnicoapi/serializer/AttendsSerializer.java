@@ -18,7 +18,7 @@ public class AttendsSerializer extends DomainObjectSerializer {
         final ExecutionCourse course = attends.getExecutionCourse();
         return JsonUtils.toJson(data -> {
             data.add("state", serializeAttendsState(attends.getAttendsStateType()));
-            data.addProperty("isEnroled", attends.getEnrolment() != null);
+            data.addProperty("isEnrolled", attends.getEnrolment() != null);
             data.add("course", this.getAPISerializer().getExecutionCourseSerializer().serialize(course));
         });
     }
@@ -26,9 +26,9 @@ public class AttendsSerializer extends DomainObjectSerializer {
     public @NotNull JsonPrimitive serializeAttendsState(@NotNull Attends.StudentAttendsStateType attendsState) {
         switch (attendsState) {
             case ENROLED:
-                return new JsonPrimitive("ENROLED");
+                return new JsonPrimitive("ENROLLED");
             case NOT_ENROLED:
-                return new JsonPrimitive("NOT_ENROLED");
+                return new JsonPrimitive("NOT_ENROLLED");
             case IMPROVEMENT:
                 return new JsonPrimitive("IMPROVEMENT");
             case SPECIAL_SEASON:
