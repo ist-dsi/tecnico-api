@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import org.fenixedu.academic.domain.Lesson;
 import org.fenixedu.academic.domain.SchoolClass;
 import org.fenixedu.academic.domain.Shift;
+import org.fenixedu.academic.domain.ShiftType;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.commons.stream.StreamUtils;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +27,7 @@ public class ShiftSerializer extends DomainObjectSerializer {
                     "types",
                     shift.getTypes()
                             .stream()
-                            .map(type -> new JsonPrimitive(type.getName()))
+                            .map(this::serializeShiftType)
                             .collect(StreamUtils.toJsonArray())
             );
         });
@@ -55,6 +56,26 @@ public class ShiftSerializer extends DomainObjectSerializer {
                         .collect(StreamUtils.toJsonArray())
         );
         return data;
+    }
+
+    public @NotNull JsonPrimitive serializeShiftType(@NotNull ShiftType shiftType) {
+        switch (shiftType) {
+            case TEORICA:
+                return new JsonPrimitive("THEORETICAL");
+            case PRATICA:
+                return new JsonPrimitive("PRACTICAL");
+            case TEORICO_PRATICA:
+                return new JsonPrimitive("THEORETICAL_PRACTICAL");
+            case LABORATORIAL:
+                return new JsonPrimitive("LABORATORY");
+            case DUVIDAS:
+                return new JsonPrimitive("OFFICE_HOURS");
+            case RESERVA:
+                return new JsonPrimitive("RESERVE");
+            // other cases are already in english
+            default:
+                return new JsonPrimitive(shiftType.getName());
+        }
     }
 
     private Stream<JsonObject> getShiftLessonInstances(Lesson lesson) {

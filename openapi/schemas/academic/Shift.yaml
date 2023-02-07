@@ -17,12 +17,12 @@ BasicShiftModel:
         type: string
         example: "PROBLEMS"
         enum:
-          - TEORICA
-          - PRATICA
-          - TEORICO_PRATICA
-          - LABORATORIAL
-          - DUVIDAS
-          - RESERVA
+          - THEORETICAL
+          - PRACTICAL
+          - THEORETICAL_PRACTICAL
+          - LABORATORY
+          - OFFICE_HOURS
+          - RESERVE
           - SEMINARY
           - PROBLEMS
           - FIELD_WORK
