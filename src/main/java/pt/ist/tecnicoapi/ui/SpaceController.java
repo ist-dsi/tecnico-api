@@ -1,10 +1,9 @@
 package pt.ist.tecnicoapi.ui;
 
-import java.util.stream.Stream;
-
+import org.apache.commons.io.IOUtils;
 import org.fenixedu.academic.domain.space.SpaceUtils;
-import pt.ist.tecnicoapi.util.APIError;
 import org.fenixedu.spaces.domain.Space;
+import org.fenixedu.spaces.services.SpaceBlueprintsDWGProcessor;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pt.ist.tecnicoapi.util.APIError;
+
+import javax.servlet.UnavailableException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/tecnico-api/v2")
@@ -78,11 +86,66 @@ public class SpaceController extends BaseController {
     }
 
     @CrossOrigin(allowCredentials = "false")
-    @RequestMapping(value = "/spaces/{space}/blueprint/{format:dwg|jpg}", method = RequestMethod.GET)
-    protected ResponseEntity<?> getSpaceBlueprint(@PathVariable Space space,
-                                                  @PathVariable String format) {
-        // TODO
-        return null;
+    @RequestMapping(value = "/spaces/{space}/blueprint/dwg", method = RequestMethod.GET)
+    protected void getSpaceBlueprintDwg(HttpServletResponse response, @PathVariable Space space) {
+        final InputStream inputStream = space.getBlueprintFile()
+                .map(Optional::of)
+                .orElseGet(
+                        () -> Optional.ofNullable(
+                                SpaceBlueprintsDWGProcessor
+                                        .getSuroundingSpaceMostRecentBlueprint(space)
+                        ).flatMap(Space::getBlueprintFile)
+                )
+                .orElseThrow(
+                        () -> new APIError(
+                                HttpStatus.NOT_FOUND,
+                                "error.space.blueprint.unavailable",
+                                space.getExternalId()
+                        )
+                )
+                .getStream();
+
+        try {
+            final String filename = space.getExternalId() + ".dwg";
+            response.setContentType("application/dwg");
+            response.addHeader("Content-Disposition", "attachment; filename=" + filename);
+
+            IOUtils.copy(inputStream, response.getOutputStream());
+            response.flushBuffer();
+        } catch (final IOException e) {
+            throw new Error(e);
+        }
+    }
+
+    @CrossOrigin(allowCredentials = "false")
+    @RequestMapping(value = "/spaces/{space}/blueprint/jpeg", method = RequestMethod.GET)
+    protected void getSpaceBlueprintJpeg(HttpServletResponse response, @PathVariable Space space) {
+        try {
+            final String filename = space.getExternalId() + ".jpg";
+            response.setContentType("image/jpeg");
+            response.addHeader("Content-Disposition", "attachment; filename=" + filename);
+
+            SpaceBlueprintsDWGProcessor.writeBlueprint(
+                    space,
+                    new DateTime(),
+                    false,
+                    true,
+                    true,
+                    false,
+                    new BigDecimal(100),
+                    response.getOutputStream()
+            );
+
+            response.flushBuffer();
+        } catch (UnavailableException e) {
+            throw new APIError(
+                    HttpStatus.NOT_FOUND,
+                    "error.space.blueprint.unavailable",
+                    space.getExternalId()
+            );
+        } catch (IOException e) {
+            throw new Error(e);
+        }
     }
 
 }
