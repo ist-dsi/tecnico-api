@@ -56,6 +56,8 @@ paths:
     $ref: "./paths/spaces-day.yaml"
   /spaces/{space}/interval/{startDay}/{endDay}:
     $ref: "./paths/spaces-interval.yaml"
+  /spaces/{space}/blueprint/{format}:
+    $ref: "./paths/spaces-blueprint.yaml"
   /student/attending:
     $ref: "./paths/student-attending.yaml"
   /student/calendar/classes:

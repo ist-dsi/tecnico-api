@@ -1,0 +1,63 @@
+get:
+  operationId: getSpaceBlueprint
+  summary: Fetches a space's blueprint
+  description: |
+    Fetches a space's blueprint. It is possible to request a space's blueprint in both jpeg and dwg formats.
+  tags:
+    - spaces
+  parameters:
+    - in: path
+      name: space
+      schema:
+        $ref: "../schemas/DomainObjectId.yaml"
+      description: |
+        The ID of the space to fetch.
+      required: true
+      example: 2448131363674
+    - in: path
+      name: format
+      schema:
+        type: string
+        enum:
+          - jpeg
+          - dwg
+      description: |
+        The format of the blueprint to fetch.
+      required: true
+      example: jpeg
+  security: []
+  responses:
+    "200":
+      description: |
+        OK
+      content:
+        image/jpeg:
+          schema:
+            type: string
+            format: binary
+        application/dwg:
+          schema:
+            type: string
+            format: binary
+    "404":
+      description: |
+        Invalid Space ID supplied.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          examples:
+            space-not-found:
+              description: Space not found
+              value:
+                key: error.space.not.found
+                message:
+                  pt-PT: O espaço com o ID 2448131363674411 não foi encontrado
+                  en-GB: The space with ID 2448131363674411 was not found
+            blueprint-unavailable:
+              description: This space has no blueprint
+              value:
+                key: error.space.blueprint.unavailable
+                message:
+                  pt-PT: A planta referente a este espaço (2448131363674411) não está disponível
+                  en-GB: The blueprint for this space (2448131363674411) is not available
