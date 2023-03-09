@@ -16,7 +16,7 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../schemas/academic/Person.yaml"
+            $ref: "../schemas/academic/Person.yaml#/PersonModel"
     "401":
       $ref: "../responses/OAuthUnauthorizedResponse.yaml"
     "403":

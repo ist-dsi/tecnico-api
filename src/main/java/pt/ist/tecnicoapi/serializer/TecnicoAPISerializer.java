@@ -27,7 +27,9 @@ public class TecnicoAPISerializer {
             this
     );
     private final @NotNull EvaluationTypeSerializer evaluationTypeSerializer = new EvaluationTypeSerializer(this);
-    private final @NotNull EvaluationSeasonSerializer evaluationSeasonSerializer = new EvaluationSeasonSerializer(this);
+    private final @NotNull EvaluationSeasonSerializer evaluationSeasonSerializer = new EvaluationSeasonSerializer(
+            this
+    );
     private final @NotNull EvaluationSerializer evaluationSerializer = new EvaluationSerializer(this);
     private final @NotNull EventSerializer eventSerializer = new EventSerializer(this);
     private final @NotNull EventBeanSerializer eventBeanSerializer = new EventBeanSerializer(this);
@@ -47,6 +49,7 @@ public class TecnicoAPISerializer {
     private final @NotNull LocaleSerializer localeSerializer = new LocaleSerializer(this);
     private final @NotNull OccupationSerializer occupationSerializer = new OccupationSerializer(this);
     private final @NotNull PersonSerializer personSerializer = new PersonSerializer(this);
+    private final @NotNull PostSerializer postSerializer = new PostSerializer(this);
     private final @NotNull ProfessorshipSerializer professorshipSerializer = new ProfessorshipSerializer(this);
     private final @NotNull RegistrationSerializer registrationSerializer = new RegistrationSerializer(this);
     private final @NotNull ScheduleSerializer scheduleSerializer = new ScheduleSerializer(this);
@@ -56,5 +59,5 @@ public class TecnicoAPISerializer {
     private final @NotNull StudentGroupSerializer studentGroupSerializer = new StudentGroupSerializer(this);
     private final @NotNull TeacherSerializer teacherSerializer = new TeacherSerializer(this);
     private final @NotNull UnitSerializer unitSerializer = new UnitSerializer(this);
-
+    private final @NotNull UserSerializer userSerializer = new UserSerializer(this);
 }

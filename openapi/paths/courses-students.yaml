@@ -7,7 +7,7 @@ get:
     - courses
   parameters:
     - in: path
-      name: id
+      name: executionCourse
       schema:
         $ref: "../schemas/DomainObjectId.yaml"
       description: |

@@ -22,15 +22,17 @@ paths:
     $ref: "./paths/academicterms.yaml"
   /academicterms/{beginYear}/{endYear}:
     $ref: "./paths/academicterms-one.yaml"
-  /courses/{id}:
+  /courses/{executionCourse}:
     $ref: "./paths/courses-one.yaml"
-  /courses/{id}/evaluations:
+  /courses/{executionCourse}/announcements:
+    $ref: "./paths/courses-announcements.yaml"
+  /courses/{executionCourse}/evaluations:
     $ref: "./paths/courses-evaluations.yaml"
-  /courses/{id}/groups:
+  /courses/{executionCourse}/groups:
     $ref: "./paths/courses-groups.yaml"
-  /courses/{id}/schedule:
+  /courses/{executionCourse}/schedule:
     $ref: "./paths/courses-schedule.yaml"
-  /courses/{id}/students:
+  /courses/{executionCourse}/students:
     $ref: "./paths/courses-students.yaml"
   /degrees:
     $ref: "./paths/degrees.yaml"

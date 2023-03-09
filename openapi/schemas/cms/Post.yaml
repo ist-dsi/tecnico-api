@@ -1,0 +1,32 @@
+BasicPostModel:
+  type: object
+  required:
+    - id
+    - title
+    - body
+    - url
+    - postedOn
+    - lastModifiedOn
+    - author
+  properties:
+    id:
+      $ref: "../DomainObjectId.yaml"
+    title:
+      type: string
+      example: "Resultados Exame"
+    body:
+      type: string
+      example: "Os resultados do exame de época normal já estão disponíveis."
+    url:
+      type: string
+      example: "https://fenix.tecnico.ulisboa.pt/disciplinas/RC/2022-2023/1-semestre/ver-post/resultados-fichas-43-lab-1-exame"
+    creationDate:
+      type: string
+      format: date-time
+      example: "2021-06-01T12:00:00Z"
+    modificationDate:
+      type: string
+      format: date-time
+      example: "2021-06-01T12:00:00Z"
+    author:
+      $ref: "../academic/Person.yaml#/BasicPersonModel"

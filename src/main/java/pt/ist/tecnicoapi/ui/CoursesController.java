@@ -3,6 +3,7 @@ package pt.ist.tecnicoapi.ui;
 import org.fenixedu.academic.domain.Attends;
 import org.fenixedu.academic.domain.ExecutionCourse;
 import org.fenixedu.bennu.core.json.JsonUtils;
+import org.fenixedu.cms.domain.Post;
 import org.fenixedu.commons.stream.StreamUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +20,22 @@ public class CoursesController extends BaseController {
     @RequestMapping(value = "/courses/{executionCourse}", method = RequestMethod.GET)
     protected ResponseEntity<?> getCourse(@PathVariable final ExecutionCourse executionCourse) {
         return ok(toExtendedExecutionCourseJson(executionCourse));
+    }
+
+    @CrossOrigin(allowCredentials = "false")
+    @RequestMapping(value = "/courses/{executionCourse}/announcements", method = RequestMethod.GET)
+    protected ResponseEntity<?> getCourseAnnouncements(@PathVariable final ExecutionCourse executionCourse) {
+        return respond(
+                executionCourse.getSite()
+                        .getCategoriesSet()
+                        .stream()
+                        .filter(category -> category.getSlug().equals("announcement"))
+                        .flatMap(category -> category.getPostsSet().stream())
+                        .filter(Post::isVisible)
+                        .filter(post -> post.getCanViewGroup().isMember(null))
+                        .sorted(Post.CREATION_DATE_COMPARATOR)
+                        .map(this::toPostJson)
+        );
     }
 
     @CrossOrigin(allowCredentials = "false")

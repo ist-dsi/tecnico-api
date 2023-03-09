@@ -102,8 +102,10 @@ LessonEventModel:
   $ref: "./academic/Occupation.yaml#/LessonEventModel"
 WrittenEvaluationEventModel:
   $ref: "./academic/Occupation.yaml#/WrittenEvaluationEventModel"
+BasicPerson:
+  $ref: "./academic/Person.yaml#/BasicPersonModel"
 Person:
-  $ref: "./academic/Person.yaml"
+  $ref: "./academic/Person.yaml#/PersonModel"
 Professorship:
   $ref: "./academic/Professorship.yaml"
 Registration:
@@ -130,6 +132,11 @@ Teacher:
   $ref: "./academic/Teacher.yaml"
 Unit:
   $ref: "./academic/Unit.yaml"
+
+# FenixEdu CMS
+
+Post:
+  $ref: "./cms/Post.yaml#/BasicPostModel"
 
 # Java
 
