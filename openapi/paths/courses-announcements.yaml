@@ -1,8 +1,8 @@
 get:
-  operationId: getCourseGroups
-  summary: Fetch a single course's groupings
+  operationId: getCourseAnnouncements
+  summary: Fetch a single course's announcements
   description: |
-    Fetch a specific course' groupings, given its ID.
+    Fetch a specific course' announcements, given its ID.
   tags:
     - courses
   parameters:
@@ -13,6 +13,7 @@ get:
       description: |
         The course's unique ID.
       required: true
+      example: 846035542882130
   security: []
   responses:
     "200":
@@ -23,7 +24,7 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/Grouping.yaml"
+              $ref: "../schemas/cms/Post.yaml#/BasicPostModel"
     "404":
       description: |
         Invalid course ID supplied.

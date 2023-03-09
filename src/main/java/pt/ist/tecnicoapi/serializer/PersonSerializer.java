@@ -36,39 +36,50 @@ public class PersonSerializer extends DomainObjectSerializer {
         roleProviders.add(this::provideTeacherRole);
     }
 
-    public @NotNull JsonObject serialize(final @NotNull Person person) {
+    public @NotNull JsonObject serializeBasic(final @NotNull Person person) {
         return JsonUtils.toJson(data -> {
+            final String primaryEmail = Optional.ofNullable(person.getDefaultEmailAddress())
+                    .map(PartyContact::getPresentationValue)
+                    .orElseGet(person::getInstitutionalEmailAddressValue);
+
             data.addProperty("username", person.getUsername());
-
-            data.addProperty("name", person.getName());
-            data.addProperty("givenNames", person.getProfile().getGivenNames());
-            data.addProperty("familyNames", person.getProfile().getFamilyNames());
             data.addProperty("displayName", person.getDisplayName());
+            data.addProperty("email", primaryEmail);
+        });
+    }
 
-            data.addProperty("gender", person.getGender().name());
+    public @NotNull JsonObject serialize(final @NotNull Person person) {
+        final JsonObject data = serializeBasic(person);
+
+        data.addProperty("name", person.getName());
+        data.addProperty("givenNames", person.getProfile().getGivenNames());
+        data.addProperty("familyNames", person.getProfile().getFamilyNames());
+
+        data.addProperty("gender", person.getGender().name());
+        addIfAndFormat(
+                data,
+                "dateOfBirth",
+                person.getDateOfBirthYearMonthDay(),
+                dob -> dob.toLocalDate().toString()
+        );
+        addIfAndFormat(data, "institutionalEmail", person.getInstitutionalEmailAddress(), EmailAddress::getValue);
+
+        if (person.getStudent() != null) {
             addIfAndFormat(
                     data,
-                    "dateOfBirth",
-                    person.getDateOfBirthYearMonthDay(),
-                    dob -> dob.toLocalDate().toString()
+                    "campus",
+                    person.getStudent().getLastActiveRegistration(),
+                    reg -> reg.getCampus().getName()
             );
-            addIfAndFormat(data, "institutionalEmail", person.getInstitutionalEmailAddress(), EmailAddress::getValue);
+        }
 
-            if (person.getStudent() != null) {
-                addIfAndFormat(
-                        data,
-                        "campus",
-                        person.getStudent().getLastActiveRegistration(),
-                        reg -> reg.getCampus().getName()
-                );
-            }
+        addPersonContactJson(data, person, false);
 
-            addPersonContactJson(data, person, false);
+        data.add("roles", serializePersonRoles(person));
 
-            data.add("roles", serializePersonRoles(person));
+        data.add("photo", serializePersonPhotoDataUri(person));
 
-            data.add("photo", serializePersonPhotoDataUri(person));
-        });
+        return data;
     }
 
     public @NotNull JsonObject serializePersonPhotoDataUri(final @NotNull Person person) {
@@ -101,15 +112,10 @@ public class PersonSerializer extends DomainObjectSerializer {
                 checkAccess
         );
 
-        final String primaryEmail = Optional.ofNullable(person.getDefaultEmailAddress())
-                .map(PartyContact::getPresentationValue)
-                .orElseGet(person::getInstitutionalEmailAddressValue);
-
         data.add("personalEmails", personalEmailAddresses);
         data.add("workEmails", workEmailAddresses);
         data.add("personalWebAddresses", personalWebAddresses);
         data.add("workWebAddresses", workWebAddresses);
-        data.addProperty("email", primaryEmail);
     }
 
     private @NotNull JsonArray collectPartyContactStream(@NotNull Stream<? extends PartyContact> contactStream,

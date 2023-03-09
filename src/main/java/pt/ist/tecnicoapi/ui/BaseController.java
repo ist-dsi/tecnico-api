@@ -18,11 +18,8 @@ import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.util.icalendar.EventBean;
-import pt.ist.tecnicoapi.oauth.OAuthAuthorizationProvider;
-import pt.ist.tecnicoapi.serializer.TecnicoAPISerializer;
-import pt.ist.tecnicoapi.util.APIError;
-import pt.ist.tecnicoapi.util.APIScope;
 import org.fenixedu.bennu.TecnicoAPIConfiguration;
+import org.fenixedu.cms.domain.Post;
 import org.fenixedu.spaces.domain.Space;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,6 +30,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import pt.ist.fenixframework.DomainObject;
+import pt.ist.tecnicoapi.oauth.OAuthAuthorizationProvider;
+import pt.ist.tecnicoapi.serializer.TecnicoAPISerializer;
+import pt.ist.tecnicoapi.util.APIError;
+import pt.ist.tecnicoapi.util.APIScope;
 
 import java.util.List;
 import java.util.Locale;
@@ -251,6 +252,10 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
 
     protected @NotNull JsonObject toPersonJson(@NotNull Person person) {
         return getSerializer().getPersonSerializer().serialize(person);
+    }
+
+    protected @NotNull JsonObject toPostJson(@NotNull Post post) {
+        return getSerializer().getPostSerializer().serialize(post);
     }
 
     protected @NotNull JsonObject toScheduleJson(@NotNull ExecutionCourse executionCourse) {
