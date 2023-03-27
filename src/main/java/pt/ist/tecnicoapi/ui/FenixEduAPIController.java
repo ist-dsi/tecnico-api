@@ -50,7 +50,7 @@ public class FenixEduAPIController extends BaseController {
 
     // gets all terms
     @CrossOrigin(allowCredentials = "false")
-    @RequestMapping(value = "/academicterms", method = RequestMethod.GET)
+    @RequestMapping(value = "/academic-terms", method = RequestMethod.GET)
     public ResponseEntity<?> getAcademicTerms(@RequestParam(required = false) Optional<String> from) {
         final Bennu bennu = Bennu.getInstance();
         final ExecutionYear firstExecutionYear = from
@@ -68,7 +68,7 @@ public class FenixEduAPIController extends BaseController {
 
     // gets a specific term
     @CrossOrigin(allowCredentials = "false")
-    @RequestMapping(value = "/academicterms/{beginYear}/{endYear}", method = RequestMethod.GET)
+    @RequestMapping(value = "/academic-terms/{beginYear}/{endYear}", method = RequestMethod.GET)
     public ResponseEntity<?> getAcademicTerm(@PathVariable String beginYear, @PathVariable String endYear) {
         final ExecutionYear executionYear = parseExecutionYearOrThrow(beginYear + "/" + endYear);
         return ok(toExtendedExecutionYearJson(executionYear));
