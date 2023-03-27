@@ -66,8 +66,7 @@ public class ExecutionCourseSerializer extends DomainObjectSerializer {
                 "teachers",
                 executionCourse.getProfessorshipsSet()
                         .stream()
-                        .map(Professorship::getTeacher)
-                        .map(this.getAPISerializer().getTeacherSerializer()::serialize)
+                        .map(this.getAPISerializer().getProfessorshipSerializer()::serializeWithTeacherInformation)
                         .collect(StreamUtils.toJsonArray())
         );
         data.add("courseInformation", courseInformation);

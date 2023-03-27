@@ -22,4 +22,10 @@ public class ProfessorshipSerializer extends DomainObjectSerializer {
         });
     }
 
+    public @NotNull JsonObject serializeWithTeacherInformation(@NotNull Professorship professorship) {
+        JsonObject data = getAPISerializer().getTeacherSerializer().serialize(professorship.getTeacher());
+        data.addProperty("isResponsibleFor", professorship.isResponsibleFor());
+        return data;
+    }
+
 }
