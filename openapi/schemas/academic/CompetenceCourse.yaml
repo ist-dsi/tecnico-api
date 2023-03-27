@@ -1,0 +1,36 @@
+BasicCompetenceCourseModel:
+  type: object
+  required:
+    - id
+    - name
+    - acronym
+  properties:
+    id:
+      $ref: "../DomainObjectId.yaml"
+    name:
+      type: string
+      example: "Agentes Autónomos e Sistemas Multi-Agente"
+    acronym:
+      type: string
+      example: "AASM-Aag"
+ExtendedCompetenceCourseModel:
+  allOf:
+    - $ref: "#/BasicCompetenceCourseModel"
+    - type: object
+      required:
+        - bibliographicReferences
+        - regime
+        - objectives
+        - program
+      properties:
+        bibliographicReferences:
+          type: array
+          items:
+            $ref: "./BibliographicReference.yaml"
+        regime:
+          type: string
+          example: "Semestral"
+        objectives:
+          $ref: "../LocalizedString.yaml"
+        program:
+          $ref: "../LocalizedString.yaml"

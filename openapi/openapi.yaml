@@ -44,6 +44,18 @@ paths:
     $ref: "./paths/degree-courses.yaml"
   /degrees/{degree}/curriculum:
     $ref: "./paths/degree-curriculum.yaml"
+  /departments:
+    $ref: "./paths/departments.yaml"
+  /departments/all:
+    $ref: "./paths/departments-all.yaml"
+  /departments/{department}:
+    $ref: "./paths/departments-one.yaml"
+  /departments/{department}/competence-courses:
+    $ref: "./paths/departments-competence-courses.yaml"
+  /departments/{department}/execution-courses:
+    $ref: "./paths/departments-execution-courses.yaml"
+  /departments/{department}/scientific-areas:
+    $ref: "./paths/departments-scientific-areas.yaml"
   /person:
     $ref: "./paths/person.yaml"
   /spaces:
@@ -110,3 +122,5 @@ tags:
     description: Endpoints related to user information
   - name: curricular
     description: Endpoints related to user academic information
+  - name: department
+    description: Endpoints related to departments

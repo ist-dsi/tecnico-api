@@ -10,6 +10,7 @@ public class TecnicoAPISerializer {
     private final @NotNull BibliographicReferenceSerializer bibliographicReferenceSerializer = new BibliographicReferenceSerializer(
             this
     );
+    private final @NotNull CompetenceCourseSerializer competenceCourseSerializer = new CompetenceCourseSerializer(this);
     private final @NotNull CourseGroupSerializer courseGroupSerializer = new CourseGroupSerializer(this);
     private final @NotNull CourseLoadSerializer courseLoadSerializer = new CourseLoadSerializer(this);
     private final @NotNull CurricularCourseSerializer curricularCourseSerializer = new CurricularCourseSerializer(
@@ -22,6 +23,7 @@ public class TecnicoAPISerializer {
             this
     );
     private final @NotNull DegreeSerializer degreeSerializer = new DegreeSerializer(this);
+    private final @NotNull DepartmentSerializer departmentSerializer = new DepartmentSerializer(this);
     private final @NotNull EnrolmentSerializer enrolmentSerializer = new EnrolmentSerializer(this);
     private final @NotNull EnrolmentPolicySerializer enrolmentPolicySerializer = new EnrolmentPolicySerializer(
             this
@@ -54,6 +56,7 @@ public class TecnicoAPISerializer {
     private final @NotNull RegistrationSerializer registrationSerializer = new RegistrationSerializer(this);
     private final @NotNull ScheduleSerializer scheduleSerializer = new ScheduleSerializer(this);
     private final @NotNull SchoolClassSerializer schoolClassSerializer = new SchoolClassSerializer(this);
+    private final @NotNull ScientificAreaSerializer scientificAreaSerializer = new ScientificAreaSerializer(this);
     private final @NotNull ShiftSerializer shiftSerializer = new ShiftSerializer(this);
     private final @NotNull SpaceSerializer spaceSerializer = new SpaceSerializer(this);
     private final @NotNull StudentGroupSerializer studentGroupSerializer = new StudentGroupSerializer(this);

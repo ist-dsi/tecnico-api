@@ -1,0 +1,18 @@
+get:
+  operationId: getDepartments
+  summary: Fetch currently active departments
+  description: |
+    Fetch all currently active departments.
+  tags:
+    - departments
+  security: []
+  responses:
+    "200":
+      description: |
+        OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../schemas/academic/Department.yaml#/BasicDepartmentModel"

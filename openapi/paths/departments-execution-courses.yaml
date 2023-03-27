@@ -1,0 +1,61 @@
+get:
+  operationId: getDepartmentExecutionCourses
+  summary: Fetch a given department's execution courses.
+  description: |
+    Fetch all the execution courses of a given department.
+    
+    By default, fetches the execution courses of the current year and semester.
+  tags:
+    - departments
+  parameters:
+    - in: path
+      name: department
+      schema:
+        type: string
+      description: |
+        The department's unique ID.
+      example: 811748818953
+      required: true
+    - in: query
+      name: year
+      schema:
+        type: string
+      description: |
+        The year of the execution courses to fetch.
+      example: "2019/2020"
+      required: false
+  security: []
+  responses:
+    "200":
+      description: |
+        OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../schemas/academic/ExecutionCourse.yaml#/BasicExecutionCourseModel"
+    "400":
+      description: |
+        Invalid year or semester supplied
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.academicterm.year.incorrect
+            message:
+              pt-PT: O ano inserido (2020/2022) é inválido ou não existe
+              en-GB: The inserted year (2020/2022) is invalid or does not exist
+    "404":
+      description: |
+        Invalid Department ID supplied.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.department.not.found
+            message:
+              pt-PT: O departamento com o ID 2448131363674411 não foi encontrado
+              en-GB: The department with ID 2448131363674411 was not found

@@ -2,8 +2,10 @@ package pt.ist.tecnicoapi.ui;
 
 import com.google.gson.JsonObject;
 import org.fenixedu.academic.domain.Attends;
+import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.CurricularCourse;
 import org.fenixedu.academic.domain.Degree;
+import org.fenixedu.academic.domain.Department;
 import org.fenixedu.academic.domain.Enrolment;
 import org.fenixedu.academic.domain.Evaluation;
 import org.fenixedu.academic.domain.ExecutionCourse;
@@ -15,6 +17,7 @@ import org.fenixedu.academic.domain.Person;
 import org.fenixedu.academic.domain.Professorship;
 import org.fenixedu.academic.domain.degreeStructure.Context;
 import org.fenixedu.academic.domain.degreeStructure.CourseGroup;
+import org.fenixedu.academic.domain.organizationalStructure.ScientificAreaUnit;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.util.icalendar.EventBean;
@@ -202,6 +205,10 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return getSerializer().getRegistrationSerializer().serializeForOthers(registration);
     }
 
+    protected @NotNull JsonObject toCompetenceCourseJson(@NotNull CompetenceCourse competenceCourse) {
+        return getSerializer().getCompetenceCourseSerializer().serialize(competenceCourse);
+    }
+
     protected @NotNull JsonObject toCurricularCourseJson(@NotNull CurricularCourse course,
                                                          @NotNull ExecutionYear executionYear) {
         return getSerializer().getCurricularCourseSerializer().serialize(course, executionYear);
@@ -214,12 +221,24 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
                 .serializeWithCurricularInformation(context, executionYear, pathTaken);
     }
 
+    protected @NotNull JsonObject toDepartmentJson(@NotNull Department department) {
+        return getSerializer().getDepartmentSerializer().serialize(department);
+    }
+
+    protected @NotNull JsonObject toExecutionCourseJson(@NotNull ExecutionCourse course) {
+        return getSerializer().getExecutionCourseSerializer().serialize(course);
+    }
+
     protected @NotNull JsonObject toExtendedDegreeJson(@NotNull Degree degree) {
         return getSerializer().getDegreeSerializer().serializeExtended(degree);
     }
 
     protected @NotNull JsonObject toExecutionDegreeJson(@NotNull ExecutionDegree executionDegree) {
         return getSerializer().getExecutionDegreeSerializer().serialize(executionDegree);
+    }
+
+    protected @NotNull JsonObject toExtendedDepartmentJson(@NotNull Department department) {
+        return getSerializer().getDepartmentSerializer().serializeExtended(department);
     }
 
     protected @NotNull JsonObject toExtendedExecutionDegreeJson(@NotNull ExecutionDegree executionDegree) {
@@ -260,6 +279,10 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
 
     protected @NotNull JsonObject toScheduleJson(@NotNull ExecutionCourse executionCourse) {
         return getSerializer().getScheduleSerializer().serialize(executionCourse);
+    }
+
+    protected @NotNull JsonObject toScientificAreaJson(@NotNull ScientificAreaUnit scientificArea) {
+        return getSerializer().getScientificAreaSerializer().serialize(scientificArea);
     }
 
     protected @NotNull JsonObject toBasicSpaceJson(@NotNull Space space) {
