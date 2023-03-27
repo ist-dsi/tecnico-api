@@ -90,4 +90,10 @@ ExtendedCourseInformation:
         teachers:
           type: array
           items:
-            $ref: "./Teacher.yaml"
+            allOf:
+              - $ref: "./Teacher.yaml"
+              - type: object
+                properties:
+                  isResponsibleFor:
+                    type: boolean
+                    description: Whether or not the teacher is responsible for this course
