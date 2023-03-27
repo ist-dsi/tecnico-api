@@ -22,6 +22,8 @@ paths:
     $ref: "./paths/academicterms.yaml"
   /academic-terms/{beginYear}/{endYear}:
     $ref: "./paths/academicterms-one.yaml"
+  /competence-courses/{competenceCourse}:
+    $ref: "./paths/competence-courses-one.yaml"
   /courses/{executionCourse}:
     $ref: "./paths/courses-one.yaml"
   /courses/{executionCourse}/announcements:

@@ -1,7 +1,9 @@
 package pt.ist.tecnicoapi.ui;
 
 import org.fenixedu.academic.domain.Attends;
+import org.fenixedu.academic.domain.CompetenceCourse;
 import org.fenixedu.academic.domain.ExecutionCourse;
+import org.fenixedu.academic.domain.ExecutionSemester;
 import org.fenixedu.bennu.core.json.JsonUtils;
 import org.fenixedu.cms.domain.Post;
 import org.fenixedu.commons.stream.StreamUtils;
@@ -10,11 +12,19 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/tecnico-api/v2")
 public class CoursesController extends BaseController {
+
+    /*
+     * ExecutionCourse related endpoints
+     */
 
     @CrossOrigin(allowCredentials = "false")
     @RequestMapping(value = "/courses/{executionCourse}", method = RequestMethod.GET)
@@ -74,6 +84,19 @@ public class CoursesController extends BaseController {
                             .collect(StreamUtils.toJsonArray())
             );
         }));
+    }
+
+    /*
+     * CompetenceCourse Course related endpoints
+     */
+
+    @CrossOrigin(allowCredentials = "false")
+    @RequestMapping(value = "/competence-courses/{competenceCourse}", method = RequestMethod.GET)
+    protected ResponseEntity<?> getCompetenceCourse(@PathVariable final CompetenceCourse competenceCourse,
+                                                    @RequestParam(required = false) Optional<String> year,
+                                                    @RequestParam(required = false) Optional<Integer> semester) {
+        final Set<ExecutionSemester> executionSemesters = parseExecutionSemestersOrThrow(year, semester);
+        return ok(toExtendedCompetenceCourseJson(competenceCourse, executionSemesters));
     }
 
 }

@@ -229,6 +229,11 @@ public class BaseController extends org.fenixedu.bennu.spring.BaseController {
         return getSerializer().getExecutionCourseSerializer().serialize(course);
     }
 
+    protected @NotNull JsonObject toExtendedCompetenceCourseJson(@NotNull CompetenceCourse competenceCourse,
+                                                                 @NotNull Set<ExecutionSemester> executionSemesters) {
+        return getSerializer().getCompetenceCourseSerializer().serializeExtended(competenceCourse, executionSemesters);
+    }
+
     protected @NotNull JsonObject toExtendedDegreeJson(@NotNull Degree degree) {
         return getSerializer().getDegreeSerializer().serializeExtended(degree);
     }
