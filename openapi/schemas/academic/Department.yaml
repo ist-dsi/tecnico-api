@@ -1,0 +1,38 @@
+BasicDepartmentModel:
+  type: object
+  required:
+    - id
+    - name
+    - acronym
+    - active
+  properties:
+    id:
+      $ref: "../DomainObjectId.yaml"
+    name:
+      allOf:
+        - $ref: "../LocalizedString.yaml"
+        - example:
+            pt-PT: "Departamento de Engenharia Informática (DEI)"
+            en-GB: "Department of Computer Science and Engineering (DEI)"
+    acronym:
+      type: string
+      example: "DEI"
+    active:
+      type: boolean
+      example: true
+ExtendedDepartmentModel:
+  allOf:
+    - $ref: "#/BasicDepartmentModel"
+    - type: object
+      required:
+        - currentTeachers
+        - currentDegrees
+      properties:
+        currentTeachers:
+          type: array
+          items:
+            $ref: "./Teacher.yaml"
+        currentDegrees:
+          type: array
+          items:
+            $ref: "./Degree.yaml#/BasicDegreeModel"

@@ -1,0 +1,15 @@
+BasicScientificAreaUnitModel:
+  type: object
+  required:
+    - id
+    - name
+    - acronym
+  properties:
+    id:
+      $ref: "../DomainObjectId.yaml"
+    name:
+      type: string
+      example: "Área Científica de Arquitectura e Sistemas Operativos"
+    acronym:
+      type: string
+      example: "ASO"

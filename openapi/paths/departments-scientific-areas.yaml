@@ -1,0 +1,39 @@
+get:
+  operationId: getDepartmentScientificAreas
+  summary: Fetch a given department's scientific areas.
+  description: |
+    Fetch all the scientific areas of a given department.
+  tags:
+    - departments
+  parameters:
+    - in: path
+      name: department
+      schema:
+        type: string
+      description: |
+        The department's unique ID.
+      example: 811748818953
+      required: true
+  security: []
+  responses:
+    "200":
+      description: |
+        OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../schemas/academic/ScientificAreaUnit.yaml#/BasicScientificAreaUnitModel"
+    "404":
+      description: |
+        Invalid Department ID supplied.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.department.not.found
+            message:
+              pt-PT: O departamento com o ID 2448131363674411 não foi encontrado
+              en-GB: The department with ID 2448131363674411 was not found
