@@ -18,11 +18,16 @@ ExtendedCompetenceCourseModel:
     - $ref: "#/BasicCompetenceCourseModel"
     - type: object
       required:
+        - executionCourses
         - bibliographicReferences
         - regime
         - objectives
         - program
       properties:
+        executionCourses:
+          type: array
+          items:
+            $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"
         bibliographicReferences:
           type: array
           items:

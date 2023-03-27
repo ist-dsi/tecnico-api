@@ -1,0 +1,66 @@
+get:
+  operationId: getCompetenceCourse
+  summary: Fetch a single competence course
+  description: |
+    Fetch information about a specific competence course, given its ID.
+    
+    Optionally, a year and semester can be passed to get the execution courses in that specific year (and semester).
+    If left empty, the current semester will be used.
+    
+    The following logic will be used to decide which semesters to include in the response:
+          - if both year and semester are given, it includes only that semester of that year
+          - if only the year is given, it includes both semesters of that year
+          - if only the semester is given, it includes that semester of the current year
+          - if neither the year nor semester are given, it includes the current semester of the current year
+    
+    When including both semesters of a year, the information of the competence course is
+    that of the last semester.
+  tags:
+    - courses
+  parameters:
+    - in: path
+      name: competenceCourse
+      schema:
+        $ref: "../schemas/DomainObjectId.yaml"
+      description: |
+        The competence course's unique ID.
+      example: 2229088029468
+      required: true
+    - in: query
+      name: year
+      schema:
+        type: string
+      description: |
+        Use this year to get execution courses from.
+      example: 2021/2022
+      required: false
+    - in: query
+      name: semester
+      schema:
+        type: integer
+      description: |
+        Use this semester (either with the given year or the current year) to get execution courses from.
+        If `year` above is set without setting this, the endpoint will return execution courses for the entire year.
+      example: 1
+      required: false
+  security: []
+  responses:
+    "200":
+      description: |
+        OK
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/academic/CompetenceCourse.yaml#/ExtendedCompetenceCourseModel"
+    "404":
+      description: |
+        Invalid competence course ID supplied.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.competencecourse.not.found
+            message:
+              pt-PT: A disciplina competência com o ID 16467887136714 não foi encontrada
+              en-GB: The competence course with ID 16467887136714 was not found
