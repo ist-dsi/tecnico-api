@@ -82,6 +82,13 @@ public class ExecutionDegreeSerializer extends DomainObjectSerializer {
                         .map(this.getAPISerializer().getTeacherSerializer()::serialize)
                         .collect(StreamUtils.toJsonArray())
         );
+        data.add(
+                "scientificCommissionMembers",
+                degree.getScientificCommissionMembers(executionYear)
+                        .stream()
+                        .map(this.getAPISerializer().getScientificCommissionSerializer()::serialize)
+                        .collect(StreamUtils.toJsonArray())
+        );
         return data;
     }
 
