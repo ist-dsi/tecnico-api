@@ -1,0 +1,32 @@
+BasicScientificCommissionModel:
+  type: object
+  required:
+    - username
+    - displayName
+    - email
+    - isCoordinationTeam
+    - isContact
+  properties:
+    username:
+      type: string
+      example: "ist1XXXXX"
+    displayName:
+      type: string
+      example: "John Doe"
+    email:
+      type: string
+      description: |
+        Primary email of the user.
+        Might not be the institutional email.
+      format: email
+      example: "example@tecnico.ulisboa.pt"
+    isCoordinationTeam:
+      type: boolean
+      description: |
+        Whether the user belongs to the coordination team of the scientific commission.
+    isContact:
+        type: boolean
+        description: |
+          Whether the user is a contact of the scientific commission.
+          Contacts are the Scientific Commission's members which will be notified,
+          by email, regarding jury homologation requests and/or dissertation records.

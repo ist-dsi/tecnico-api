@@ -5,6 +5,8 @@ ExtendedExecutionDegreeModel:
   allOf:
     - $ref: "./Degree.yaml#/ExtendedDegreeModel"
     - type: object
+      required:
+        - scientificCommissionMembers
       properties:
         accessRequisites:
           allOf:
@@ -59,8 +61,8 @@ ExtendedExecutionDegreeModel:
           items:
             allOf:
               - $ref: "./Teacher.yaml"
-            example:
-              username: "ist135791"
-              name: "André Celes Mateus"
-              emailAddress: "example@tecnico.ulisboa.pt"
-              webAddress: "https://www.tecnico.ulisboa.pt"
+        scientificCommissionMembers:
+          type: array
+          items:
+            allOf:
+              - $ref: "./ScientificCommission.yaml#/BasicScientificCommissionModel"

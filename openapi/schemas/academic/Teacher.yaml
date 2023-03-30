@@ -7,10 +7,10 @@ required:
 properties:
   username:
     type: string
-    example: "ist135791"
+    example: "ist1XXXXX"
   name:
     type: string
-    example: "André Celes Mateus"
+    example: "John Doe"
   emailAddress:
     type: string
     example: "example@tecnico.ulisboa.pt"

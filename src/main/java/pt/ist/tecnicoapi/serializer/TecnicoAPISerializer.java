@@ -54,6 +54,9 @@ public class TecnicoAPISerializer {
     private final @NotNull PostSerializer postSerializer = new PostSerializer(this);
     private final @NotNull ProfessorshipSerializer professorshipSerializer = new ProfessorshipSerializer(this);
     private final @NotNull RegistrationSerializer registrationSerializer = new RegistrationSerializer(this);
+    private final @NotNull ScientificCommissionSerializer scientificCommissionSerializer = new ScientificCommissionSerializer(
+            this
+    );
     private final @NotNull ScheduleSerializer scheduleSerializer = new ScheduleSerializer(this);
     private final @NotNull SchoolClassSerializer schoolClassSerializer = new SchoolClassSerializer(this);
     private final @NotNull ScientificAreaSerializer scientificAreaSerializer = new ScientificAreaSerializer(this);
