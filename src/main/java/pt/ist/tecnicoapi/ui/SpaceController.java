@@ -2,6 +2,7 @@ package pt.ist.tecnicoapi.ui;
 
 import org.apache.commons.io.IOUtils;
 import org.fenixedu.academic.domain.space.SpaceUtils;
+import org.fenixedu.academic.dto.spaceManager.FindSpacesBean;
 import org.fenixedu.spaces.domain.Space;
 import org.fenixedu.spaces.services.SpaceBlueprintsDWGProcessor;
 import org.joda.time.DateTime;
@@ -146,6 +147,27 @@ public class SpaceController extends BaseController {
         } catch (IOException e) {
             throw new Error(e);
         }
+    }
+
+    @CrossOrigin(allowCredentials = "false")
+    @RequestMapping(value = "/spaces/search", method = RequestMethod.GET)
+    protected ResponseEntity<?> getSpaceSearch(@RequestParam(required = true) String spaceName,
+                                               @RequestParam(required = false) Space campus,
+                                               @RequestParam(required = false) Space building) {
+        if (campus != null && !SpaceUtils.isCampus(campus)) {
+            throw new APIError(HttpStatus.BAD_REQUEST, "error.space.campus.invalid", campus.getExternalId());
+        }
+        if (building != null && !SpaceUtils.isBuilding(building)) {
+            throw new APIError(HttpStatus.BAD_REQUEST, "error.space.building.invalid", building.getExternalId());
+        }
+        return respond(
+                SpaceUtils.findSpaces(
+                        spaceName,
+                        campus,
+                        building,
+                        FindSpacesBean.SpacesSearchCriteriaType.SPACE
+                ).stream().map(this::toBasicSpaceJson)
+        );
     }
 
 }

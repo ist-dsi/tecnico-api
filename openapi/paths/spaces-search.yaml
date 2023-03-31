@@ -1,0 +1,54 @@
+get:
+  operationId: getSpaceSearch
+  summary: Fetch spaces as search
+  description: |
+    Fetch search result for a given space name.
+  tags:
+    - spaces
+  parameters:
+    - in: query
+      name: spaceName
+      schema:
+        type: string
+        example: F4
+      description: |
+        Name used in the search for spaces.
+      required: true
+    - in: query
+      name: campus
+      schema:
+        $ref: "../schemas/DomainObjectId.yaml"
+      description: |
+        Only fetch spaces located in this campus.
+      required: false
+    - in: query
+      name: building
+      schema:
+        $ref: "../schemas/DomainObjectId.yaml"
+      description: |
+        Only fetch spaces located in this building.
+      required: false
+  security: []
+  responses:
+    "200":
+      description: |
+        OK
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "../schemas/academic/Space.yaml#/BasicSpaceModel"
+    "400":
+      description: |
+        The supplied campus Space or building Space are not a valid campus or building.
+      content:
+        application/json:
+          schema:
+            $ref: "../schemas/Error.yaml"
+          example:
+            key: error.space.campus.invalid
+            message:
+              pt-PT: O ID inserido (2448131363674411) não corresponde a um campus existente
+              en-GB: The inserted ID (2448131363674411) does not match an existing campus
+
