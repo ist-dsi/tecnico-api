@@ -68,6 +68,8 @@ paths:
     $ref: "./paths/spaces-campi.yaml"
   /spaces/{space}:
     $ref: "./paths/spaces-one.yaml"
+  /spaces/search:
+    $ref : "./paths/spaces-search.yaml"
   /spaces/{space}/day/{day}:
     $ref: "./paths/spaces-day.yaml"
   /spaces/{space}/interval/{startDay}/{endDay}:
