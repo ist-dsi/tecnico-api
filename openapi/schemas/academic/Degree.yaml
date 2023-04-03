@@ -8,7 +8,9 @@ BasicDegreeModel:
     - degreeType
   properties:
     id:
-      $ref: "../DomainObjectId.yaml"
+      allOf:
+        - $ref: "../DomainObjectId.yaml"
+      example: "2761663971474"
     name:
       allOf:
         - $ref: "../LocalizedString.yaml"
@@ -24,7 +26,8 @@ BasicDegreeModel:
     campi:
       type: array
       items:
-        $ref: "./Space.yaml#/BasicSpaceModel"
+        allOf:
+          - $ref: "./Space.yaml#/BasicCampus"
     degreeType:
       allOf:
         - $ref: "../LocalizedString.yaml"

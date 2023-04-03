@@ -8,12 +8,18 @@ BasicExecutionCourseModel:
     - courseInformation
   properties:
     id:
-      $ref: "../DomainObjectId.yaml"
+      allOf:
+        - $ref: "../DomainObjectId.yaml"
+      example: "846035542882132"
     acronym:
       type: string
-      example: "Fis3"
+      example: "RC"
     name:
-      $ref: "../LocalizedString.yaml"
+      allOf:
+        - $ref: "../LocalizedString.yaml"
+      example:
+        pt-PT: "Redes de Computadores"
+        en-GB: "Computer Networks"
     academicTerm:
       $ref: "./ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
     courseInformation:
@@ -41,13 +47,13 @@ BasicCourseInformation:
       properties:
         courseUrl:
           type: string
-          example: "https://fenix.tecnico.ulisboa.pt/disciplinas/PEstatisticad10/2021-2022/2-semestre"
+          example: "https://fenix.tecnico.ulisboa.pt/disciplinas/RC/2021-2022/1-semestre"
         rssAnnouncementsUrl:
           type: string
-          example: "https://fenix.tecnico.ulisboa.pt/disciplinas/PEstatisticad10/2021-2022/2-semestre/rss/announcement"
+          example: "https://fenix.tecnico.ulisboa.pt/disciplinas/RC/2021-2022/1-semestre/rss/announcement"
         rssSummariesUrl:
           type: string
-          example: "https://fenix.tecnico.ulisboa.pt/disciplinas/PEstatisticad10/2021-2022/2-semestre/rss/summary"
+          example: "https://fenix.tecnico.ulisboa.pt/disciplinas/RC/2021-2022/1-semestre/rss/summary"
 ExtendedCourseInformation:
   allOf:
     - $ref: "#/BasicCourseInformation"

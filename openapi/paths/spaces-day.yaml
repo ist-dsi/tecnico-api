@@ -13,6 +13,7 @@ get:
       description: |
         The space's unique ID.
       required: true
+      example: 2448131363674
     - in: path
       name: day
       schema:
@@ -21,7 +22,7 @@ get:
       description: |
         The day to fetch information for.
       required: true
-      example: "2022-12-31T00:00:00.000Z"
+      example: "2022-12-12T00:00:00.000Z"
   security: []
   responses:
     "200":
@@ -30,7 +31,8 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../schemas/academic/Space.yaml#/ExtendedSpaceModel"
+            allOf:
+              - $ref: "../schemas/academic/Space.yaml#/ExtendedSpaceModel"
     "400":
       description: |
         Invalid day supplied.

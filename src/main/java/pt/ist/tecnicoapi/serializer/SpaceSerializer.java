@@ -42,9 +42,14 @@ public class SpaceSerializer extends DomainObjectSerializer {
         }
         data.addProperty("description", space.getPresentationName());
         // possibly only add the building field if a building contains the space - with campi and buildings probably not needed
-        addIfAndFormatElement(data, "building", SpaceUtils.getSpaceBuilding(space), this::serializeBasic);
-        addIfAndFormatElement(data, "campus", SpaceUtils.getSpaceCampus(space), this::serializeBasic);
+        if (!SpaceUtils.isBuilding(space)) {
+            addIfAndFormatElement(data, "building", SpaceUtils.getSpaceBuilding(space), this::serializeBasic);
+        }
+        if (!SpaceUtils.isCampus(space)) {
+            addIfAndFormatElement(data, "campus", SpaceUtils.getSpaceCampus(space), this::serializeBasic);
+        }
         addIfAndFormatElement(data, "containedIn", space.getParent(), this::serializeBasic);
+
         data.add(
                 "contains",
                 space.getChildren()

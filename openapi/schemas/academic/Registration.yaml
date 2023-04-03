@@ -64,22 +64,28 @@ RegistrationWithCurriculumInformation:
         startDate:
           type: string
           format: date
+          example: "2020-09-01"
         endDate:
           type: string
           format: date
+          example: "2023-08-31"
         curricularYear:
           type: integer
           description: The curricular year the student is currently in.
+          example: 3
         credits:
           type: number
           format: double
+          example: 120.0
         gradeAverage:
           type: number
           format: double
           description: The weighted average of the grades of approved courses.
+          example: 17.2
         roundedGradeAverage:
           type: integer
           description: The weighted average of the grades of approved courses, rounded to the nearest integer.
+          example: 17
         isConcluded:
           type: boolean
         curricularPlans:
@@ -96,9 +102,11 @@ RegistrationWithCurriculumInformation:
             startDate:
               type: string
               format: date
+              example: "2020-09-01"
             endDate:
               type: string
               format: date
+              example: "2030-08-31"
             entries:
               type: array
               items:
@@ -112,6 +120,6 @@ RegistrationForOthers:
   properties:
     username:
       type: string
-      example: "ist135791"
+      example: "ist123456"
     degree:
       $ref: "./Degree.yaml#/BasicDegreeModel"

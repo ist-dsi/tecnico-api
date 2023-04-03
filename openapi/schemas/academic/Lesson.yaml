@@ -10,4 +10,5 @@ properties:
     type: string
     format: date-time
   room:
-    $ref: "./Space.yaml#/BasicSpaceModel"
+    allOf:
+      - $ref: "./Space.yaml#/BasicRoom"

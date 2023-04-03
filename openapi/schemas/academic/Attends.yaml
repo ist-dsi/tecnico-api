@@ -1,6 +1,7 @@
 type: object
 required:
   - state
+  - isEnrolled
   - course
 properties:
   state:
@@ -12,5 +13,8 @@ properties:
       - SPECIAL_SEASON
       - EXTRAORDINARY_SEASON
       - EXAM
+  isEnrolled:
+    type: boolean
+    example: true
   course:
     $ref: "./ExecutionCourse.yaml#/BasicExecutionCourseModel"

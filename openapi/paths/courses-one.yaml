@@ -13,6 +13,7 @@ get:
       description: |
         The course's unique ID.
       required: true
+      example: 846035542882132
   security: []
   responses:
     "200":

@@ -4,7 +4,9 @@ required:
   - name
 properties:
   id:
-    $ref: "../DomainObjectId.yaml"
+    allOf:
+      - $ref: "../DomainObjectId.yaml"
+    example: "844832952025163"
   name:
     allOf:
       - $ref: "../LocalizedString.yaml"

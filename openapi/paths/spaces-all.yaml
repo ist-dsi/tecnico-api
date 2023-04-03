@@ -13,6 +13,7 @@ get:
       description: |
         Only fetch spaces located in this campus.
       required: false
+      example: 2448131360897
   security: []
   responses:
     "200":
@@ -23,7 +24,8 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/Space.yaml#/BasicSpaceModel"
+              allOf:
+                - $ref: "../schemas/academic/Space.yaml#/BasicRoom"
     "400":
       description: |
         The supplied Space is not a valid campus.

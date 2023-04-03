@@ -14,6 +14,7 @@ get:
         $ref: "../schemas/DomainObjectId.yaml"
       description: |
         The degree's unique ID.
+      example: 2761663971475
       required: true
     - in: query
       name: year

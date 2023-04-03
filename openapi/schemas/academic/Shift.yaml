@@ -8,14 +8,14 @@ BasicShiftModel:
       type: string
       description: |
         The shift's name.
-      example: "FP4PB04"
+      example: "RCL04"
     types:
       type: array
       description: |
         The shift's types.
       items:
         type: string
-        example: "PROBLEMS"
+        example: "LABORATORY"
         enum:
           - THEORETICAL
           - PRACTICAL

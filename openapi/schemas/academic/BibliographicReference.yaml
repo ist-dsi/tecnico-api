@@ -2,13 +2,13 @@ type: object
 properties:
   authors:
     type: string
-    example: "John Doe, Jane Doe"
+    example: "Jim Kurose, Keith Ross"
   title:
     type: string
-    example: "Programação em Python: Introdução à programação com múltiplos paradigmas"
+    example: "Computer Networks: A Top Down Approach"
   publisherReference:
     type: string
-    example: "IST Press"
+    example: "Pearson Education Limited"
   type:
     type: string
     example: "MAIN"
@@ -20,4 +20,4 @@ properties:
     example: "https://example.com/books"
   year:
     type: string
-    example: "2018"
+    example: "2017"

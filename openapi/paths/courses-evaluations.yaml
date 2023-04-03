@@ -2,7 +2,7 @@ get:
   operationId: getCourseEvaluations
   summary: Fetch a single course's evaluations
   description: |
-    Fetch a specific course' evaluations, given its ID.
+    Fetch a specific course's evaluations, given its ID.
   tags:
     - courses
   parameters:
@@ -13,6 +13,7 @@ get:
       description: |
         The course's unique ID.
       required: true
+      example: 846035542882132
   security: []
   responses:
     "200":

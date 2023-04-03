@@ -18,7 +18,12 @@ public class StudentGroupSerializer extends DomainObjectSerializer {
     public @NotNull JsonObject serialize(@NotNull StudentGroup studentGroup) {
         return JsonUtils.toJson(data -> {
             data.addProperty("groupNumber", studentGroup.getGroupNumber());
-            addIfAndFormat(data, "shift", studentGroup.getShift(), Shift::getPresentationName);
+            addIfAndFormatElement(
+                    data,
+                    "shift",
+                    studentGroup.getShift(),
+                    getAPISerializer().getShiftSerializer()::serialize
+            );
             data.add(
                     "members",
                     studentGroup.getAttendsSet()

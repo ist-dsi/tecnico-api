@@ -14,6 +14,7 @@ get:
       description: |
         The space's unique ID.
       required: true
+      example: 2448131363674
     - in: path
       name: startDay
       schema:
@@ -22,7 +23,7 @@ get:
       description: |
         The first day of the interval.
       required: true
-      example: "2022-12-31T00:00:00.000Z"
+      example: "2022-12-11T00:00:00.000Z"
     - in: path
       name: endDay
       schema:
@@ -31,7 +32,7 @@ get:
       description: |
         The last day of the interval.
       required: true
-      example: "2022-12-31T00:00:00.000Z"
+      example: "2022-12-13T00:00:00.000Z"
   security: []
   responses:
     "200":
@@ -40,7 +41,8 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../schemas/academic/Space.yaml#/ExtendedSpaceModel"
+            allOf:
+              - $ref: "../schemas/academic/Space.yaml#/ExtendedSpaceModel"
     "400":
       description: |
         Bad Request

@@ -28,6 +28,7 @@ GenericCurriculumLine:
     ects:
       type: number
       format: double
+      example: 6.0
     semester:
       $ref: "./ExecutionSemester.yaml#/ExtendedExecutionSemesterModel"
     type:

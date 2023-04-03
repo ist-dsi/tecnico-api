@@ -9,21 +9,23 @@ GenericEventModel:
     start:
       type: string
       format: date-time
+      example: "2019-10-01T09:00:00Z"
     end:
       type: string
       format: date-time
+      example: "2019-10-01T12:00:00Z"
     name:
       type: string
-      example: "Workshop DEI - NEIIST"
+      example: "Evento de Redes de Computadores"
     description:
       type: string
-      example: "Linux Install Party"
+      example: "Descrição maior do Evento de Redes de Computadores"
     extendedDescription:
       type: string
-      example: "Linux Install Party promovida pelo NEIIST"
+      example: "Descrição muito maior do Evento de Redes de Computadores"
     url:
       type: string
-      example: "https://neiist.tecnico.ulisboa.pt/"
+      example: "https://example.com"
     type:
       type: string
       enum:
@@ -41,6 +43,7 @@ LessonEventModel:
           type: string
           enum:
             - LESSON
+          example: "LESSON"
         shift:
           $ref: "./Shift.yaml#/BasicShiftModel"
         course:
@@ -57,5 +60,6 @@ WrittenEvaluationEventModel:
           type: string
           enum:
             - EVALUATION
+          example: "EVALUATION"
         evaluation:
           $ref: "./evaluation/WrittenEvaluation.yaml"

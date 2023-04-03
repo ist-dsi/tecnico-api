@@ -9,10 +9,10 @@ required:
 properties:
   name:
     type: string
-    example: "Projeto 1"
+    example: "Projeto RC"
   description:
     type: string
-    example: "Grupos para a realização do projeto 1 de FP"
+    example: "Grupos para a realização do projeto de RC"
   enrolmentPeriod:
     required:
       - start

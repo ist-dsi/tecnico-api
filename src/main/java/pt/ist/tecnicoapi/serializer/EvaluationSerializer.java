@@ -87,7 +87,7 @@ public class EvaluationSerializer extends DomainObjectSerializer {
                 "rooms",
                 evaluation.getAssociatedRooms(),
                 rooms -> rooms.stream()
-                        .map(this.getAPISerializer().getSpaceSerializer()::serialize)
+                        .map(this.getAPISerializer().getSpaceSerializer()::serializeBasic)
                         .collect(StreamUtils.toJsonArray())
         );
         return data;

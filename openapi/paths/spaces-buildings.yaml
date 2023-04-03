@@ -13,6 +13,7 @@ get:
       description: |
         ID of campus. Only fetch buildings located in this campus.
       required: false
+      example: 2448131360897
   security: []
   responses:
     "200":
@@ -23,7 +24,9 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/Space.yaml#/GenericSpaceModel"
+              # TODO: check if it makes more sense to use basic or generic space model (containing rooms is useful)
+              allOf:
+                - $ref: "../schemas/academic/Space.yaml#/BasicBuilding"
     "400":
       description: |
         The supplied Space is not a valid campus.
@@ -48,4 +51,3 @@ get:
             message:
               pt-PT: O espaço com o ID 2448131363674411 não foi encontrado
               en-GB: The space with ID 2448131363674411 was not found
-      

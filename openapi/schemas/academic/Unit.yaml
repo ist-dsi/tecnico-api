@@ -3,9 +3,14 @@ required:
   - name
 properties:
   name:
-    $ref: "../LocalizedString.yaml"
+    allOf:
+      - $ref: "../LocalizedString.yaml"
+    example:
+      pt-PT: Instituto Superior Técnico
+      en-GB: Instituto Superior Técnico
   acronym:
     type: string
+    example: "Técnico Lisboa"
   url:
     type: string
     example: "https://tecnico.ulisboa.pt"
@@ -14,3 +19,4 @@ properties:
     format: email
   phone:
     type: string
+    example: "+351 123 456 789"

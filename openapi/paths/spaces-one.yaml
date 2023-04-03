@@ -13,6 +13,7 @@ get:
       description: |
         The space's unique ID.
       required: true
+      example: 2448131363674
   security: []
   responses:
     "200":
@@ -21,7 +22,8 @@ get:
       content:
         application/json:
           schema:
-            $ref: "../schemas/academic/Space.yaml#/GenericSpaceModel"
+            allOf:
+              - $ref: "../schemas/academic/Space.yaml#/GenericRoom"
     "404":
       description: |
         Invalid Space ID supplied.

@@ -15,4 +15,5 @@ get:
           schema:
             type: array
             items:
-              $ref: "../schemas/academic/Space.yaml#/GenericSpaceModel"
+              allOf:
+                - $ref: "../schemas/academic/Space.yaml#/GenericCampus"

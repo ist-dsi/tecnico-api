@@ -1,8 +1,10 @@
 get:
   operationId: getSpaceSearch
-  summary: Fetch spaces as search
+  summary: Search spaces
   description: |
-    Fetch search result for a given space name.
+    Search spaces by their name.
+
+    Optionally, the ID of a campus and/or building can be passed to restrict the given results.
   tags:
     - spaces
   parameters:
@@ -17,14 +19,18 @@ get:
     - in: query
       name: campus
       schema:
-        $ref: "../schemas/DomainObjectId.yaml"
+        allOf:
+          - $ref: "../schemas/DomainObjectId.yaml"
+        example: 2448131360897
       description: |
         Only fetch spaces located in this campus.
       required: false
     - in: query
       name: building
       schema:
-        $ref: "../schemas/DomainObjectId.yaml"
+        allOf:
+          - $ref: "../schemas/DomainObjectId.yaml"
+        example: 2448131361133
       description: |
         Only fetch spaces located in this building.
       required: false
@@ -51,4 +57,3 @@ get:
             message:
               pt-PT: O ID inserido (2448131363674411) não corresponde a um campus existente
               en-GB: The inserted ID (2448131363674411) does not match an existing campus
-

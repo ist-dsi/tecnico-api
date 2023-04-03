@@ -7,7 +7,9 @@ BasicCurricularCourseModelWithoutExecutions:
     - credits
   properties:
     id:
-      $ref: "../DomainObjectId.yaml"
+      allOf:
+        - $ref: "../DomainObjectId.yaml"
+      example: "845953938489552"
     name:
       allOf:
         - $ref: "../LocalizedString.yaml"
@@ -21,6 +23,7 @@ BasicCurricularCourseModelWithoutExecutions:
       type: number
       format: double
       multipleOf: 0.1
+      example: 6.0
 BasicCurricularCourseModel:
   allOf:
     - $ref: "#/BasicCurricularCourseModelWithoutExecutions"
@@ -55,14 +58,17 @@ ExtendedCurricularCourseModel:
               type: number
               format: double
               multipleOf: 0.1
+              example: 119
             contact:
               type: number
               format: double
               multipleOf: 0.1
+              example: 49.0
             total:
               type: number
               format: double
               multipleOf: 0.1
+              example: 168.0
         curricularPeriod:
           allOf:
             - $ref: "./CurricularPeriod.yaml"

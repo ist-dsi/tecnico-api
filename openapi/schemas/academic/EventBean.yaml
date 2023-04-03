@@ -20,7 +20,8 @@ GenericEventBeanModel:
     locations:
       type: array
       items:
-        $ref: "./Space.yaml#/BasicSpaceModel"
+        allOf:
+          - $ref: "./Space.yaml#/BasicRoom"
 ClassEventBeanModel:
   allOf:
     - $ref: "#/GenericEventBeanModel"
@@ -41,7 +42,8 @@ EvaluationEventBeanModel:
         - courses
       properties:
         assignedRoom:
-          $ref: "./Space.yaml#/BasicSpaceModel"
+          allOf:
+            - $ref: "./Space.yaml#/BasicRoom"
         courses:
           type: array
           items:

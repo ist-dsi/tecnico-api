@@ -61,6 +61,11 @@ ExtendedExecutionDegreeModel:
           items:
             allOf:
               - $ref: "./Teacher.yaml"
+            example:
+              username: "ist123456"
+              name: "John Doe"
+              emailAddress: "example@tecnico.ulisboa.pt"
+              webAddress: "https://www.tecnico.ulisboa.pt"
         scientificCommissionMembers:
           type: array
           items:

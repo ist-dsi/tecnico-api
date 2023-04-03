@@ -19,7 +19,6 @@ properties:
     properties:
       currentlyOpen:
         type: boolean
-        example: true
       start:
         type: string
         format: date-time
@@ -40,4 +39,18 @@ properties:
   rooms:
     type: array
     items:
-      $ref: "../Space.yaml#/GenericSpaceModel"
+      allOf:
+        - $ref: "../Space.yaml#/BasicSpaceModel"
+example:
+  season: "FIRST_SEASON"
+  enrolmentPeriod:
+    currentlyOpen: true
+    start: "2019-09-01T00:00:00Z"
+    end: "2019-019-31T23:59:59Z"
+  evaluationPeriod:
+    # FIXME: does it make sense to include this too? since the occupation's written evaluation model also includes it
+    start: "2019-10-01T09:00:00Z"
+    end: "2019-10-01T12:00:00Z"
+  rooms:
+    allOf:
+      - $ref: "../Space.yaml#/BasicRoom/example"

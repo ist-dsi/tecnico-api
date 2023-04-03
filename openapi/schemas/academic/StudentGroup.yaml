@@ -7,9 +7,8 @@ properties:
     type: integer
     example: 4
   shift:
-    type: string
-    example: "L04"
+    $ref: "./Shift.yaml#/BasicShiftModel"
   members:
     type: array
     items:
-      $ref: "./Attends.yaml"
+      $ref: "./Registration.yaml#/RegistrationForOthers"

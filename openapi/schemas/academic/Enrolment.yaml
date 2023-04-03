@@ -11,6 +11,7 @@ EnrolmentModel:
     ects:
       type: number
       format: double
+      example: 6.0
     curricularCourse:
       $ref: "./CurricularCourse.yaml#/BasicCurricularCourseModelWithoutExecutions"
     executionCourse:

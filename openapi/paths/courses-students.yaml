@@ -13,6 +13,7 @@ get:
       description: |
         The course's unique ID.
       required: true
+      example: 846035542882132
   security: []
   responses:
     "200":
@@ -43,7 +44,7 @@ get:
               attendingStudents:
                 type: array
                 items:
-                  $ref: "../schemas/academic/Attends.yaml"
+                  $ref: "../schemas/academic/Registration.yaml#/RegistrationForOthers"
     "404":
       description: |
         Invalid course ID supplied.
