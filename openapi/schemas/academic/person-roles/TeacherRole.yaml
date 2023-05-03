@@ -1,6 +1,18 @@
 type: object
 required:
   - department
+  - category
+  - scientificAreas
 properties:
   department:
-    $ref: "../Unit.yaml"
+    $ref: "../Department.yaml#/BasicDepartmentModel"
+  category:
+    allOf:
+      - $ref: "../../LocalizedString.yaml"
+    example:
+      pt: "Assistente Convidado"
+      en-GB: "Invited Instructor"
+  scientificAreas:
+    type: array
+    items:
+      $ref: "../ScientificAreaUnit.yaml#/BasicScientificAreaUnitModel"

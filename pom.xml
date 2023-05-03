@@ -34,6 +34,8 @@
         <version.org.fenixedu.learning>4.7.5</version.org.fenixedu.learning>
         <version.org.jetbrains.annotations>23.0.0</version.org.jetbrains.annotations>
         <version.org.projectlombok.lombok>1.18.24</version.org.projectlombok.lombok>
+        <!-- Required for retrieving contracts -->
+        <version.pt.ist.fenixedu.ist>18.59.1</version.pt.ist.fenixedu.ist>
     </properties>
 
     <build>
@@ -136,6 +138,11 @@
             <artifactId>lombok</artifactId>
             <version>${version.org.projectlombok.lombok}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>pt.ist</groupId>
+            <artifactId>fenixedu-ist-giaf-contracts</artifactId>
+            <version>${version.pt.ist.fenixedu.ist}</version>
         </dependency>
     </dependencies>
 

@@ -3,15 +3,20 @@ package pt.ist.tecnicoapi.serializer;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import org.fenixedu.academic.domain.Department;
 import org.fenixedu.academic.domain.Person;
+import org.fenixedu.academic.domain.Teacher;
 import org.fenixedu.academic.domain.accessControl.ActiveStudentsGroup;
 import org.fenixedu.academic.domain.accessControl.ActiveTeachersGroup;
 import org.fenixedu.academic.domain.accessControl.AllAlumniGroup;
 import org.fenixedu.academic.domain.contacts.EmailAddress;
 import org.fenixedu.academic.domain.contacts.PartyContact;
+import org.fenixedu.academic.domain.organizationalStructure.DepartmentUnit;
+import org.fenixedu.academic.domain.organizationalStructure.ScientificAreaUnit;
 import org.fenixedu.academic.domain.organizationalStructure.Unit;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.util.ContentType;
+import pt.ist.fenixedu.contracts.domain.organizationalStructure.EmployeeContract;
 import pt.ist.tecnicoapi.util.PhotoUtils;
 import org.fenixedu.bennu.core.domain.User;
 import org.fenixedu.bennu.core.json.JsonUtils;
@@ -149,7 +154,7 @@ public class PersonSerializer extends DomainObjectSerializer {
         roles.add("student", JsonUtils.toJson(role -> {
             final JsonArray registrations = person.getStudent()
                     .getActiveRegistrationStream()
-                    .map(this::toRegistrationJson)
+                    .map(getAPISerializer().getRegistrationSerializer()::serialize)
                     .collect(StreamUtils.toJsonArray());
             role.add("registrations", registrations);
         }));
@@ -173,7 +178,7 @@ public class PersonSerializer extends DomainObjectSerializer {
             final JsonArray registrations = person.getStudent()
                     .getConcludedRegistrations()
                     .stream()
-                    .map(this::toRegistrationJson)
+                    .map(getAPISerializer().getRegistrationSerializer()::serialize)
                     .collect(StreamUtils.toJsonArray());
             role.add("concludedRegistrations", registrations);
         }));
@@ -192,17 +197,33 @@ public class PersonSerializer extends DomainObjectSerializer {
             return;
         }
 
+        final Teacher teacher = person.getTeacher();
+        final Department department = teacher.getDepartment();
+        final DepartmentUnit departmentUnit = department.getDepartmentUnit();
         roles.add("teacher", JsonUtils.toJson(role -> {
-            final JsonObject department = toUnitJson(person.getTeacher().getDepartment().getDepartmentUnit());
-            role.add("department", department);
+            role.add("department", getAPISerializer().getDepartmentSerializer().serialize(department));
+            addIfAndFormatElement(
+                    role,
+                    "category",
+                    teacher.getCategory(),
+                    teacherCategory -> teacherCategory.getName().json()
+            );
+            role.add(
+                    "scientificAreas",
+                    departmentUnit.getAllSubUnits()
+                            .stream()
+                            .filter(Unit::isScientificAreaUnit)
+                            .map(ScientificAreaUnit.class::cast)
+                            .filter(scientificAreaUnit -> isCurrentlyMemberOfScientificArea(scientificAreaUnit, person))
+                            .map(getAPISerializer().getScientificAreaSerializer()::serialize)
+                            .collect(StreamUtils.toJsonArray())
+            );
         }));
     }
 
-    private @NotNull JsonObject toRegistrationJson(@NotNull Registration registration) {
-        return this.getAPISerializer().getRegistrationSerializer().serialize(registration);
-    }
-
-    private @NotNull JsonObject toUnitJson(@NotNull Unit unit) {
-        return this.getAPISerializer().getUnitSerializer().serialize(unit);
+    private boolean isCurrentlyMemberOfScientificArea(ScientificAreaUnit scientificAreaUnit, Person person) {
+        return EmployeeContract.getWorkingContracts(scientificAreaUnit)
+                .stream()
+                .anyMatch(contract -> contract.getPerson().equals(person));
     }
 }
