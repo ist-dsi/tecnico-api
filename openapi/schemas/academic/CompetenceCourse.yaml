@@ -6,7 +6,9 @@ BasicCompetenceCourseModel:
     - acronym
   properties:
     id:
-      $ref: "../DomainObjectId.yaml"
+      allOf:
+        - $ref: "../DomainObjectId.yaml"
+      example: "2229088029468"
     name:
       type: string
       example: "Agentes Autónomos e Sistemas Multi-Agente"

@@ -6,7 +6,9 @@ BasicScientificAreaUnitModel:
     - acronym
   properties:
     id:
-      $ref: "../DomainObjectId.yaml"
+      allOf:
+        - $ref: "../DomainObjectId.yaml"
+      example: "863288487755"
     name:
       type: string
       example: "Área Científica de Arquitectura e Sistemas Operativos"
